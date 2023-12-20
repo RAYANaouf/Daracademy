@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "633844862634",
+    "project_id": "daracademyfireproject",
+    "storage_bucket": "daracademyfireproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:633844862634:android:493b439995d4d691f0cad3",
+        "android_client_info": {
+          "package_name": "com.example.daracademy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOIOSef2vvIYm7WqXTOFFVxPoEozcvDdc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
