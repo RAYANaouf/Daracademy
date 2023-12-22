@@ -1,6 +1,7 @@
 package com.example.daracademy.view.screens.homeScreen
 
 import android.app.Activity
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,15 +16,22 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,6 +43,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.example.daracademy.model.dataClasses.ChatInfo
 import com.example.daracademy.model.dataClasses.Formation
 import com.example.daracademy.model.dataClasses.MessageBox
 import com.example.daracademy.model.sealedClasses.screens.Screens
@@ -42,9 +51,11 @@ import com.example.daracademy.ui.theme.color1
 import com.example.daracademy.ui.theme.color3
 import com.example.daracademy.ui.theme.customWhite2
 import com.example.daracademy.ui.theme.customWhite4
+import com.example.daracademy.view.screens.homeScreen.dialogs.AddChatFeatureDialog
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
@@ -54,17 +65,64 @@ fun HomeScreen(
     modifier      : Modifier = Modifier
 ) {
 
-    val formations = viewModel.formations
-    val posts      = viewModel.posts
 
 
-    val window = LocalView.current.context as Activity
+    val window  = LocalView.current.context as Activity
+    val context = LocalContext.current
 
     LaunchedEffect(key1 = window){
         window.window.apply {
             statusBarColor = Color.White.toArgb()
         }
     }
+
+    var coroutineScope = rememberCoroutineScope()
+
+
+    var show_dialog by remember{
+        mutableStateOf(false)
+    }
+    var chatId      by remember {
+        mutableStateOf("")
+    }
+    AddChatFeatureDialog(
+        show        = show_dialog,
+        onDismiss   = {
+            show_dialog = false
+        },
+        onDoneClick = {name->
+            val result : Boolean
+
+            if (name == ""){
+                Toast.makeText(context , "enter your name" , Toast.LENGTH_LONG).show()
+                result = false
+            }
+            else{
+                val id = System.currentTimeMillis().toString()
+
+                coroutineScope.launch {
+                    viewModel.dataStoreRepo.insertGetChatInfo(ChatInfo(id = id , name = name))
+                }
+
+                show_dialog = false
+
+                navController.navigate("${Screens.Chat_Screen().root}/${chatId}_${id}/${name}"){
+                    popUpTo(Screens.HomeScreen().root){
+                        inclusive = true
+                    }
+                }
+
+                result      = false
+            }
+
+            result
+        },
+        modifier    = Modifier
+            .fillMaxWidth(0.8f)
+            .clip(RoundedCornerShape(16.dp))
+            .background(Color.White)
+    )
+
 
     val swipeState = rememberSwipeRefreshState(isRefreshing = viewModel.isLoading.collectAsState().value)
 
@@ -110,20 +168,32 @@ fun HomeScreen(
                         viewModel.formation = it
                         navController.navigate(Screens.FormationScreen().root)
                     },
-                    formations = formations,
+                    formations = viewModel.formations,
                     modifier = Modifier
                 )
 
             }
 
 
-            items(posts){
+            items(viewModel.posts){
                 Spacer(modifier = Modifier.height(16.dp))
 
                 PostItem(
                     post = it,
-                    onChatClick = { chatId->
-                        navController.navigate("${Screens.Chat_Screen().root}/$chatId")
+                    onChatClick = { _chatId->
+                        chatId = _chatId
+                        coroutineScope.launch{
+                            var chatInfo = viewModel.dataStoreRepo.getChatInfo()
+                            if (chatInfo == null)
+                                show_dialog = true
+                            else{
+//                                navController.navigate("${Screens.Chat_Screen().root}/${chatId}/${chatInfo.id}/${chatInfo.name}")
+                                navController.navigate("${Screens.Chat_Screen().root}/${chatId}_${chatInfo.id}/${chatInfo.name
+                                }")
+
+                            }
+                        }
+
                     },
                     modifier = Modifier
                         .padding(start = 16.dp , end = 16.dp)

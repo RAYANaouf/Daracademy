@@ -1,5 +1,6 @@
 package com.example.daracademy.viewModel
 
+import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -15,6 +16,7 @@ import com.example.daracademy.model.dataClasses.Teacher
 import com.example.daracademy.model.sealedClasses.Errors.Errors
 import com.example.daracademy.model.sealedClasses.screens.Screens
 import com.example.daracademy.repo.DaracademyRepo
+import com.example.daracademyadmin.repo.dataStore.DataStoreRepo
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.QuerySnapshot
@@ -27,7 +29,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class DaracademyViewModel : ViewModel() {
+class DaracademyViewModel : ViewModel {
 
 
     var appScreen : String  by mutableStateOf(Screens.HomeScreen().root)
@@ -56,11 +58,19 @@ class DaracademyViewModel : ViewModel() {
     var formation : Formation? by mutableStateOf(null)
 
 
+    val dataStoreRepo : DataStoreRepo
+
 
 
     init {
         refresh_silent()
     }
+
+    constructor(context : Context){
+        this.dataStoreRepo = DataStoreRepo(context = context)
+    }
+
+
 
 
     /***************************************************/

@@ -17,6 +17,7 @@ import com.example.daracademy.model.variables.les_annees_d_etude.annees_de_prima
 import com.example.daracademyadmin.model.sealedClasses.phaseDesEtudes.PhaseDesEtudes
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -27,6 +28,8 @@ class DaracademyRepo {
     private val auth: FirebaseAuth by mutableStateOf(Firebase.auth)
     private val firebaseFirestore  = Firebase.firestore
     private val firebaseStorageRef    = Firebase.storage.reference
+
+    private var chatListener       : ListenerRegistration? = null
 
 
 
@@ -136,13 +139,19 @@ class DaracademyRepo {
     }
 
 
-    fun getBoxMessages(id : String, onSuccessCallBack: (List<Message>) -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
+    fun getBoxMessages(id : String ,  onSuccessCallBack: (List<Message>) -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
 
 
         val chatBoxDoc = firebaseFirestore.collection("chats").document("post_$id")
 
+        chatBoxDoc.set(
+            "name" to "rayn"
+        )
 
-        chatBoxDoc.collection("messages")
+
+        chatListener?.remove()
+
+        chatListener = chatBoxDoc.collection("messages")
             .addSnapshotListener { snapshot, error ->
                 if (error != null){
                     onFailureCallBack(error)
@@ -160,27 +169,6 @@ class DaracademyRepo {
 
             }
 
-
-//        val chatBoxDoc = firebaseFirestore.collection("chats")
-//            .document("post_$id")
-//
-//
-//
-//            chatBoxDoc
-//                .collection("messages")
-//                .addSnapshotListener { snapshot, error ->
-//                    if (error != null){
-//                        onFailureCallBack(error)
-//                        return@addSnapshotListener
-//                    }
-//
-//                    if (snapshot != null && !snapshot.isEmpty){
-//                        val messages = snapshot.documents.mapNotNull {doc->
-//                            doc.toObject(Message::class.java)
-//                        }
-//                        onSuccessCallBack(messages)
-//                    }
-//                }
 
     }
 

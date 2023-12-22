@@ -28,10 +28,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -51,6 +54,7 @@ import com.example.daracademy.view.screens.CousesScreen.CoursesScreen
 import com.example.daracademy.view.screens.chat.ChatScreen
 import com.example.daracademy.view.screens.chatBoxs.ChatBoxsScreen
 import com.example.daracademy.view.screens.formationScreen.FormationScreen
+import java.lang.IllegalArgumentException
 
 
 class MainActivity : ComponentActivity() {
@@ -65,13 +69,25 @@ class MainActivity : ComponentActivity() {
 
 
             DaracademyTheme {
+
+                val context = LocalContext.current
+
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
 
-                    val viewModel : DaracademyViewModel =  viewModel()
+                    val viewModel : DaracademyViewModel =  viewModel(
+                        factory = object : ViewModelProvider.Factory{
+                            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                                if (modelClass.isAssignableFrom(DaracademyViewModel::class.java))
+                                    return DaracademyViewModel(context) as T
+                                else
+                                    throw IllegalArgumentException("cant create daracademyViewModel")
+                            }
+                        }
+                    )
 
 
                     MainScreen(viewModel =  viewModel)
@@ -114,6 +130,7 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                 navController = navController ,
                 startDestination = Screens.HomeScreen().root,
                 modifier = Modifier
+                    .windowInsetsPadding(WindowInsets.ime)
             ){
 
                 composable(route = Screens.HomeScreen().root){
@@ -220,9 +237,12 @@ fun MainScreen(viewModel : DaracademyViewModel) {
 
 
                 composable(
-                    route = "${Screens.Chat_Screen().root}/{chatId}",
+                    route = "${Screens.Chat_Screen().root}/{chatId}/{name}",
                     arguments = listOf(
                         navArgument(name = "chatId"){
+                            type = NavType.StringType
+                        },
+                        navArgument(name = "name"){
                             type = NavType.StringType
                         }
                     )
@@ -230,7 +250,7 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                     ChatScreen(
                         viewModel = viewModel,
                         chatId    = navBackStackEntry.arguments?.getString("chatId") ?: "",
-
+                        name      = navBackStackEntry.arguments?.getString("name")   ?: "",
                         modifier = Modifier
                             .background(Color(parseColor("#f9f9f9")))
                             .padding(top = paddingValues.calculateTopPadding())

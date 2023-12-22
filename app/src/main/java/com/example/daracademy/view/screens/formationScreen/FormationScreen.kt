@@ -169,12 +169,15 @@ fun FormationScreen(
 @Preview
 @Composable
 fun FormationScreen_preview() {
+
+    val context = LocalContext.current
+
     FormationScreen(
         viewModel = viewModel(
             factory = object : ViewModelProvider.Factory{
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     if (modelClass.isAssignableFrom(DaracademyViewModel::class.java)){
-                        return DaracademyViewModel() as T
+                        return DaracademyViewModel(context) as T
                     }
                     else{
                         throw IllegalArgumentException("can tcreate daracademy viewmodel (formationScreen)")

@@ -174,12 +174,15 @@ fun AcademyStageItem(
 @Preview
 @Composable
 fun AcademyStage_preview() {
+
+    val context = LocalContext.current
+
     AcademyStage(
         viewModel = viewModel(
             factory = object : ViewModelProvider.Factory{
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     if (modelClass.isAssignableFrom(DaracademyViewModel::class.java))
-                        return DaracademyViewModel() as T
+                        return DaracademyViewModel(context) as T
                     else
                         throw IllegalArgumentException("cant create DaracademyViewModel (Academy stage)")
                 }

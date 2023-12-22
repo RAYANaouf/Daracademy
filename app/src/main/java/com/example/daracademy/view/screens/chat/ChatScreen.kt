@@ -61,6 +61,7 @@ import com.example.daracademy.ui.theme.customWhite6
 fun ChatScreen(
     viewModel   : DaracademyViewModel,
     chatId      : String,
+    name        : String = "",
     modifier    : Modifier = Modifier
 ) {
 
