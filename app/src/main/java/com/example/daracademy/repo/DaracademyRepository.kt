@@ -153,7 +153,7 @@ class DaracademyRepo {
         chatListener?.remove()
 
         chatListener = chatBoxDoc.collection("messages")
-            .orderBy("id")
+            .orderBy("timestampZ")
             .addSnapshotListener { snapshot, error ->
                 if (error != null){
                     onFailureCallBack(error)
@@ -203,9 +203,10 @@ class DaracademyRepo {
             .document()
             .set(
                 hashMapOf(
-                    "id"         to  FieldValue.serverTimestamp(),
+                    "id"         to  newMassage.id,
                     "msg"        to  newMassage.msg ,
                     "person_msg" to  newMassage.person_msg,
+                    "timestamp"  to  FieldValue.serverTimestamp(),
                     )
             )
             .addOnSuccessListener(){
