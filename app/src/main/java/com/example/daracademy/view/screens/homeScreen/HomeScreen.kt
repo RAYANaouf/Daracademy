@@ -188,8 +188,7 @@ fun HomeScreen(
                                 show_dialog = true
                             else{
 //                                navController.navigate("${Screens.Chat_Screen().root}/${chatId}/${chatInfo.id}/${chatInfo.name}")
-                                navController.navigate("${Screens.Chat_Screen().root}/${chatId}_${chatInfo.id}/${chatInfo.name
-                                }")
+                                navController.navigate("${Screens.Chat_Screen().root}/${chatId}_${chatInfo.id}/${chatInfo.name}")
 
                             }
                         }

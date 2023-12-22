@@ -17,6 +17,7 @@ import com.example.daracademy.model.variables.les_annees_d_etude.annees_de_prima
 import com.example.daracademyadmin.model.sealedClasses.phaseDesEtudes.PhaseDesEtudes
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -152,6 +153,7 @@ class DaracademyRepo {
         chatListener?.remove()
 
         chatListener = chatBoxDoc.collection("messages")
+            .orderBy("id")
             .addSnapshotListener { snapshot, error ->
                 if (error != null){
                     onFailureCallBack(error)
@@ -198,9 +200,13 @@ class DaracademyRepo {
         val chatBoxRef = firebaseFirestore.collection("chats").document("post_$id").collection("messages")
 
         chatBoxRef
-            .document(System.currentTimeMillis().toString())
+            .document()
             .set(
-                hashMapOf("msg" to newMassage.msg , "person_msg" to  newMassage.person_msg)
+                hashMapOf(
+                    "id"         to  FieldValue.serverTimestamp(),
+                    "msg"        to  newMassage.msg ,
+                    "person_msg" to  newMassage.person_msg,
+                    )
             )
             .addOnSuccessListener(){
                 onSuccessCallBack()
