@@ -49,7 +49,7 @@ fun HeaderItem(
         Spacer(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(35.dp)
+                .height(26.dp)
                 .background(
                     brush = Brush.verticalGradient(
                         colors = listOf(

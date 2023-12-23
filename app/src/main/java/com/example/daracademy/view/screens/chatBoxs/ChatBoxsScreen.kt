@@ -56,13 +56,18 @@ fun ChatBoxsScreen(
         window.window.apply {
             statusBarColor = Color.White.toArgb()
         }
+
     }
 
-    viewModel.getAllMessageBoxs(
-        onSuccessCallBack = {
+    LaunchedEffect(key1 = true ){
+        viewModel.getAllMessageBoxs(
+            onSuccessCallBack = {
 
-        }
-    )
+            }
+        )
+    }
+
+
 
     Column(
         modifier = modifier

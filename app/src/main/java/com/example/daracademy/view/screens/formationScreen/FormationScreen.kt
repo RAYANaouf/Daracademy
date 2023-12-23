@@ -113,21 +113,23 @@ fun FormationScreen(
 
         val context = LocalContext.current
 
-        viewModel.getTeacherById(
-            teacherId = formation.teacher,
-            onSuccessCallBack = {
-                teacher = it
-            },
-            onFailureCallBack = {
-                if (it is Errors){
-                    Toast.makeText(context , "error ${formation.teacher}" , Toast.LENGTH_LONG).show()
-                }
-                else{
-                    Toast.makeText(context , "error ${it.message}" , Toast.LENGTH_LONG).show()
+        LaunchedEffect(key1 = true ){
+            viewModel.getTeacherById(
+                teacherId = formation.teacher,
+                onSuccessCallBack = {
+                    teacher = it
+                },
+                onFailureCallBack = {
+                    if (it is Errors){
+                        Toast.makeText(context , "error ${formation.teacher}" , Toast.LENGTH_LONG).show()
+                    }
+                    else{
+                        Toast.makeText(context , "error ${it.message}" , Toast.LENGTH_LONG).show()
 
+                    }
                 }
-            }
-        )
+            )
+        }
 
 
 

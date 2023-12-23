@@ -153,7 +153,7 @@ class DaracademyRepo {
         chatListener?.remove()
 
         chatListener = chatBoxDoc.collection("messages")
-            .orderBy("timestampZ")
+            .orderBy("timestamp")
             .addSnapshotListener { snapshot, error ->
                 if (error != null){
                     onFailureCallBack(error)
