@@ -140,12 +140,13 @@ fun HeaderSection(
                 .padding(top = 25.dp, bottom = 16.dp)
         ) {
 
-            Spacer(modifier = Modifier.width(6.dp))
+            Spacer(modifier = Modifier.width(20.dp))
 
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .weight(1f)
+                    .height(80.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .background(color1)
                     .padding(4.dp)
@@ -162,13 +163,14 @@ fun HeaderSection(
                 )
             }
 
-            Spacer(modifier = Modifier.width(6.dp))
+            Spacer(modifier = Modifier.width(16.dp))
 
 
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .weight(1f)
+                    .height(80.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .background(color2)
                     .padding(4.dp)
@@ -185,13 +187,14 @@ fun HeaderSection(
                 )
             }
 
-            Spacer(modifier = Modifier.width(6.dp))
+            Spacer(modifier = Modifier.width(16.dp))
 
 
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .weight(1f)
+                    .height(80.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .background(color3)
                     .clickable {
@@ -209,7 +212,7 @@ fun HeaderSection(
                 )
             }
 
-            Spacer(modifier = Modifier.width(6.dp))
+            Spacer(modifier = Modifier.width(20 .dp))
 
         }
     }

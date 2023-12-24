@@ -1,38 +1,48 @@
 package com.example.daracademy.view.screens.formationScreen.component.header
 
+import android.graphics.Color.parseColor
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import coil.compose.rememberAsyncImagePainter
 import com.example.bigsam.model.data.`object`.NormalTextStyles
+import com.example.daracademy.R
 import com.example.daracademy.model.variables.firaSansFamily
 import com.example.daracademy.ui.theme.customWhite0
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HeaderItem(
-    images : List<String>,
+    images    : List<String>,
+    onNavBack : ()->Unit = {},
     formationName : String,
-    modifier: Modifier = Modifier
+    modifier  : Modifier = Modifier
 ) {
 
     val pagerState = rememberPagerState(
@@ -46,20 +56,62 @@ fun HeaderItem(
             .fillMaxWidth()
     ) {
 
-        Spacer(
+//        Spacer(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(26.dp)
+//                .background(
+//                    brush = Brush.verticalGradient(
+//                        colors = listOf(
+//                            Color.White,
+//                            Color.White,
+//                            Color.Transparent
+//                        )
+//                    )
+//                )
+//                .zIndex(10f)
+//        )
+
+        Box(
+            contentAlignment = Alignment.Center,
             modifier = Modifier
-                .fillMaxWidth()
-                .height(26.dp)
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color.White,
-                            Color.Transparent
-                        )
-                    )
-                )
+                .padding(top = 30.dp , start = 16.dp)
+                .clip(CircleShape)
+                .background(Color(parseColor("#33000000")))
                 .zIndex(10f)
-        )
+                .size(40.dp)
+                .clickable { onNavBack() }
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.right_arrow ),
+                contentDescription = null,
+                tint = Color.White ,
+                modifier =Modifier
+                    .size(20.dp)
+                    .rotate(180f)
+            )
+        }
+
+
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .padding(top = 30.dp , start = 16.dp)
+                .clip(CircleShape)
+                .background(Color(parseColor("#33000000")))
+                .zIndex(10f)
+                .size(40.dp)
+                .align(Alignment.TopEnd)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.fullscreen_icon),
+                contentDescription = null,
+                tint = Color.White ,
+                modifier =Modifier
+                    .size(20.dp)
+                    .rotate(180f)
+            )
+        }
 
 
         HorizontalPager(

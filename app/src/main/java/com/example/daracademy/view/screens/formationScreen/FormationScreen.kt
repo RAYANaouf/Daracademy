@@ -41,6 +41,8 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.example.bigsam.model.data.`object`.NormalTextStyles
@@ -48,6 +50,7 @@ import com.example.daracademy.model.dataClasses.Company
 import com.example.daracademy.model.dataClasses.Formation
 import com.example.daracademy.model.dataClasses.Teacher
 import com.example.daracademy.model.sealedClasses.Errors.Errors
+import com.example.daracademy.model.sealedClasses.screens.Screens
 import com.example.daracademy.model.variables.firaSansFamily
 import com.example.daracademy.ui.theme.customWhite0
 import com.example.daracademy.ui.theme.customWhite1
@@ -63,9 +66,10 @@ import okhttp3.internal.format
 
 @Composable
 fun FormationScreen(
-    formation : Formation,
-    viewModel : DaracademyViewModel,
-    modifier  : Modifier = Modifier
+    formation     : Formation,
+    navController : NavController,
+    viewModel     : DaracademyViewModel,
+    modifier      : Modifier = Modifier
 ) {
 
 
@@ -89,9 +93,16 @@ fun FormationScreen(
     ) {
 
         HeaderItem(
-            images = formation.imgs ,
+            images        = formation.imgs ,
+            onNavBack     = {
+                navController.navigate(Screens.HomeScreen().root){
+                    popUpTo(Screens.HomeScreen().root){
+                        inclusive = true
+                    }
+                }
+            },
             formationName = formation.name,
-            modifier = Modifier
+            modifier      = Modifier
                 .fillMaxWidth()
                 .height(450.dp)
         )
@@ -175,8 +186,9 @@ fun FormationScreen_preview() {
     val context = LocalContext.current
 
     FormationScreen(
-        viewModel = viewModel(
-            factory = object : ViewModelProvider.Factory{
+        navController = rememberNavController(),
+        viewModel     = viewModel(
+            factory   = object : ViewModelProvider.Factory{
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     if (modelClass.isAssignableFrom(DaracademyViewModel::class.java)){
                         return DaracademyViewModel(context) as T
@@ -187,6 +199,6 @@ fun FormationScreen_preview() {
                 }
             }
         ),
-        formation = Formation()
+        formation     = Formation()
     )
 }

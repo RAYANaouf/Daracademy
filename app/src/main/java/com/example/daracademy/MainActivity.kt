@@ -264,6 +264,7 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                 ){navBackStackEntry->
                     FormationScreen(
                         viewModel = viewModel,
+                        navController = navController,
                         formation = viewModel.formation!!,
                         modifier = Modifier
                             .background(Color(parseColor("#f9f9f9")))
