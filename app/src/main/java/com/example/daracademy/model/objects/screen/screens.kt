@@ -8,7 +8,7 @@ object screens {
 
     val materiaux_Screen         = "materiaux_Screen"
     val chat_Screen              = "chat_Screen"
-    val chatBox_Screen           = "box_Screen"
+    val chatBoxs_Screen          = "chatBoxs_Screen"
     val coursesScreen            = "courses_screen"
 
 }

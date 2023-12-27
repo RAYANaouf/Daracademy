@@ -207,7 +207,7 @@ fun PostItem(
                         }
                 ){
                     Icon(
-                        painter = painterResource(id = R.drawable.live_chat),
+                        painter = painterResource(id = R.drawable.live_chat_inline),
                         contentDescription = null,
                         modifier = Modifier
                             .size(26.dp)

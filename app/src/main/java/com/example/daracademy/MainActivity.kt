@@ -6,25 +6,38 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DismissibleNavigationDrawer
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,10 +47,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -54,6 +71,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.bigsam.grafic.material.topBar.AlphaTopBar2
+import com.example.bigsam.model.data.`object`.NormalTextStyles
 import com.example.daracademy.view.screens.annees_de_etude_Screen.AnneesDesEtudesScreen
 import com.example.daracademy.view.screens.homeScreen.HomeScreen
 import com.example.daracademy.view.screens.materiauxScreen.MatieresScreen
@@ -62,10 +80,12 @@ import com.example.daracademy.model.sealedClasses.screens.Screens
 import com.example.daracademy.viewModel.DaracademyViewModel
 import com.example.daracademy.ui.theme.DaracademyTheme
 import com.example.daracademy.ui.theme.color1
+import com.example.daracademy.ui.theme.customWhite7
 import com.example.daracademy.view.screens.CousesScreen.CoursesScreen
 import com.example.daracademy.view.screens.chat.ChatScreen
 import com.example.daracademy.view.screens.chatBoxs.ChatBoxsScreen
 import com.example.daracademy.view.screens.formationScreen.FormationScreen
+import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
 
@@ -129,25 +149,308 @@ fun MainScreen(viewModel : DaracademyViewModel) {
 
     ModalNavigationDrawer(
         drawerContent = {
-            Column {
+            ModalDrawerSheet(
+                drawerContainerColor = Color.White,
+                modifier = Modifier
+                    .widthIn(max = 450.dp)
+                    .fillMaxWidth(0.75f)
+            ) {
+
                 Box(
+                    contentAlignment = Alignment.Center,
                     modifier = Modifier
-                        .size(120.dp)
-                        .background(color = color1)
-                        .alpha(0.5f)
-                )
-                Box(
+                        .weight(2f)
+                        .fillMaxWidth()
+                        .drawBehind {
+                            drawLine(
+                                color = customWhite7,
+                                strokeWidth = 1f,
+                                start = Offset(0f, size.height),
+                                end = Offset(size.width, size.height)
+                            )
+                        }
+                        .clickable {
+                            coroutineScope.launch {
+                                drawerState.apply {
+                                    close()
+                                }
+                            }
+                        }
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.daracademy),
+                        contentDescription = null,
+                        contentScale = ContentScale.Inside,
+                        modifier = Modifier
+                            .width(85.dp)
+                            .height(110.dp)
+                    )
+                }
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
-                        .size(120.dp)
-                        .background(color = color1)
-                        .alpha(0.5f)
-                )
-                Box(
-                    modifier = Modifier
-                        .size(120.dp)
-                        .background(color = color1)
-                        .alpha(0.5f)
+                        .weight(8f)
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState())
+                ) {
+
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth(0.8f)
+                            .padding(top = 16.dp)
+                            .background(customWhite7)
+                    )
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .height(65.dp)
+                            .padding(start = 16.dp, end = 16.dp)
+                            .clickable {
+                                coroutineScope.launch {
+                                    drawerState.apply {
+                                        close()
+                                    }
+                                }
+                            }
+                            .padding(top = 6.dp, bottom = 6.dp)
+                            .fillMaxWidth()
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.user_account),
+                            contentDescription = null,
+                            contentScale = ContentScale.Inside,
+                            modifier = Modifier
+                                .size(26.dp)
                         )
+
+                        Spacer(modifier = Modifier.width(16.dp))
+
+                        Text(
+                            text = "Account",
+                            style = NormalTextStyles.TextStyleSZ7
+                        )
+                    }
+
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth(0.8f)
+                            .padding(top = 16.dp, bottom = 16.dp)
+                            .height(1.dp)
+                            .background(customWhite7)
+                    )
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .height(65.dp)
+                            .padding(start = 16.dp, end = 16.dp)
+                            .clickable {
+                                coroutineScope.launch {
+                                    drawerState.apply {
+                                        close()
+                                    }
+                                }
+                            }
+                            .padding(top = 6.dp, bottom = 6.dp)
+                            .fillMaxWidth()
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.support),
+                            contentDescription = null,
+                            contentScale = ContentScale.Inside,
+                            modifier = Modifier
+                                .size(26.dp)
+                        )
+
+                        Spacer(modifier = Modifier.width(16.dp))
+
+                        Text(
+                            text = "Support",
+                            style = NormalTextStyles.TextStyleSZ7
+                        )
+                    }
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .height(65.dp)
+                            .padding(start = 16.dp, end = 16.dp)
+                            .clickable {
+                                coroutineScope.launch {
+                                    drawerState.apply {
+                                        close()
+                                    }
+                                }
+                            }
+                            .padding(top = 6.dp, bottom = 6.dp)
+                            .fillMaxWidth()
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.formation),
+                            contentDescription = null,
+                            contentScale = ContentScale.Inside,
+                            modifier = Modifier
+                                .size(26.dp)
+                        )
+
+                        Spacer(modifier = Modifier.width(16.dp))
+
+                        Text(
+                            text = "Formations",
+                            style = NormalTextStyles.TextStyleSZ7
+                        )
+                    }
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .height(65.dp)
+                            .padding(start = 16.dp, end = 16.dp)
+                            .clickable {
+                                coroutineScope.launch {
+                                    drawerState.apply {
+                                        close()
+                                    }
+                                }
+                            }
+                            .padding(top = 6.dp, bottom = 6.dp)
+                            .fillMaxWidth()
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.post),
+                            contentDescription = null,
+                            contentScale = ContentScale.Inside,
+                            modifier = Modifier
+                                .size(26.dp)
+                        )
+
+                        Spacer(modifier = Modifier.width(16.dp))
+
+                        Text(
+                            text = "Posts",
+                            style = NormalTextStyles.TextStyleSZ7
+                        )
+                    }
+
+
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth(0.8f)
+                            .padding(top = 16.dp, bottom = 16.dp)
+                            .height(1.dp)
+                            .background(customWhite7)
+                    )
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .height(65.dp)
+                            .padding(start = 16.dp, end = 16.dp)
+                            .clickable {
+                                viewModel.setAppScreen(Screens.ChatBoxsScreen())
+                                navController.navigate(Screens.ChatBoxsScreen().root)
+                                coroutineScope.launch {
+                                    drawerState.apply {
+                                        close()
+                                    }
+                                }
+                            }
+                            .padding(top = 6.dp, bottom = 6.dp)
+                            .fillMaxWidth()
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.live_chat),
+                            contentDescription = null,
+                            contentScale = ContentScale.Inside,
+                            modifier = Modifier
+                                .size(26.dp)
+                        )
+
+                        Spacer(modifier = Modifier.width(16.dp))
+
+                        Text(
+                            text = "Chats",
+                            style = NormalTextStyles.TextStyleSZ7
+                        )
+                    }
+
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth(0.8f)
+                            .padding(top = 16.dp, bottom = 16.dp)
+                            .height(1.dp)
+                            .background(customWhite7)
+                    )
+
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .height(65.dp)
+                            .padding(start = 16.dp, end = 16.dp)
+                            .clickable {
+                                coroutineScope.launch {
+                                    drawerState.apply {
+                                        close()
+                                    }
+                                }
+                            }
+                            .padding(top = 6.dp, bottom = 6.dp)
+                            .fillMaxWidth()
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.about_us),
+                            contentDescription = null,
+                            contentScale = ContentScale.Inside,
+                            modifier = Modifier
+                                .size(26.dp)
+                        )
+
+                        Spacer(modifier = Modifier.width(16.dp))
+
+                        Text(
+                            text = "About us",
+                            style = NormalTextStyles.TextStyleSZ7
+                        )
+                    }
+
+
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .height(65.dp)
+                            .padding(start = 16.dp, end = 16.dp)
+                            .clickable {
+                                coroutineScope.launch {
+                                    drawerState.apply {
+                                        close()
+                                    }
+                                }
+                            }
+                            .padding(top = 6.dp, bottom = 6.dp)
+                            .fillMaxWidth()
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.development),
+                            contentDescription = null,
+                            contentScale = ContentScale.Inside,
+                            modifier = Modifier
+                                .size(26.dp)
+                        )
+
+                        Spacer(modifier = Modifier.width(16.dp))
+
+                        Text(
+                            text = "developpeur",
+                            style = NormalTextStyles.TextStyleSZ7
+                        )
+                    }
+
+                }
+
             }
         }
     ) {
@@ -259,7 +562,7 @@ fun MainScreen(viewModel : DaracademyViewModel) {
 
 
 
-                composable(route = Screens.ChatBox_Screen().root){
+                composable(route = Screens.ChatBoxsScreen().root){
                     ChatBoxsScreen(
                         viewModel = viewModel,
                         onNavigate = {screen ->

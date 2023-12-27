@@ -85,7 +85,7 @@ fun ChatBoxsScreen(
                     messageBox = it,
                     modifier = Modifier
                         .clickable {
-                            onNavigate(Screens.ChatBox_Screen())
+                            onNavigate(Screens.Chat_Screen())
                         }
                         .padding(top = 8.dp, bottom = 8.dp)
 

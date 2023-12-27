@@ -15,9 +15,9 @@ sealed class Screens(val root : String){
 
     class MateriauxScreen    : Screens(root = screens.materiaux_Screen)
 
+    class ChatBoxsScreen     : Screens(root = screens.chatBoxs_Screen)
     class Chat_Screen        : Screens(root = screens.chat_Screen)
 
-    class ChatBox_Screen     : Screens(root = screens.chatBox_Screen)
 
     class CoursesScreen      : Screens(root = screens.coursesScreen)
 
