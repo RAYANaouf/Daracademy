@@ -7,11 +7,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.DismissibleNavigationDrawer
@@ -19,6 +22,7 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.rememberDrawerState
@@ -31,12 +35,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -55,6 +61,7 @@ import com.example.daracademy.model.dataClasses.MessageBox
 import com.example.daracademy.model.sealedClasses.screens.Screens
 import com.example.daracademy.viewModel.DaracademyViewModel
 import com.example.daracademy.ui.theme.DaracademyTheme
+import com.example.daracademy.ui.theme.color1
 import com.example.daracademy.view.screens.CousesScreen.CoursesScreen
 import com.example.daracademy.view.screens.chat.ChatScreen
 import com.example.daracademy.view.screens.chatBoxs.ChatBoxsScreen
@@ -120,10 +127,28 @@ fun MainScreen(viewModel : DaracademyViewModel) {
     val coroutineScope = rememberCoroutineScope()
 
 
-    DismissibleNavigationDrawer(
-        drawerState = drawerState,
+    ModalNavigationDrawer(
         drawerContent = {
-
+            Column {
+                Box(
+                    modifier = Modifier
+                        .size(120.dp)
+                        .background(color = color1)
+                        .alpha(0.5f)
+                )
+                Box(
+                    modifier = Modifier
+                        .size(120.dp)
+                        .background(color = color1)
+                        .alpha(0.5f)
+                )
+                Box(
+                    modifier = Modifier
+                        .size(120.dp)
+                        .background(color = color1)
+                        .alpha(0.5f)
+                        )
+            }
         }
     ) {
         Scaffold(
