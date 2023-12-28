@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -117,25 +118,35 @@ class DaracademyRepo {
 
     fun getAllMessageBoxs(userId  : String  ,  onSuccessCallBack: (List<MessageBox>) -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
 
-        firebaseFirestore.collection("chats")
-            .document(userId)
-            .collection("products")
-            .get()
-            .addOnSuccessListener { result->
 
-                val messageBoxs = ArrayList<MessageBox>()
+        var messageBoxs = arrayListOf<MessageBox>()
 
-                for (doc in result){
+         firebaseFirestore.collection("chats")
+             .document(userId)
+             .get()
+             .addOnSuccessListener {userChatDoc->
+                 firebaseFirestore.collection("chats").document(userId).collection("products")
+                     .orderBy("timestamp" , Query.Direction.DESCENDING)
+                     .get()
+                     .addOnSuccessListener {productChatDoc->
 
-                    messageBoxs.add(MessageBox(name = ))
-                }
+                         for (doc  in  productChatDoc){
 
-                onSuccessCallBack(messageBoxs)
+                             messageBoxs.add(MessageBox(name = userChatDoc["name"].toString() , id = userId , lastMessage = doc["lastMessage"].toString() ))
 
-            }
-            .addOnFailureListener {
-                onFailureCallBack(it)
-            }
+                         }
+
+                         onSuccessCallBack(messageBoxs)
+
+                     }
+                     .addOnFailureListener {
+                         onFailureCallBack(it)
+                     }
+             }
+             .addOnFailureListener {
+                 onFailureCallBack(it)
+             }
+
 
     }
 
@@ -169,26 +180,6 @@ class DaracademyRepo {
 
     }
 
-    fun getBoxMessages(onSuccessCallBack: (List<Message>) -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
-
-        firebaseFirestore.collection("chats")
-            .document()
-            .collection("messages")
-            .addSnapshotListener { snapshot, error ->
-                if (error != null){
-                    onFailureCallBack(error)
-                    return@addSnapshotListener
-                }
-
-                if (snapshot != null && !snapshot.isEmpty){
-                    val messages = snapshot.documents.mapNotNull {doc->
-                        doc.toObject(Message::class.java)
-                    }
-                    onSuccessCallBack(messages)
-                }
-            }
-
-    }
 
     fun sendMsg(userId : String , productId: String , newMassage : Message, onSuccessCallBack: () -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
 
@@ -210,7 +201,10 @@ class DaracademyRepo {
 
                 //lastMessage
                 chatBoxRef.set(
-                    mapOf("lastMessage" to newMassage.msg),
+                    mapOf(
+                        "lastMessage" to newMassage.msg,
+                        "timestamp"  to  FieldValue.serverTimestamp()
+                    ),
                     SetOptions.merge()
                 )
                     .addOnFailureListener {

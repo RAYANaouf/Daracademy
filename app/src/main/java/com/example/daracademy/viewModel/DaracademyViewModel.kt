@@ -168,8 +168,9 @@ class DaracademyViewModel : ViewModel {
     //chat feature ****************************************************
 
 
-    fun getAllMessageBoxs(onSuccessCallBack: (List<MessageBox>) -> Unit = {}, onFailureCallBack: (ex : Exception) -> Unit = {} ){
+    fun getAllMessageBoxs(userId : String , onSuccessCallBack: (List<MessageBox>) -> Unit = {}, onFailureCallBack: (ex : Exception) -> Unit = {} ){
         repo.getAllMessageBoxs(
+            userId            = userId,
             onSuccessCallBack = {
                 onSuccessCallBack(it)
                 this.boxMessages = it

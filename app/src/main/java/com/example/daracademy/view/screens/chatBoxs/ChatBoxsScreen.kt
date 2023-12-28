@@ -1,6 +1,7 @@
 package com.example.daracademy.view.screens.chatBoxs
 
 import android.app.Activity
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -52,6 +54,7 @@ fun ChatBoxsScreen(
 
 
     val window = LocalView.current.context as Activity
+    val context = LocalContext.current
 
     LaunchedEffect(key1 = window){
         window.window.apply {
@@ -62,8 +65,12 @@ fun ChatBoxsScreen(
 
     LaunchedEffect(key1 = true ){
         viewModel.getAllMessageBoxs(
+            userId = userId,
             onSuccessCallBack = {
-
+                                
+            },
+            onFailureCallBack = {
+                Toast.makeText(context , "${it.message}" , Toast.LENGTH_LONG).show()
             }
         )
     }
@@ -158,6 +165,7 @@ fun Item(
 @Composable
 fun ChatBoxsScreen_preview() {
     ChatBoxsScreen(
-        viewModel = viewModel()
+        viewModel = viewModel(),
+        userId    = ""
     )
 }

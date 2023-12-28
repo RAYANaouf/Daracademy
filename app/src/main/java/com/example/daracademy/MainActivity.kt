@@ -349,17 +349,21 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                             .height(65.dp)
                             .padding(start = 16.dp, end = 16.dp)
                             .clickable {
-                                viewModel.setAppScreen(Screens.ChatBoxsScreen())
-                                navController.navigate(Screens.ChatBoxsScreen().root)
                                 coroutineScope.launch {
 
                                     val anonymInfo = viewModel.dataStoreRepo.getAnonymInfo()
 
-                                    navController.navigate("${Screens.ChatBoxsScreen().root}/{${(anonymInfo?.id)}}")
+                                    if (anonymInfo?.id == null){
+
+                                    }
+                                    else{
+                                        navController.navigate("${Screens.ChatBoxsScreen().root}/${(anonymInfo?.id)}")
+                                    }
 
                                     drawerState.apply {
                                         close()
                                     }
+
                                 }
                             }
                             .padding(top = 6.dp, bottom = 6.dp)
@@ -457,7 +461,8 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                 }
 
             }
-        }
+        },
+        drawerState = drawerState
     ) {
         Scaffold(
             topBar = {
@@ -568,16 +573,16 @@ fun MainScreen(viewModel : DaracademyViewModel) {
 
 
                 composable(
-                    route = Screens.ChatBoxsScreen().root,
+                    route = "${Screens.ChatBoxsScreen().root}/{userId}",
                     arguments = listOf(
                         navArgument(name = "userId" ){
                             type = NavType.StringType
                         }
                     )
-                ){
+                ){navBackStackEntry->
                     ChatBoxsScreen(
                         viewModel  = viewModel,
-                        userId     = String   ,
+                        userId     = navBackStackEntry.arguments?.getString("userId") ?: ""   ,
                         onNavigate = {screen ->
                             navController.navigate(screen.root)
                             viewModel.setAppScreen(screen)
