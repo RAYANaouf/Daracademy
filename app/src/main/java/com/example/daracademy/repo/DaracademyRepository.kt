@@ -115,21 +115,19 @@ class DaracademyRepo {
     }
 
 
-    fun getAllMessageBoxs(onSuccessCallBack: (List<MessageBox>) -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
+    fun getAllMessageBoxs(userId  : String  ,  onSuccessCallBack: (List<MessageBox>) -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
 
         firebaseFirestore.collection("chats")
+            .document(userId)
+            .collection("products")
             .get()
             .addOnSuccessListener { result->
 
                 val messageBoxs = ArrayList<MessageBox>()
 
                 for (doc in result){
-                    val messageBox = MessageBox(
-                        name = (doc.data["person"] as HashMap<String,String>)["name"].toString() ,
-                        lastMessage = ((doc.data["person"] as HashMap<String,String>)["last_message"].toString()) ,
-                        id = doc.id
-                    )
-                    messageBoxs.add(messageBox)
+
+                    messageBoxs.add(MessageBox(name = ))
                 }
 
                 onSuccessCallBack(messageBoxs)

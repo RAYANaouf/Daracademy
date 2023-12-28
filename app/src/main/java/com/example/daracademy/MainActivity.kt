@@ -352,6 +352,11 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                                 viewModel.setAppScreen(Screens.ChatBoxsScreen())
                                 navController.navigate(Screens.ChatBoxsScreen().root)
                                 coroutineScope.launch {
+
+                                    val anonymInfo = viewModel.dataStoreRepo.getAnonymInfo()
+
+                                    navController.navigate("${Screens.ChatBoxsScreen().root}/{${(anonymInfo?.id)}}")
+
                                     drawerState.apply {
                                         close()
                                     }
@@ -562,9 +567,17 @@ fun MainScreen(viewModel : DaracademyViewModel) {
 
 
 
-                composable(route = Screens.ChatBoxsScreen().root){
+                composable(
+                    route = Screens.ChatBoxsScreen().root,
+                    arguments = listOf(
+                        navArgument(name = "userId" ){
+                            type = NavType.StringType
+                        }
+                    )
+                ){
                     ChatBoxsScreen(
-                        viewModel = viewModel,
+                        viewModel  = viewModel,
+                        userId     = String   ,
                         onNavigate = {screen ->
                             navController.navigate(screen.root)
                             viewModel.setAppScreen(screen)

@@ -44,6 +44,7 @@ import com.example.daracademy.ui.theme.customBlack0
 @Composable
 fun ChatBoxsScreen(
     viewModel  : DaracademyViewModel,
+    userId     : String ,
     onNavigate : (Screens)->Unit = {},
     modifier   : Modifier = Modifier
 ) {
