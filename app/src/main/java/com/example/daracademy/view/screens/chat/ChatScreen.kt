@@ -2,6 +2,7 @@ package com.example.daracademy.view.screens.chat
 
 import android.app.Activity
 import android.graphics.Color.parseColor
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -38,6 +39,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -175,6 +177,7 @@ fun ChatScreen(
             Spacer(modifier = Modifier.width(16.dp))
 
             if (!loading){
+                val context = LocalContext.current
                 Image(
                     painter = painterResource(id = R.drawable.send_icon) ,
                     contentDescription = null,
@@ -195,6 +198,7 @@ fun ChatScreen(
                                 },
                                 onFailureCallBack = {
                                     loading = false
+                                    Toast.makeText(context , "$it" , Toast.LENGTH_LONG).show()
                                 }
                             )
                         }

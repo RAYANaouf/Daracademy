@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -193,9 +194,11 @@ class DaracademyRepo {
 
     fun sendMsg(userId : String , productId: String , newMassage : Message, onSuccessCallBack: () -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
 
-        val chatBoxRef = firebaseFirestore.collection("chats").document("$userId").collection("products").document("$productId").collection("messages")
+        val chatBoxRef = firebaseFirestore.collection("chats").document("$userId").collection("products").document("$productId")
+        val chatMessageCollectionRef = chatBoxRef.collection("messages")
 
-        chatBoxRef
+
+        chatMessageCollectionRef
             .document()
             .set(
                 hashMapOf(
@@ -206,9 +209,23 @@ class DaracademyRepo {
                     )
             )
             .addOnSuccessListener(){
-                onSuccessCallBack()
+
+                //lastMessage
+                chatBoxRef.set(
+                    mapOf("lastMessage" to newMassage.msg),
+                    SetOptions.merge()
+                )
+                    .addOnFailureListener {
+                        onFailureCallBack(it)
+                    }
+                    .addOnSuccessListener {
+                        onSuccessCallBack()
+                    }
+
             }
             .addOnFailureListener(onFailureCallBack)
+
+
 
 
     }
