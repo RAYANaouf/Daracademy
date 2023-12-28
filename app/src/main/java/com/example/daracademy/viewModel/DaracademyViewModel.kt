@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.daracademy.model.dataClasses.ChatInfo
 import com.example.daracademy.model.dataClasses.Course
 import com.example.daracademy.model.dataClasses.Formation
 import com.example.daracademy.model.dataClasses.Matiere
@@ -164,6 +165,9 @@ class DaracademyViewModel : ViewModel {
     }
 
 
+    //chat feature ****************************************************
+
+
     fun getAllMessageBoxs(onSuccessCallBack: (List<MessageBox>) -> Unit = {}, onFailureCallBack: (ex : Exception) -> Unit = {} ){
         repo.getAllMessageBoxs(
             onSuccessCallBack = {
@@ -177,12 +181,18 @@ class DaracademyViewModel : ViewModel {
     }
 
 
-    fun getBoxMessages(id : String, onSuccessCallBack: (List<Message>) -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
-        repo.getBoxMessages(id, onSuccessCallBack, onFailureCallBack)
+    fun getBoxMessages(userId : String , productId : String , onSuccessCallBack: (List<Message>) -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
+        repo.getBoxMessages(userId , productId , onSuccessCallBack, onFailureCallBack)
     }
 
-    fun sendMsg(id : String, newMassage : Message, onSuccessCallBack: () -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
-        repo.sendMsg(id, newMassage, onSuccessCallBack, onFailureCallBack)
+    fun sendMsg(userId : String , productId: String , newMassage : Message, onSuccessCallBack: () -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
+        repo.sendMsg(userId, productId, newMassage, onSuccessCallBack, onFailureCallBack)
+    }
+
+    fun saveInfoInChatFeature( chatInfo: ChatInfo , onSuccessCallBack: () -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}){
+
+        repo.saveInfoInChatFeature(chatInfo , onSuccessCallBack , onFailureCallBack)
+
     }
 
 

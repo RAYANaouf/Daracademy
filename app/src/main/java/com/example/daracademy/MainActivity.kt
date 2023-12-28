@@ -595,7 +595,7 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                     ChatScreen(
                         viewModel = viewModel,
                         userId    = navBackStackEntry.arguments?.getString("userId") ?: "",
-                        chatId    = navBackStackEntry.arguments?.getString("productId") ?: "",
+                        productId = navBackStackEntry.arguments?.getString("productId") ?: "",
                         name      = navBackStackEntry.arguments?.getString("name")   ?: "",
                         modifier = Modifier
                             .background(Color(parseColor("#f9f9f9")))

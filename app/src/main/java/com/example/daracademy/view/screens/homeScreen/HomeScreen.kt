@@ -82,7 +82,7 @@ fun HomeScreen(
     var show_dialog by remember{
         mutableStateOf(false)
     }
-    var chatId      by remember {
+    var postId      by remember {
         mutableStateOf("")
     }
     AddChatFeatureDialog(
@@ -102,11 +102,12 @@ fun HomeScreen(
 
                 coroutineScope.launch {
                     viewModel.dataStoreRepo.insertAnonymInfo(ChatInfo(id = id , name = name))
+                    viewModel.saveInfoInChatFeature(ChatInfo(id = id , name = name))
                 }
 
                 show_dialog = false
 
-                navController.navigate("${Screens.Chat_Screen().root}/${chatId}_${id}/${name}"){
+                navController.navigate("${Screens.Chat_Screen().root}/${id}/${postId}/${name}"){
                     popUpTo(Screens.HomeScreen().root){
                         inclusive = true
                     }
@@ -180,14 +181,14 @@ fun HomeScreen(
 
                 PostItem(
                     post = it,
-                    onChatClick = { _chatId->
-                        chatId = _chatId
+                    onChatClick = { _postId->
+                        postId = _postId
                         coroutineScope.launch{
                             var anonymId = viewModel.dataStoreRepo.getAnonymInfo()
                             if (anonymId == null)
                                 show_dialog = true
                             else{
-                                navController.navigate("${Screens.Chat_Screen().root}/${anonymId.id}/${chatId}/${anonymId.name}")
+                                navController.navigate("${Screens.Chat_Screen().root}/${anonymId.id}/${postId}/${anonymId.name}")
                             }
                         }
 

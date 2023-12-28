@@ -2,6 +2,7 @@ package com.example.daracademy.repo
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import com.example.daracademy.model.dataClasses.ChatInfo
 import com.example.daracademy.model.dataClasses.Course
 import com.example.daracademy.model.dataClasses.Formation
 import com.example.daracademy.model.dataClasses.Matiere
@@ -140,15 +141,10 @@ class DaracademyRepo {
     }
 
 
-    fun getBoxMessages(id : String ,  onSuccessCallBack: (List<Message>) -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
+    fun getBoxMessages(userId : String , productId : String ,  onSuccessCallBack: (List<Message>) -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
 
 
-        val chatBoxDoc = firebaseFirestore.collection("chats").document("post_$id")
-
-        chatBoxDoc.set(
-            "name" to "rayn"
-        )
-
+        val chatBoxDoc = firebaseFirestore.collection("chats").document("$userId").collection("products").document("$productId")
 
         chatListener?.remove()
 
@@ -195,9 +191,9 @@ class DaracademyRepo {
 
     }
 
-    fun sendMsg(id : String, newMassage : Message, onSuccessCallBack: () -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
+    fun sendMsg(userId : String , productId: String , newMassage : Message, onSuccessCallBack: () -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
 
-        val chatBoxRef = firebaseFirestore.collection("chats").document("post_$id").collection("messages")
+        val chatBoxRef = firebaseFirestore.collection("chats").document("$userId").collection("products").document("$productId").collection("messages")
 
         chatBoxRef
             .document()
@@ -214,6 +210,26 @@ class DaracademyRepo {
             }
             .addOnFailureListener(onFailureCallBack)
 
+
+    }
+
+
+    fun saveInfoInChatFeature(chatInfo: ChatInfo, onSuccessCallBack: () -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}){
+
+        firebaseFirestore.collection("chats")
+            .document(chatInfo.id)
+            .set(
+                hashMapOf(
+                    "id"   to chatInfo.id,
+                    "name" to chatInfo.name
+                )
+            )
+            .addOnSuccessListener {
+                onSuccessCallBack()
+            }
+            .addOnFailureListener {
+                onFailureCallBack(it)
+            }
 
     }
 

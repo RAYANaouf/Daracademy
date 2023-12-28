@@ -61,7 +61,7 @@ import com.example.daracademy.ui.theme.customWhite6
 fun ChatScreen(
     viewModel   : DaracademyViewModel,
     userId      : String,
-    chatId      : String,
+    productId   : String,
     name        : String = "",
     modifier    : Modifier = Modifier
 ) {
@@ -92,7 +92,8 @@ fun ChatScreen(
 
     LaunchedEffect(key1 = true ){
         viewModel.getBoxMessages(
-            id = chatId,
+            userId            = userId,
+            productId         = productId,
             onSuccessCallBack = {
                 messages = it
             },
@@ -101,6 +102,7 @@ fun ChatScreen(
             }
         )
     }
+
 
     
     Column(
@@ -185,7 +187,8 @@ fun ChatScreen(
 
                             loading = true
                             viewModel.sendMsg(
-                                chatId ,
+                                userId ,
+                                productId,
                                 Message(msg = msg , person_msg = true ),
                                 onSuccessCallBack = {
                                     loading = false
@@ -281,6 +284,6 @@ fun ChatScreen_preview() {
     ChatScreen(
         userId    = "",
         viewModel = viewModel(),
-        chatId    = ""
+        productId    = ""
     )
 }
