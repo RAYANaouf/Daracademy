@@ -60,6 +60,7 @@ import com.example.daracademy.ui.theme.customWhite6
 @Composable
 fun ChatScreen(
     viewModel   : DaracademyViewModel,
+    userId      : String,
     chatId      : String,
     name        : String = "",
     modifier    : Modifier = Modifier
@@ -278,7 +279,8 @@ fun messageItem(
 @Composable
 fun ChatScreen_preview() {
     ChatScreen(
-        viewModel(),
-        ""
+        userId    = "",
+        viewModel = viewModel(),
+        chatId    = ""
     )
 }

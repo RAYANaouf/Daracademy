@@ -21,8 +21,8 @@ class DataStoreRepo {
         this.context  = context
     }
 
-    suspend fun getChatInfo() : ChatInfo?{
-        val id   = context.dataStore.data.first()[dataStoreKeys.Key_chatFeatureId] ?: null
+    suspend fun getAnonymInfo() : ChatInfo?{
+        val id   = context.dataStore.data.first()[dataStoreKeys.Key_anonymeId] ?: null
         val name = context.dataStore.data.first()[dataStoreKeys.Key_anonymeName]   ?: null
         if (id == null || name == null){
             return null
@@ -31,10 +31,10 @@ class DataStoreRepo {
         return ChatInfo(id = id!! , name = name!!)
     }
 
-    suspend fun insertGetChatInfo(chatInfo : ChatInfo) {
+    suspend fun insertAnonymInfo(chatInfo : ChatInfo) {
 
         context.dataStore.edit {
-            it[dataStoreKeys.Key_chatFeatureId] = chatInfo.id
+            it[dataStoreKeys.Key_anonymeId] = chatInfo.id
             it[dataStoreKeys.Key_anonymeName]   = chatInfo.name
         }
     }

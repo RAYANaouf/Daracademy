@@ -4,7 +4,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 
 object dataStoreKeys {
 
-    val Key_chatFeatureId = stringPreferencesKey("chatFeatureId")
+    val Key_anonymeId     = stringPreferencesKey("anonymeId")
     val Key_anonymeName   = stringPreferencesKey("anonymeName")
 
 }

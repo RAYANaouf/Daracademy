@@ -101,7 +101,7 @@ fun HomeScreen(
                 val id = System.currentTimeMillis().toString()
 
                 coroutineScope.launch {
-                    viewModel.dataStoreRepo.insertGetChatInfo(ChatInfo(id = id , name = name))
+                    viewModel.dataStoreRepo.insertAnonymInfo(ChatInfo(id = id , name = name))
                 }
 
                 show_dialog = false
@@ -183,13 +183,11 @@ fun HomeScreen(
                     onChatClick = { _chatId->
                         chatId = _chatId
                         coroutineScope.launch{
-                            var chatInfo = viewModel.dataStoreRepo.getChatInfo()
-                            if (chatInfo == null)
+                            var anonymId = viewModel.dataStoreRepo.getAnonymInfo()
+                            if (anonymId == null)
                                 show_dialog = true
                             else{
-//                                navController.navigate("${Screens.Chat_Screen().root}/${chatId}/${chatInfo.id}/${chatInfo.name}")
-                                navController.navigate("${Screens.Chat_Screen().root}/${chatId}_${chatInfo.id}/${chatInfo.name}")
-
+                                navController.navigate("${Screens.Chat_Screen().root}/${anonymId.id}/${chatId}/${anonymId.name}")
                             }
                         }
 

@@ -579,9 +579,12 @@ fun MainScreen(viewModel : DaracademyViewModel) {
 
 
                 composable(
-                    route = "${Screens.Chat_Screen().root}/{chatId}/{name}",
+                    route = "${Screens.Chat_Screen().root}/{userId}/{productId}/{name}",
                     arguments = listOf(
-                        navArgument(name = "chatId"){
+                        navArgument(name = "userId"){
+                            type = NavType.StringType
+                        },
+                        navArgument(name = "productId"){
                             type = NavType.StringType
                         },
                         navArgument(name = "name"){
@@ -591,7 +594,8 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                 ){navBackStackEntry->
                     ChatScreen(
                         viewModel = viewModel,
-                        chatId    = navBackStackEntry.arguments?.getString("chatId") ?: "",
+                        userId    = navBackStackEntry.arguments?.getString("userId") ?: "",
+                        chatId    = navBackStackEntry.arguments?.getString("productId") ?: "",
                         name      = navBackStackEntry.arguments?.getString("name")   ?: "",
                         modifier = Modifier
                             .background(Color(parseColor("#f9f9f9")))
