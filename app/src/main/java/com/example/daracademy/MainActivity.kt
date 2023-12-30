@@ -3,6 +3,7 @@ package com.example.daracademy
 import android.app.Activity
 import android.graphics.Color.parseColor
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -85,6 +86,7 @@ import com.example.daracademy.view.screens.CousesScreen.CoursesScreen
 import com.example.daracademy.view.screens.chat.ChatScreen
 import com.example.daracademy.view.screens.chatBoxs.ChatBoxsScreen
 import com.example.daracademy.view.screens.formationScreen.FormationScreen
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
@@ -98,7 +100,6 @@ class MainActivity : ComponentActivity() {
 
 
         setContent {
-
 
             DaracademyTheme {
 
@@ -120,6 +121,23 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     )
+
+
+                    LaunchedEffect(key1 = true ){
+
+                        val anonymInfo = viewModel.dataStoreRepo.getAnonymInfo()
+
+                        if (anonymInfo != null){
+                            viewModel.setChatBoxsListener(
+                                userId = anonymInfo.id
+                            )
+                        }
+
+                        delay(1500)
+
+                        Toast.makeText(context , "${viewModel.getAllMessageBoxs()}" , Toast.LENGTH_LONG).show()
+
+                    }
 
 
                     MainScreen(viewModel =  viewModel)
@@ -145,6 +163,7 @@ fun MainScreen(viewModel : DaracademyViewModel) {
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
+    val context        = LocalContext.current
 
 
     ModalNavigationDrawer(
@@ -351,14 +370,7 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                             .clickable {
                                 coroutineScope.launch {
 
-                                    val anonymInfo = viewModel.dataStoreRepo.getAnonymInfo()
-
-                                    if (anonymInfo?.id == null){
-
-                                    }
-                                    else{
-                                        navController.navigate("${Screens.ChatBoxsScreen().root}/${(anonymInfo?.id)}")
-                                    }
+                                    navController.navigate("${Screens.ChatBoxsScreen().root}")
 
                                     drawerState.apply {
                                         close()
@@ -485,6 +497,7 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                     .windowInsetsPadding(WindowInsets.ime)
             ){
 
+
                 composable(route = Screens.HomeScreen().root){
                     HomeScreen(
                         navController = navController,
@@ -573,18 +586,13 @@ fun MainScreen(viewModel : DaracademyViewModel) {
 
 
                 composable(
-                    route = "${Screens.ChatBoxsScreen().root}/{userId}",
-                    arguments = listOf(
-                        navArgument(name = "userId" ){
-                            type = NavType.StringType
-                        }
-                    )
-                ){navBackStackEntry->
+                    route = "${Screens.ChatBoxsScreen().root}"
+                ){
                     ChatBoxsScreen(
                         viewModel  = viewModel,
-                        userId     = navBackStackEntry.arguments?.getString("userId") ?: ""   ,
-                        onNavigate = {screen ->
-                            navController.navigate(screen.root)
+                        onNavigate = {screen , messageBox ->
+                            Toast.makeText(context , "${messageBox.userId}_${messageBox.productId}" , Toast.LENGTH_LONG).show()
+                            navController.navigate("${screen.root}/${messageBox.userId}/${messageBox.productId}/${messageBox.name}")
                             viewModel.setAppScreen(screen)
 
                         },

@@ -46,8 +46,7 @@ import com.example.daracademy.ui.theme.customBlack0
 @Composable
 fun ChatBoxsScreen(
     viewModel  : DaracademyViewModel,
-    userId     : String ,
-    onNavigate : (Screens)->Unit = {},
+    onNavigate : (Screens , MessageBox)->Unit = {_,_->},
     modifier   : Modifier = Modifier
 ) {
 
@@ -63,17 +62,17 @@ fun ChatBoxsScreen(
 
     }
 
-    LaunchedEffect(key1 = true ){
-        viewModel.getAllMessageBoxs(
-            userId = userId,
-            onSuccessCallBack = {
-                                
-            },
-            onFailureCallBack = {
-                Toast.makeText(context , "${it.message}" , Toast.LENGTH_LONG).show()
-            }
-        )
-    }
+//    LaunchedEffect(key1 = true ){
+//        viewModel.getAllMessageBoxs(
+//            userId = userId,
+//            onSuccessCallBack = {
+//
+//            },
+//            onFailureCallBack = {
+//                Toast.makeText(context , "${it.message}" , Toast.LENGTH_LONG).show()
+//            }
+//        )
+//    }
 
 
 
@@ -88,12 +87,12 @@ fun ChatBoxsScreen(
                 .weight(1f)
         ) {
 
-            items(viewModel.boxMessages){
+            items(viewModel.getAllMessageBoxs()){
                 Item(
                     messageBox = it,
                     modifier = Modifier
                         .clickable {
-                            onNavigate(Screens.Chat_Screen())
+                            onNavigate(Screens.Chat_Screen() , it)
                         }
                         .padding(top = 8.dp, bottom = 8.dp)
 
@@ -166,6 +165,5 @@ fun Item(
 fun ChatBoxsScreen_preview() {
     ChatBoxsScreen(
         viewModel = viewModel(),
-        userId    = ""
     )
 }

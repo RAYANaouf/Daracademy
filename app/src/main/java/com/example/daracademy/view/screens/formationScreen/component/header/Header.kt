@@ -56,22 +56,6 @@ fun HeaderItem(
             .fillMaxWidth()
     ) {
 
-//        Spacer(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(26.dp)
-//                .background(
-//                    brush = Brush.verticalGradient(
-//                        colors = listOf(
-//                            Color.White,
-//                            Color.White,
-//                            Color.Transparent
-//                        )
-//                    )
-//                )
-//                .zIndex(10f)
-//        )
-
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
@@ -96,7 +80,7 @@ fun HeaderItem(
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .padding(top = 30.dp , start = 16.dp)
+                .padding(top = 30.dp , end = 16.dp)
                 .clip(CircleShape)
                 .background(Color(parseColor("#33000000")))
                 .zIndex(10f)

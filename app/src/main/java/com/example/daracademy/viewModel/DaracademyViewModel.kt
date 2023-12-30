@@ -182,7 +182,17 @@ class DaracademyViewModel : ViewModel {
     }
 
 
-    fun getBoxMessages(userId : String , productId : String , onSuccessCallBack: (List<Message>) -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
+
+    fun getAllMessageBoxs( ) : List<MessageBox>{
+        return repo.chatBoxs
+    }
+
+    fun setChatBoxsListener(userId: String , onSuccessCallBack: (List<MessageBox>) -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}) {
+        this.repo.setChatBoxsListener(userId, onSuccessCallBack, onFailureCallBack)
+    }
+
+
+        fun getBoxMessages(userId : String , productId : String , onSuccessCallBack: (List<Message>) -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
         repo.getBoxMessages(userId , productId , onSuccessCallBack, onFailureCallBack)
     }
 
@@ -190,15 +200,13 @@ class DaracademyViewModel : ViewModel {
         repo.sendMsg(userId, productId, newMassage, onSuccessCallBack, onFailureCallBack)
     }
 
-    fun saveInfoInChatFeature( chatInfo: ChatInfo , onSuccessCallBack: () -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}){
-
-        repo.saveInfoInChatFeature(chatInfo , onSuccessCallBack , onFailureCallBack)
-
+    fun createChatBox(chatInfo: ChatInfo , productId: String , onSuccessCallBack: () -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ) {
+        repo.createChatBox(chatInfo, productId, onSuccessCallBack, onFailureCallBack)
     }
 
 
 
-    fun getAllMatieres(phase : String, annee : String, onSuccessCallBack: (List<Matiere>) -> Unit, onFailureCallBack: (ex: Exception) -> Unit) {
+        fun getAllMatieres(phase : String, annee : String, onSuccessCallBack: (List<Matiere>) -> Unit, onFailureCallBack: (ex: Exception) -> Unit) {
 
         matiere = emptyList()
 

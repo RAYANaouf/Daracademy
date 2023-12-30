@@ -1,6 +1,7 @@
 package com.example.daracademy.view.screens.homeScreen
 
 import android.app.Activity
+import android.graphics.Paint.Join
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -55,6 +56,7 @@ import com.example.daracademy.view.screens.homeScreen.dialogs.AddChatFeatureDial
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -74,7 +76,10 @@ fun HomeScreen(
         window.window.apply {
             statusBarColor = Color.White.toArgb()
         }
+
     }
+
+
 
     var coroutineScope = rememberCoroutineScope()
 
@@ -102,7 +107,6 @@ fun HomeScreen(
 
                 coroutineScope.launch {
                     viewModel.dataStoreRepo.insertAnonymInfo(ChatInfo(id = id , name = name))
-                    viewModel.saveInfoInChatFeature(ChatInfo(id = id , name = name))
                 }
 
                 show_dialog = false
@@ -183,14 +187,39 @@ fun HomeScreen(
                     post = it,
                     onChatClick = { _postId->
                         postId = _postId
-                        coroutineScope.launch{
-                            var anonymId = viewModel.dataStoreRepo.getAnonymInfo()
-                            if (anonymId == null)
+                        coroutineScope.launch {
+                            var anonymInfo : ChatInfo? = null
+                            var existence   = false
+
+                            anonymInfo = viewModel.dataStoreRepo.getAnonymInfo()
+                            if (anonymInfo == null){
                                 show_dialog = true
-                            else{
-                                navController.navigate("${Screens.Chat_Screen().root}/${anonymId.id}/${postId}/${anonymId.name}")
+                                return@launch
                             }
+
+
+                            /******/
+//                            existence = viewModel.dataStoreRepo.isProductSaved(_postId)
+                            viewModel.getAllMessageBoxs().forEach {
+                                if (it.productId == _postId)
+                                    existence = true
+                            }
+                            if (!existence){
+                                viewModel.createChatBox(anonymInfo  , _postId)
+                                viewModel.dataStoreRepo.saveProduct(_postId)
+                                existence = true
+                            }
+                            /*****/
+
+
+
+                            if (existence && anonymInfo != null){
+                                navController.navigate("${Screens.Chat_Screen().root}/${anonymInfo?.id}/${postId}/${anonymInfo?.name}")
+                            }
+
                         }
+
+
 
                     },
                     modifier = Modifier

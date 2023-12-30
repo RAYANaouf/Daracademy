@@ -1,5 +1,6 @@
 package com.example.daracademy.repo
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import com.example.daracademy.model.dataClasses.ChatInfo
@@ -19,6 +20,7 @@ import com.example.daracademyadmin.model.sealedClasses.phaseDesEtudes.PhaseDesEt
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
@@ -30,10 +32,12 @@ class DaracademyRepo {
 
 
     private val auth: FirebaseAuth by mutableStateOf(Firebase.auth)
-    private val firebaseFirestore  = Firebase.firestore
+    private val firebaseFirestore     = Firebase.firestore
     private val firebaseStorageRef    = Firebase.storage.reference
 
-    private var chatListener       : ListenerRegistration? = null
+    private var chatListener          : ListenerRegistration? = null
+    private var chatBoxListener       : ListenerRegistration? = null
+    var chatBoxs                      = mutableListOf<MessageBox>()
 
 
 
@@ -70,6 +74,35 @@ class DaracademyRepo {
 
     constructor(){
 
+    }
+
+
+    fun setChatBoxsListener(userId: String , onSuccessCallBack: (List<MessageBox>) -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}){
+        firebaseFirestore.collection("chats")
+            .where(Filter.equalTo("userId" , userId))
+            .addSnapshotListener { snapshot, error ->
+                if (error != null){
+                    onFailureCallBack(error)
+                    return@addSnapshotListener
+                }
+
+                if (snapshot == null || snapshot.isEmpty){
+                    return@addSnapshotListener
+                }
+
+                chatBoxs.clear()
+                snapshot.documents.mapNotNull { msg->
+                    val messageBox = msg.toObject(MessageBox::class.java)
+                    if ( messageBox == null){
+
+                    }
+                    else{
+                        chatBoxs.add(messageBox.copy(productId = msg.id.split("_")[1]))
+                    }
+
+                }
+                onSuccessCallBack(chatBoxs)
+            }
     }
 
     fun getAllFormation(onSuccessCallBack: (List<Formation>) -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
@@ -122,39 +155,28 @@ class DaracademyRepo {
         var messageBoxs = arrayListOf<MessageBox>()
 
          firebaseFirestore.collection("chats")
-             .document(userId)
+             .where(Filter.equalTo("userId" , userId))
              .get()
-             .addOnSuccessListener {userChatDoc->
-                 firebaseFirestore.collection("chats").document(userId).collection("products")
-                     .orderBy("timestamp" , Query.Direction.DESCENDING)
-                     .get()
-                     .addOnSuccessListener {productChatDoc->
+             .addOnSuccessListener {userChatBoxsDoc->
 
-                         for (doc  in  productChatDoc){
+                 for (doc  in  userChatBoxsDoc){
+                     val ids = doc.id.split("_")
+                     doc.toObject(MessageBox::class.java)?.copy(userId = ids[0] , productId = ids[1])
+                 }
 
-                             messageBoxs.add(MessageBox(name = userChatDoc["name"].toString() , id = userId , lastMessage = doc["lastMessage"].toString() ))
+                 onSuccessCallBack(messageBoxs)
 
-                         }
-
-                         onSuccessCallBack(messageBoxs)
-
-                     }
-                     .addOnFailureListener {
-                         onFailureCallBack(it)
-                     }
              }
              .addOnFailureListener {
                  onFailureCallBack(it)
              }
 
-
     }
-
 
     fun getBoxMessages(userId : String , productId : String ,  onSuccessCallBack: (List<Message>) -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
 
 
-        val chatBoxDoc = firebaseFirestore.collection("chats").document("$userId").collection("products").document("$productId")
+        val chatBoxDoc = firebaseFirestore.collection("chats").document("${userId}_${productId}")
 
         chatListener?.remove()
 
@@ -174,8 +196,33 @@ class DaracademyRepo {
                 }
                 onSuccessCallBack(messages)
 
-
             }
+
+
+    }
+
+
+    fun createChatBox(chatInfo: ChatInfo , productId: String , onSuccessCallBack: () -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
+
+        val chatBoxRef = firebaseFirestore.collection("chats").document("${chatInfo.id}_${productId}")
+
+
+        //lastMessage
+        chatBoxRef.set(
+            mapOf(
+                "userId"      to chatInfo.id,
+                "name"        to chatInfo.name,
+                "timestamp"   to FieldValue.serverTimestamp()
+            ),
+            SetOptions.merge()
+        )
+            .addOnFailureListener {
+                onFailureCallBack(it)
+            }
+            .addOnSuccessListener {
+                onSuccessCallBack()
+            }
+
 
 
     }
@@ -183,64 +230,92 @@ class DaracademyRepo {
 
     fun sendMsg(userId : String , productId: String , newMassage : Message, onSuccessCallBack: () -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
 
-        val chatBoxRef = firebaseFirestore.collection("chats").document("$userId").collection("products").document("$productId")
-        val chatMessageCollectionRef = chatBoxRef.collection("messages")
+        val chatBoxRef = firebaseFirestore.collection("chats").document("${userId}_${productId}")
+
+        val messagesRef = chatBoxRef.collection("messages")
+
+        val id = System.currentTimeMillis().toString()
+
+        if (newMassage.photo != ""){
+            val imageRef = firebaseStorageRef.child("messagePhotos/user_$userId/product_$productId/$id")
+
+            imageRef.putFile(Uri.parse(newMassage.photo))
+                .addOnSuccessListener {
+
+                    imageRef.downloadUrl
+                        .addOnFailureListener { onFailureCallBack(it) }
+                        .addOnSuccessListener {storageUri->
+                            messagesRef
+                                .document()
+                                .set(
+                                    hashMapOf(
+                                        "msg"        to  newMassage.msg,
+                                        "photo"      to (storageUri?.toString() ?: ""),
+                                        "person_msg" to  newMassage.person_msg,
+                                        "timestamp"  to  FieldValue.serverTimestamp(),
+                                    )
+                                )
+                                .addOnSuccessListener(){
+
+                                    //lastMessage
+                                    chatBoxRef.set(
+                                        mapOf(
+                                            "lastMessage" to newMassage.msg,
+                                            "timestamp"   to FieldValue.serverTimestamp()
+                                        ),
+                                        SetOptions.merge()
+                                    )
+                                        .addOnFailureListener {
+                                            onFailureCallBack(it)
+                                        }
+                                        .addOnSuccessListener {
+                                            onSuccessCallBack()
+                                        }
+
+                                }
+                                .addOnFailureListener(onFailureCallBack)
+
+                        }
 
 
-        chatMessageCollectionRef
-            .document()
-            .set(
-                hashMapOf(
-                    "id"         to  newMassage.id,
-                    "msg"        to  newMassage.msg ,
-                    "person_msg" to  newMassage.person_msg,
-                    "timestamp"  to  FieldValue.serverTimestamp(),
+                }
+                .addOnFailureListener(onFailureCallBack)
+        }
+        else{
+            messagesRef
+                .document()
+                .set(
+                    hashMapOf(
+                        "msg"        to  newMassage.msg,
+                        "person_msg" to  newMassage.person_msg,
+                        "timestamp"  to  FieldValue.serverTimestamp(),
                     )
-            )
-            .addOnSuccessListener(){
-
-                //lastMessage
-                chatBoxRef.set(
-                    mapOf(
-                        "lastMessage" to newMassage.msg,
-                        "timestamp"  to  FieldValue.serverTimestamp()
-                    ),
-                    SetOptions.merge()
                 )
-                    .addOnFailureListener {
-                        onFailureCallBack(it)
-                    }
-                    .addOnSuccessListener {
-                        onSuccessCallBack()
-                    }
+                .addOnSuccessListener(){
 
-            }
-            .addOnFailureListener(onFailureCallBack)
+                    //lastMessage
+                    chatBoxRef.set(
+                        mapOf(
+                            "lastMessage" to newMassage.msg,
+                            "timestamp"   to FieldValue.serverTimestamp()
+                        ),
+                        SetOptions.merge()
+                    )
+                        .addOnFailureListener {
+                            onFailureCallBack(it)
+                        }
+                        .addOnSuccessListener {
+                            onSuccessCallBack()
+                        }
+
+                }
+                .addOnFailureListener(onFailureCallBack)
 
 
-
+        }
 
     }
 
-
-    fun saveInfoInChatFeature(chatInfo: ChatInfo, onSuccessCallBack: () -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}){
-
-        firebaseFirestore.collection("chats")
-            .document(chatInfo.id)
-            .set(
-                hashMapOf(
-                    "id"   to chatInfo.id,
-                    "name" to chatInfo.name
-                )
-            )
-            .addOnSuccessListener {
-                onSuccessCallBack()
-            }
-            .addOnFailureListener {
-                onFailureCallBack(it)
-            }
-
-    }
 
 
     fun getAllMatieres(phase : String , annee : String , onSuccessCallBack: (List<Matiere>) -> Unit , onFailureCallBack: (ex: Exception) -> Unit) {

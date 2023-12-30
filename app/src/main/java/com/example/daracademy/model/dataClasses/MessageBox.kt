@@ -4,5 +4,6 @@ data class MessageBox(
     val name        : String = "",
     val image       : String = "",
     val lastMessage : String = "",
-    val id          : String = ""
+    val productId   : String = "",
+    val userId      : String = ""
 )
