@@ -90,17 +90,14 @@ class DaracademyRepo {
                     return@addSnapshotListener
                 }
 
-                chatBoxs.clear()
-                snapshot.documents.mapNotNull { msg->
+                val newChatBoxs = snapshot.documents.mapNotNull { msg->
                     val messageBox = msg.toObject(MessageBox::class.java)
-                    if ( messageBox == null){
+                    messageBox?.copy(productId = msg.id.split("_")[1])
 
-                    }
-                    else{
-                        chatBoxs.add(messageBox.copy(productId = msg.id.split("_")[1]))
-                    }
+                }.toList()
 
-                }
+                chatBoxs = newChatBoxs.toMutableList()
+
                 onSuccessCallBack(chatBoxs)
             }
     }

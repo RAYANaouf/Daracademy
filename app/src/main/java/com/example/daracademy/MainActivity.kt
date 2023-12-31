@@ -133,9 +133,6 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        delay(1500)
-
-                        Toast.makeText(context , "${viewModel.getAllMessageBoxs()}" , Toast.LENGTH_LONG).show()
 
                     }
 
