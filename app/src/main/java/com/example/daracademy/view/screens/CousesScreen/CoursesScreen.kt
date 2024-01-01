@@ -47,6 +47,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.bigsam.model.data.`object`.NormalTextStyles
@@ -300,8 +302,20 @@ fun LessonCard(
 @Preview
 @Composable
 fun CoursesScreen_preview() {
+
+    val context = LocalContext.current
+
     CoursesScreen(
-        viewModel  = viewModel(),
+        viewModel = viewModel(
+            factory = object : ViewModelProvider.Factory{
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    if(modelClass.isAssignableFrom(DaracademyViewModel::class.java))
+                        return DaracademyViewModel(context) as T
+                    else
+                        throw IllegalArgumentException("can't create daracademyViewModel (coursesScreen)")
+                }
+            }
+        ),
         phase      ="",
         annee      ="",
         matiere    ="",

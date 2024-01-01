@@ -45,8 +45,6 @@ class DaracademyViewModel : ViewModel {
     var posts by mutableStateOf<List<Post>>(emptyList())
         private set
 
-    var boxMessages by mutableStateOf<List<MessageBox>>(emptyList())
-        private set
 
 
     private val repo : DaracademyRepo = DaracademyRepo()
@@ -168,18 +166,6 @@ class DaracademyViewModel : ViewModel {
     //chat feature ****************************************************
 
 
-    fun getAllMessageBoxs(userId : String , onSuccessCallBack: (List<MessageBox>) -> Unit = {}, onFailureCallBack: (ex : Exception) -> Unit = {} ){
-        repo.getAllMessageBoxs(
-            userId            = userId,
-            onSuccessCallBack = {
-                onSuccessCallBack(it)
-                this.boxMessages = it
-            },
-            onFailureCallBack = {
-                onFailureCallBack(it)
-            }
-        )
-    }
 
 
 

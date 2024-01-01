@@ -1,6 +1,7 @@
 package com.example.daracademy
 
 import android.app.Activity
+import android.content.Context
 import android.graphics.Color.parseColor
 import android.os.Bundle
 import android.widget.Toast
@@ -62,6 +63,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -92,11 +96,15 @@ import java.lang.IllegalArgumentException
 
 
 class MainActivity : ComponentActivity() {
+
+    private val Context.dataStore  : DataStore<Preferences> by preferencesDataStore(name = "dataStore")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         WindowCompat.setDecorFitsSystemWindows(window , false)
 
+        // At the top level of your kotlin file:
 
 
         setContent {
@@ -520,7 +528,6 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                 ){navBackStackEntry->
                     AnneesDesEtudesScreen(
                         navController = navController,
-                        viewModel = viewModel,
                         phase     = navBackStackEntry.arguments?.getString("phase") ?: "",
                         modifier  = Modifier
                             .padding(top = paddingValues.calculateTopPadding())

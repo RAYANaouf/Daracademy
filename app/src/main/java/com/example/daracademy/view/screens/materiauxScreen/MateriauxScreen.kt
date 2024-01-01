@@ -38,6 +38,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -56,7 +58,7 @@ import com.example.daracademy.ui.theme.customWhite4
 
 @Composable
 fun MatieresScreen(
-    viewModel : DaracademyViewModel = viewModel(),
+    viewModel : DaracademyViewModel ,
     navController : NavController,
     phase         : String,
     annee         : String,
@@ -159,7 +161,20 @@ fun MatieresScreenItem(
 @Preview
 @Composable
 fun MatieresScreen_preview() {
+
+    val context = LocalContext.current
+
     MatieresScreen(
+        viewModel = viewModel(
+            factory = object : ViewModelProvider.Factory{
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    if(modelClass.isAssignableFrom(DaracademyViewModel::class.java))
+                        return DaracademyViewModel(context) as T
+                    else
+                        throw IllegalArgumentException("can't create daracademyViewModel (MatiereScreen)")
+                }
+            }
+        ),
         navController = rememberNavController(),
         phase = "",
         annee = ""

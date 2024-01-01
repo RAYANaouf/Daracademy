@@ -50,7 +50,6 @@ import com.example.daracademyadmin.model.sealedClasses.phaseDesEtudes.PhaseDesEt
 @Composable
 fun AnneesDesEtudesScreen(
     navController: NavController,
-    viewModel  : DaracademyViewModel = viewModel(),
     modifier   : Modifier = Modifier,
     phase : String,
 ) {

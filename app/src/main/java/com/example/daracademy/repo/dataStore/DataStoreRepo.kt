@@ -19,7 +19,7 @@ class DataStoreRepo {
     private val Context.dataStore  : DataStore<Preferences> by preferencesDataStore(name = "dataStore")
 
 
-    constructor(context: Context){
+    constructor(context: Context , dataStore: DataStore<Preferences>){
         this.context  = context
     }
 

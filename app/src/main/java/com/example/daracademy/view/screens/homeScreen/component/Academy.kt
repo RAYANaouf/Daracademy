@@ -44,7 +44,6 @@ import com.example.daracademy.ui.theme.customWhite7
 
 @Composable
 fun AcademyStage(
-    viewModel  : DaracademyViewModel,
     onClick    : (Formation)->Unit ={},
     modifier   : Modifier = Modifier,
     formations : List<Formation>
@@ -178,58 +177,6 @@ fun AcademyStage_preview() {
     val context = LocalContext.current
 
     AcademyStage(
-        viewModel = viewModel(
-            factory = object : ViewModelProvider.Factory{
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    if (modelClass.isAssignableFrom(DaracademyViewModel::class.java))
-                        return DaracademyViewModel(context) as T
-                    else
-                        throw IllegalArgumentException("cant create DaracademyViewModel (Academy stage)")
-                }
-            }
-        ),
         formations = emptyList()
     )
 }
-
-
-
-
-
-/*
-
-Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(12.dp))
-    ) {
-        Image(
-            painter = painterResource(id = image),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxSize()
-        )
-        Box(
-            contentAlignment = Alignment.CenterStart,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(30.dp)
-                .align(Alignment.BottomCenter)
-                .background(Color(0x44000000))
-        ) {
-            Box(modifier = Modifier
-                .fillMaxSize()
-                .alpha(0.6f)
-                .background(customBlack0))
-            Text(
-                text     = txt,
-                style    = NormalTextStyles.TextStyleSZ7.copy(color = customWhite0),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier
-                    .padding(start = 8.dp)
-            )
-        }
-    }
-
-*/

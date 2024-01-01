@@ -20,10 +20,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.bigsam.model.data.`object`.NormalTextStyles
 import com.example.daracademy.model.variables.firaSansFamily
 import com.example.daracademy.model.variables.josefinSansFamily
@@ -40,7 +43,7 @@ import com.example.daracademyadmin.model.sealedClasses.phaseDesEtudes.PhaseDesEt
 
 @Composable
 fun HeaderSection(
-    viewModel: DaracademyViewModel = viewModel(),
+    viewModel: DaracademyViewModel ,
     onNavigate : (Screens , String)->Unit = {_,_->},
     modifier: Modifier = Modifier
 ) {
@@ -151,7 +154,7 @@ fun HeaderSection(
                     .background(color1)
                     .padding(4.dp)
                     .clickable {
-                        onNavigate(Screens.AnneesScreen() , PhaseDesEtudes.Primaire().phase )
+                        onNavigate(Screens.AnneesScreen(), PhaseDesEtudes.Primaire().phase)
                     }
             ) {
                 Text(
@@ -175,7 +178,7 @@ fun HeaderSection(
                     .background(color2)
                     .padding(4.dp)
                     .clickable {
-                        onNavigate(Screens.AnneesScreen() , PhaseDesEtudes.CEM().phase)
+                        onNavigate(Screens.AnneesScreen(), PhaseDesEtudes.CEM().phase)
                     }
             ) {
                 Text(
@@ -198,7 +201,7 @@ fun HeaderSection(
                     .clip(RoundedCornerShape(16.dp))
                     .background(color3)
                     .clickable {
-                        onNavigate(Screens.AnneesScreen() , PhaseDesEtudes.Lycee().phase)
+                        onNavigate(Screens.AnneesScreen(), PhaseDesEtudes.Lycee().phase)
                     }
                     .padding(4.dp)
 
@@ -224,10 +227,23 @@ fun HeaderSection(
 @Composable
 fun HeaderSection_preview() {
 
+    val context = LocalContext.current
+
     Surface(
         color = customWhite2
     ) {
-        HeaderSection()
+        HeaderSection(
+            viewModel = viewModel(
+                factory = object : ViewModelProvider.Factory{
+                    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                        if(modelClass.isAssignableFrom(DaracademyViewModel::class.java))
+                            return DaracademyViewModel(context) as T
+                        else
+                            throw IllegalArgumentException("can't create daracademyViewModel (headerSection)")
+                    }
+                }
+            )
+        )
     }
 
 }

@@ -34,6 +34,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bigsam.model.data.`object`.NormalTextStyles
 import com.example.daracademy.R
@@ -53,7 +55,6 @@ fun ChatBoxsScreen(
 
 
     val window = LocalView.current.context as Activity
-    val context = LocalContext.current
 
     LaunchedEffect(key1 = window){
         window.window.apply {
@@ -62,17 +63,6 @@ fun ChatBoxsScreen(
 
     }
 
-//    LaunchedEffect(key1 = true ){
-//        viewModel.getAllMessageBoxs(
-//            userId = userId,
-//            onSuccessCallBack = {
-//
-//            },
-//            onFailureCallBack = {
-//                Toast.makeText(context , "${it.message}" , Toast.LENGTH_LONG).show()
-//            }
-//        )
-//    }
 
 
 
@@ -163,7 +153,18 @@ fun Item(
 @Preview
 @Composable
 fun ChatBoxsScreen_preview() {
-    ChatBoxsScreen(
-        viewModel = viewModel(),
+
+    val context = LocalContext.current
+
+    ChatBoxsScreen(viewModel = viewModel(
+        factory = object : ViewModelProvider.Factory{
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                if(modelClass.isAssignableFrom(DaracademyViewModel::class.java))
+                    return DaracademyViewModel(context) as T
+                else
+                    throw IllegalArgumentException("can't create daracademyViewModel (chat screen)")
+            }
+        }
+    )
     )
 }

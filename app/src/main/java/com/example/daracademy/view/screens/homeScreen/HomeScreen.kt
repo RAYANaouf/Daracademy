@@ -36,6 +36,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.daracademy.view.screens.homeScreen.component.AcademyStage
 import com.example.daracademy.view.screens.homeScreen.component.HeaderSection
 import com.example.daracademy.view.screens.homeScreen.component.PostItem
@@ -61,7 +63,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
-    viewModel     : DaracademyViewModel = viewModel(),
+    viewModel     : DaracademyViewModel ,
     navController : NavController,
     onChat        : (String)->Unit = {},
     modifier      : Modifier = Modifier
@@ -168,7 +170,6 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 AcademyStage(
-                    viewModel = viewModel,
                     onClick = {
                         viewModel.formation = it
                         navController.navigate(Screens.FormationScreen().root)
@@ -260,10 +261,23 @@ fun HomeScreen(
 @Preview
 @Composable
 fun HomeScreen_preview() {
+
+    val context = LocalContext.current
+
     Surface(
         color = customWhite2
     ) {
         HomeScreen(
+            viewModel = viewModel(
+                factory = object : ViewModelProvider.Factory{
+                    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                        if(modelClass.isAssignableFrom(DaracademyViewModel::class.java))
+                            return DaracademyViewModel(context) as T
+                        else
+                            throw IllegalArgumentException("can't create daracademyViewModel (home screen)")
+                    }
+                }
+            ),
             navController = rememberNavController()
         )
     }

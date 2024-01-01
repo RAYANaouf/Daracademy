@@ -151,8 +151,6 @@ fun ChatScreen(
             items(messages.reversed()){
                 messageItem(
                     message         = it,
-//                    shape           = CircleShape,
-//                    elevation       = 2.dp,
                     rightColor      = color1,
                     leftColor       = customWhite1,
                     rightColor_text = customWhite0,
@@ -169,7 +167,6 @@ fun ChatScreen(
 
 
         Column(
-//            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
                 .background(customWhite0)

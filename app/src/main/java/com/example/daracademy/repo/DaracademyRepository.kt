@@ -78,7 +78,10 @@ class DaracademyRepo {
 
 
     fun setChatBoxsListener(userId: String , onSuccessCallBack: (List<MessageBox>) -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}){
-        firebaseFirestore.collection("chats")
+
+        chatBoxListener?.remove()
+
+        chatBoxListener = firebaseFirestore.collection("chats")
             .where(Filter.equalTo("userId" , userId))
             .addSnapshotListener { snapshot, error ->
                 if (error != null){
@@ -146,30 +149,6 @@ class DaracademyRepo {
     }
 
 
-    fun getAllMessageBoxs(userId  : String  ,  onSuccessCallBack: (List<MessageBox>) -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
-
-
-        var messageBoxs = arrayListOf<MessageBox>()
-
-         firebaseFirestore.collection("chats")
-             .where(Filter.equalTo("userId" , userId))
-             .get()
-             .addOnSuccessListener {userChatBoxsDoc->
-
-                 for (doc  in  userChatBoxsDoc){
-                     val ids = doc.id.split("_")
-                     doc.toObject(MessageBox::class.java)?.copy(userId = ids[0] , productId = ids[1])
-                 }
-
-                 onSuccessCallBack(messageBoxs)
-
-             }
-             .addOnFailureListener {
-                 onFailureCallBack(it)
-             }
-
-    }
-
     fun getBoxMessages(userId : String , productId : String ,  onSuccessCallBack: (List<Message>) -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
 
 
@@ -228,7 +207,6 @@ class DaracademyRepo {
     fun sendMsg(userId : String , productId: String , newMassage : Message, onSuccessCallBack: () -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
 
         val chatBoxRef = firebaseFirestore.collection("chats").document("${userId}_${productId}")
-
         val messagesRef = chatBoxRef.collection("messages")
 
         val id = System.currentTimeMillis().toString()
@@ -257,8 +235,10 @@ class DaracademyRepo {
                                     //lastMessage
                                     chatBoxRef.set(
                                         mapOf(
-                                            "lastMessage" to newMassage.msg,
-                                            "timestamp"   to FieldValue.serverTimestamp()
+                                            "lastMessage"  to  newMassage.msg,
+                                            "photo"        to  "photo",
+                                            "person_msg"   to newMassage.person_msg,
+                                            "timestamp"    to  FieldValue.serverTimestamp()
                                         ),
                                         SetOptions.merge()
                                     )
@@ -293,8 +273,9 @@ class DaracademyRepo {
                     //lastMessage
                     chatBoxRef.set(
                         mapOf(
-                            "lastMessage" to newMassage.msg,
-                            "timestamp"   to FieldValue.serverTimestamp()
+                            "lastMessage"  to newMassage.msg,
+                            "person_msg"   to  newMassage.person_msg,
+                            "timestamp"    to FieldValue.serverTimestamp()
                         ),
                         SetOptions.merge()
                     )
