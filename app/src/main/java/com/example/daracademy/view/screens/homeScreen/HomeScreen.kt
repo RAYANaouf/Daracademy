@@ -272,7 +272,7 @@ fun HomeScreen_preview() {
                 factory = object : ViewModelProvider.Factory{
                     override fun <T : ViewModel> create(modelClass: Class<T>): T {
                         if(modelClass.isAssignableFrom(DaracademyViewModel::class.java))
-                            return DaracademyViewModel(context) as T
+                            return DaracademyViewModel(context , null) as T
                         else
                             throw IllegalArgumentException("can't create daracademyViewModel (home screen)")
                     }

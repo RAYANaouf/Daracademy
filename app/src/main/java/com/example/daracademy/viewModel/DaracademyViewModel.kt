@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.daracademy.model.dataClasses.ChatInfo
@@ -65,8 +67,8 @@ class DaracademyViewModel : ViewModel {
         refresh_silent()
     }
 
-    constructor(context : Context){
-        this.dataStoreRepo = DataStoreRepo(context = context)
+    constructor(context : Context , dataStore : DataStore<Preferences>? ){
+        this.dataStoreRepo = DataStoreRepo(context = context , dataStore = dataStore)
     }
 
 

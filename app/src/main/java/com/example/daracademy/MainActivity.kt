@@ -95,9 +95,10 @@ import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
 
-class MainActivity : ComponentActivity() {
+private val Context.dataStore  : DataStore<Preferences> by preferencesDataStore(name = "dataStore")
 
-    private val Context.dataStore  : DataStore<Preferences> by preferencesDataStore(name = "dataStore")
+
+class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -123,7 +124,7 @@ class MainActivity : ComponentActivity() {
                         factory = object : ViewModelProvider.Factory{
                             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                                 if (modelClass.isAssignableFrom(DaracademyViewModel::class.java))
-                                    return DaracademyViewModel(context) as T
+                                    return DaracademyViewModel(context , context.dataStore) as T
                                 else
                                     throw IllegalArgumentException("cant create daracademyViewModel")
                             }
