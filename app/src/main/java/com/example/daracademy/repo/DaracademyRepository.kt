@@ -17,6 +17,7 @@ import com.example.daracademy.model.variables.les_annees_d_etude.annees_de_C_E_M
 import com.example.daracademy.model.variables.les_annees_d_etude.annees_de_lycee
 import com.example.daracademy.model.variables.les_annees_d_etude.annees_de_primaire
 import com.example.daracademyadmin.model.sealedClasses.phaseDesEtudes.PhaseDesEtudes
+import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
@@ -34,6 +35,8 @@ class DaracademyRepo {
     private val auth: FirebaseAuth by mutableStateOf(Firebase.auth)
     private val firebaseFirestore     = Firebase.firestore
     private val firebaseStorageRef    = Firebase.storage.reference
+    private val analytics             =  Firebase.analytics
+
 
     private var chatListener          : ListenerRegistration? = null
     var  chatMessages                 = mutableListOf<Message>()
