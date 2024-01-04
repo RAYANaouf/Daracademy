@@ -101,6 +101,9 @@ dependencies {
     //dataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
+    // https://mvnrepository.com/artifact/me.saket.swipe/swipe
+    implementation("me.saket.swipe:swipe:1.2.0")
+
 
 
     /****************************  firebase   ****************************/

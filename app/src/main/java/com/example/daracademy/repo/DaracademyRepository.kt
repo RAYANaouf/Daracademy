@@ -36,6 +36,8 @@ class DaracademyRepo {
     private val firebaseStorageRef    = Firebase.storage.reference
 
     private var chatListener          : ListenerRegistration? = null
+    var  chatMessages                 = mutableListOf<Message>()
+        private set
     private var chatBoxListener       : ListenerRegistration? = null
     var chatBoxs                      = mutableListOf<MessageBox>()
 
@@ -157,7 +159,7 @@ class DaracademyRepo {
         chatListener?.remove()
 
         chatListener = chatBoxDoc.collection("messages")
-            .orderBy("timestamp")
+            .orderBy("timestamp" , Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, error ->
                 if (error != null){
                     onFailureCallBack(error)
@@ -170,7 +172,10 @@ class DaracademyRepo {
                 val messages = snapshot.documents.mapNotNull { msg->
                     msg.toObject(Message::class.java)
                 }
-                onSuccessCallBack(messages)
+
+                chatMessages = messages.toMutableList()
+
+                onSuccessCallBack(chatMessages)
 
             }
 

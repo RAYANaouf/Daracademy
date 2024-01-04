@@ -9,6 +9,7 @@ sealed class Screens(val root : String){
     class HomeScreen         : Screens(root = screens.homeScreen)
 
     class FormationScreen    : Screens(root = screens.formationScreen)
+    class FormationsScreen   : Screens(root = screens.formationsScreen)
 
 
     class AnneesScreen       : Screens(root = screens.anneesScreen)

@@ -169,7 +169,7 @@ fun MatieresScreen_preview() {
             factory = object : ViewModelProvider.Factory{
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     if(modelClass.isAssignableFrom(DaracademyViewModel::class.java))
-                        return DaracademyViewModel(context , null) as T
+                        return DaracademyViewModel(context ) as T
                     else
                         throw IllegalArgumentException("can't create daracademyViewModel (MatiereScreen)")
                 }

@@ -3,6 +3,7 @@ package com.example.daracademy.view.screens.chat
 import android.app.Activity
 import android.graphics.Color.parseColor
 import android.net.Uri
+import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -55,10 +57,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.alphaspace.screens.common.textFields.AlphaTextField
-import com.example.bigsam.grafic.material.loadingEffect.loadingLottieAnimation
+import com.example.bigsam.grafic.material.loadingEffect.LottieAnimation_loading_1
 import com.example.bigsam.model.data.`object`.NormalTextStyles
 import com.example.daracademy.R
 import com.example.daracademy.model.dataClasses.Message
@@ -115,8 +119,8 @@ fun ChatScreen(
     }
 
 
-    var messages : List<Message> by remember{
-        mutableStateOf(emptyList())
+    var messages  = rememberSaveable {
+        mutableListOf<Message>()
     }
 
 
@@ -126,7 +130,8 @@ fun ChatScreen(
             userId            = userId,
             productId         = productId,
             onSuccessCallBack = {
-                messages = it
+                messages.clear()
+                messages.addAll(it)
             },
             onFailureCallBack = {
 
@@ -148,7 +153,7 @@ fun ChatScreen(
                 .weight(1f)
         ) {
 
-            items(messages.reversed()){
+            items(viewModel.repo.chatMessages){
                 messageItem(
                     message         = it,
                     rightColor      = color1,
@@ -158,6 +163,7 @@ fun ChatScreen(
                     modifier        = Modifier
                         .padding(4.dp)
                 )
+
 
                 Spacer(modifier = Modifier.height(6.dp))
             }
@@ -256,7 +262,6 @@ fun ChatScreen(
                 Spacer(modifier = Modifier.width(16.dp))
 
                 if (!loading){
-                    val context = LocalContext.current
                     Image(
                         painter = painterResource(id = R.drawable.send_icon) ,
                         contentDescription = null,
@@ -293,7 +298,7 @@ fun ChatScreen(
                     )
                 }
                 else{
-                    loadingLottieAnimation(
+                    LottieAnimation_loading_1(
                         modifier = Modifier
                             .size(26.dp)
                     )
@@ -357,17 +362,33 @@ fun messageItem(
                 }
 
                 if (message.photo != ""){
-                    Spacer(modifier = Modifier.height(4.dp))
 
-                    Image(
-                        painter = rememberAsyncImagePainter(model    = message.photo) ,
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier           = Modifier
-                            .widthIn(  max = 150.dp , min = 50.dp)
-                            .heightIn( max = 350.dp , min = 50.dp)
-                            .clip(RoundedCornerShape(topStart = if (!message.person_msg) 0.dp else 12.dp , topEnd = if (!message.person_msg) 12.dp else 0.dp , bottomStart = 12.dp , bottomEnd = 12.dp ))
-                    )
+                    if (message.msg != ""){
+                        Spacer(modifier = Modifier.height(4.dp))
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .clip(
+                                RoundedCornerShape(
+                                    topStart = if (!message.person_msg) 0.dp else 12.dp,
+                                    topEnd = if (!message.person_msg) 12.dp else 0.dp,
+                                    bottomStart = 12.dp,
+                                    bottomEnd = 12.dp
+                                )
+                            )
+                    ) {
+
+                        Image(
+                            painter = rememberAsyncImagePainter(model    = message.photo ) ,
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier           = Modifier
+                                .width(200.dp)
+                                .height(200.dp)
+                        )
+                    }
+
                 }
 
             }
@@ -392,9 +413,20 @@ fun messageItem(
 @Preview
 @Composable
 fun ChatScreen_preview() {
+
+    val context = LocalContext.current
     ChatScreen(
         userId    = "",
-        viewModel = viewModel(),
+        viewModel = viewModel(
+            factory = object : ViewModelProvider.Factory{
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    if(modelClass.isAssignableFrom(DaracademyViewModel::class.java))
+                        return DaracademyViewModel(context ) as T
+                    else
+                        throw IllegalArgumentException("can't create daracademyViewModel (chat screen)")
+                }
+            }
+        ),
         productId    = ""
     )
 }

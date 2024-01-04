@@ -1,12 +1,9 @@
 package com.example.daracademy
 
-import android.app.Activity
-import android.content.Context
 import android.graphics.Color.parseColor
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,7 +13,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,13 +26,10 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.DismissibleNavigationDrawer
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -45,27 +38,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -80,22 +66,17 @@ import com.example.bigsam.model.data.`object`.NormalTextStyles
 import com.example.daracademy.view.screens.annees_de_etude_Screen.AnneesDesEtudesScreen
 import com.example.daracademy.view.screens.homeScreen.HomeScreen
 import com.example.daracademy.view.screens.materiauxScreen.MatieresScreen
-import com.example.daracademy.model.dataClasses.MessageBox
 import com.example.daracademy.model.sealedClasses.screens.Screens
 import com.example.daracademy.viewModel.DaracademyViewModel
 import com.example.daracademy.ui.theme.DaracademyTheme
-import com.example.daracademy.ui.theme.color1
 import com.example.daracademy.ui.theme.customWhite7
 import com.example.daracademy.view.screens.CousesScreen.CoursesScreen
 import com.example.daracademy.view.screens.chat.ChatScreen
 import com.example.daracademy.view.screens.chatBoxs.ChatBoxsScreen
-import com.example.daracademy.view.screens.formationScreen.FormationScreen
-import kotlinx.coroutines.delay
+import com.example.daracademy.view.screens.formation.FormationScreen
+import com.example.daracademy.view.screens.formations.FormationsScreen
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
-
-
-private val Context.dataStore  : DataStore<Preferences> by preferencesDataStore(name = "dataStore")
 
 
 class MainActivity : ComponentActivity() {
@@ -124,7 +105,7 @@ class MainActivity : ComponentActivity() {
                         factory = object : ViewModelProvider.Factory{
                             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                                 if (modelClass.isAssignableFrom(DaracademyViewModel::class.java))
-                                    return DaracademyViewModel(context , context.dataStore) as T
+                                    return DaracademyViewModel(context ) as T
                                 else
                                     throw IllegalArgumentException("cant create daracademyViewModel")
                             }
@@ -303,6 +284,13 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                             .height(65.dp)
                             .padding(start = 16.dp, end = 16.dp)
                             .clickable {
+
+                                navController.navigate(Screens.FormationsScreen().root){
+                                    popUpTo(Screens.HomeScreen().root){
+//                                        inclusive = true
+                                    }
+                                }
+
                                 coroutineScope.launch {
                                     drawerState.apply {
                                         close()
@@ -645,6 +633,19 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                         formation = viewModel.formation!!,
                         modifier = Modifier
                             .background(Color(parseColor("#f9f9f9")))
+                    )
+                }
+
+                composable(
+                    route = "${Screens.FormationsScreen().root}"
+                ){navBackStackEntry->
+                    FormationsScreen(
+                        viewModel = viewModel,
+                        navController = navController,
+                        modifier = Modifier
+                            .background(Color(parseColor("#f9f9f9")))
+                            .padding(top = paddingValues.calculateTopPadding())
+                            .windowInsetsPadding(WindowInsets.navigationBars)
                     )
                 }
 

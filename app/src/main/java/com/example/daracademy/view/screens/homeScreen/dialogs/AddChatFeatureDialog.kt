@@ -29,7 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.alphaspace.screens.common.textFields.AlphaTextField
-import com.example.bigsam.grafic.material.loadingEffect.loadingLottieAnimation
+import com.example.bigsam.grafic.material.loadingEffect.LottieAnimation_loading_1
 import com.example.bigsam.model.data.`object`.NormalTextStyles
 import com.example.daracademy.model.variables.firaSansFamily
 import com.example.daracademy.ui.theme.color1
@@ -132,7 +132,7 @@ fun AddChatFeatureDialog(
                             )
                         }
                         else{
-                            loadingLottieAnimation()
+                            LottieAnimation_loading_1()
                         }
                     }
                 }

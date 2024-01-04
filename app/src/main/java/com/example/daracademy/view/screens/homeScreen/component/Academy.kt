@@ -5,9 +5,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -27,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -41,6 +44,7 @@ import com.example.daracademy.ui.theme.color2
 import com.example.daracademy.ui.theme.customBlack0
 import com.example.daracademy.ui.theme.customBlack3
 import com.example.daracademy.ui.theme.customWhite7
+import com.example.daracademy.view.material.lottie.LottieAnimation_loadingImage
 
 @Composable
 fun AcademyStage(
@@ -129,10 +133,10 @@ fun AcademyStageItem(
     Column(
         modifier = modifier
     ) {
-        Image(
-            painter = if (formation.imgs.isEmpty()) painterResource(id = R.drawable.photo_error) else rememberAsyncImagePainter(model = formation.imgs[0]),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
+
+
+
+        Box(
             modifier = Modifier
                 .size(160.dp)
                 .clip(RoundedCornerShape(12.dp))
@@ -141,7 +145,23 @@ fun AcademyStageItem(
                     color = customWhite7,
                     shape = RoundedCornerShape(12.dp)
                 )
-        )
+        ){
+            Image(
+                painter = if (formation.imgs.isEmpty()) painterResource(id = R.drawable.photo_error) else rememberAsyncImagePainter(model = formation.imgs[0]),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .zIndex(10f)
+            )
+
+            LottieAnimation_loadingImage(
+                Modifier
+                    .fillMaxSize()
+            )
+        }
+
+
 
 //        Spacer(modifier = Modifier.height(4.dp))
 

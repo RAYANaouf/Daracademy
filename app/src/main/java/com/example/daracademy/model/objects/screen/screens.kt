@@ -4,6 +4,7 @@ object screens {
 
     val homeScreen               = "homeScreen"
     val formationScreen          = "formationScreen"
+    val formationsScreen         = "formationsScreen"
     val anneesScreen             = "anneesScreen"
 
     val materiaux_Screen         = "materiaux_Screen"

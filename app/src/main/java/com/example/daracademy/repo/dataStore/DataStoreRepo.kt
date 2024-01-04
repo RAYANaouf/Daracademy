@@ -16,17 +16,18 @@ class DataStoreRepo {
     private val context : Context
 
     // At the top level of your kotlin file:
-    private val dataStore  : DataStore<Preferences>
+    private val dataStoreInstance  : DataStore<Preferences>
 
 
-    constructor(context: Context , dataStore: DataStore<Preferences>?){
-        this.dataStore = dataStore!!
+
+    constructor(context: Context ){
+        this.dataStoreInstance = com.example.daracademy.model.dataStore.dataStore.getInstance(context)
         this.context  = context
     }
 
     suspend fun getAnonymInfo() : ChatInfo?{
-        val id   = dataStore.data.first()[dataStoreKeys.Key_anonymeId]
-        val name = dataStore.data.first()[dataStoreKeys.Key_anonymeName]
+        val id   = dataStoreInstance.data.first()[dataStoreKeys.Key_anonymeId]
+        val name = dataStoreInstance.data.first()[dataStoreKeys.Key_anonymeName]
         if (id == null || name == null){
             return null
         }
@@ -36,21 +37,21 @@ class DataStoreRepo {
 
     suspend fun insertAnonymInfo(chatInfo : ChatInfo) {
 
-        dataStore.edit {
+        dataStoreInstance.edit {
             it[dataStoreKeys.Key_anonymeId] = chatInfo.id
             it[dataStoreKeys.Key_anonymeName]   = chatInfo.name
         }
     }
 
     suspend fun isProductSaved(productId : String) : Boolean{
-        val postIdsSet   = dataStore.data.first()[dataStoreKeys.Key_postIds] ?: return false
+        val postIdsSet   = dataStoreInstance.data.first()[dataStoreKeys.Key_postIds] ?: return false
 
         return postIdsSet.contains(productId)
     }
 
     suspend fun saveProduct(productId : String) {
 
-        dataStore.edit {
+        dataStoreInstance.edit {
             var mutableSet    = it[dataStoreKeys.Key_postIds]?.toMutableSet() ?: emptySet<String>().toMutableSet()
             mutableSet?.add(productId)
 

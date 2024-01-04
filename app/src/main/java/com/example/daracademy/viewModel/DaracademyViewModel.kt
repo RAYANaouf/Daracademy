@@ -49,7 +49,7 @@ class DaracademyViewModel : ViewModel {
 
 
 
-    private val repo : DaracademyRepo = DaracademyRepo()
+    val repo : DaracademyRepo = DaracademyRepo()
 
 
     var matiere : List<Matiere> by mutableStateOf(emptyList())
@@ -67,8 +67,8 @@ class DaracademyViewModel : ViewModel {
         refresh_silent()
     }
 
-    constructor(context : Context , dataStore : DataStore<Preferences>? ){
-        this.dataStoreRepo = DataStoreRepo(context = context , dataStore = dataStore)
+    constructor(context : Context ){
+        this.dataStoreRepo = DataStoreRepo(context = context )
     }
 
 
