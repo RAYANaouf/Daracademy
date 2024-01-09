@@ -9,6 +9,8 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.daracademy.model.dataClasses.ChatInfo
+import com.example.daracademy.model.objects.userType.user_type
+import com.example.daracademy.model.sealedClasses.userType.UserType
 import kotlinx.coroutines.flow.first
 
 class DataStoreRepo {
@@ -24,6 +26,20 @@ class DataStoreRepo {
         this.dataStoreInstance = com.example.daracademy.model.dataStore.dataStore.getInstance(context)
         this.context  = context
     }
+
+
+    suspend fun getUserType() : UserType{
+        val type   = dataStoreInstance.data.first()[dataStoreKeys.Key_anonymeId]
+
+        val app_user_type = when(type){
+            user_type.teacher_user -> UserType.TeacherUser()
+            user_type.student_user -> UserType.StudentUser()
+            else -> UserType.AnonymousUser()
+        }
+
+        return app_user_type
+    }
+
 
     suspend fun getAnonymInfo() : ChatInfo?{
         val id   = dataStoreInstance.data.first()[dataStoreKeys.Key_anonymeId]

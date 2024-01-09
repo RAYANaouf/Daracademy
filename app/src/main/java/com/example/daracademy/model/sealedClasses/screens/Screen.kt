@@ -6,6 +6,7 @@ sealed class Screens(val root : String){
 
 
 
+    class SignInScreen       : Screens(root = screens.signInScreen)
     class HomeScreen         : Screens(root = screens.homeScreen)
 
     class FormationScreen    : Screens(root = screens.formationScreen)

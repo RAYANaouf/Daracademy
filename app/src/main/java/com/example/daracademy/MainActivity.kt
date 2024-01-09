@@ -63,20 +63,26 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.bigsam.grafic.material.topBar.AlphaTopBar2
 import com.example.bigsam.model.data.`object`.NormalTextStyles
-import com.example.daracademy.view.screens.annees_de_etude_Screen.AnneesDesEtudesScreen
-import com.example.daracademy.view.screens.homeScreen.HomeScreen
-import com.example.daracademy.view.screens.materiauxScreen.MatieresScreen
+import com.example.daracademy.model.objects.userType.user_type
+import com.example.daracademy.view.screens.navigationScreen.annees_de_etude_Screen.AnneesDesEtudesScreen
+import com.example.daracademy.view.screens.navigationScreen.homeScreen.HomeScreen
+import com.example.daracademy.view.screens.navigationScreen.materiauxScreen.MatieresScreen
 import com.example.daracademy.model.sealedClasses.screens.Screens
+import com.example.daracademy.model.sealedClasses.userType.UserType
 import com.example.daracademy.viewModel.DaracademyViewModel
 import com.example.daracademy.ui.theme.DaracademyTheme
 import com.example.daracademy.ui.theme.customWhite7
-import com.example.daracademy.view.screens.CousesScreen.CoursesScreen
-import com.example.daracademy.view.screens.chat.ChatScreen
-import com.example.daracademy.view.screens.chatBoxs.ChatBoxsScreen
-import com.example.daracademy.view.screens.formation.FormationScreen
-import com.example.daracademy.view.screens.formations.FormationsScreen
+import com.example.daracademy.view.screens.fullScreen.signIn.SignInScreen
+import com.example.daracademy.view.screens.navigationScreen.CousesScreen.CoursesScreen
+import com.example.daracademy.view.screens.navigationScreen.chat.ChatScreen
+import com.example.daracademy.view.screens.navigationScreen.chatBoxs.ChatBoxsScreen
+import com.example.daracademy.view.screens.navigationScreen.formation.FormationScreen
+import com.example.daracademy.view.screens.navigationScreen.formations.FormationsScreen
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
+
+
+var appUserType : UserType? = null
 
 
 class MainActivity : ComponentActivity() {
@@ -122,6 +128,8 @@ class MainActivity : ComponentActivity() {
                                 userId = anonymInfo.id
                             )
                         }
+
+                        appUserType = viewModel.dataStoreRepo.getUserType()
 
 
                     }
@@ -219,6 +227,10 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                                         close()
                                     }
                                 }
+
+                                if (appUserType is UserType.AnonymousUser || appUserType == null )
+                                navController.navigate("${Screens.SignInScreen().root}")
+
                             }
                             .padding(top = 6.dp, bottom = 6.dp)
                             .fillMaxWidth()
@@ -642,6 +654,17 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                     FormationsScreen(
                         viewModel = viewModel,
                         navController = navController,
+                        modifier = Modifier
+                            .background(Color(parseColor("#f9f9f9")))
+                            .padding(top = paddingValues.calculateTopPadding())
+                            .windowInsetsPadding(WindowInsets.navigationBars)
+                    )
+                }
+
+                composable(
+                    route = "${Screens.SignInScreen().root}"
+                ){navBackStackEntry->
+                    SignInScreen(
                         modifier = Modifier
                             .background(Color(parseColor("#f9f9f9")))
                             .padding(top = paddingValues.calculateTopPadding())
