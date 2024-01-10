@@ -59,7 +59,6 @@ import com.example.daracademy.ui.theme.customWhite4
 @Composable
 fun MatieresScreen(
     viewModel : DaracademyViewModel ,
-    navController : NavController,
     phase         : String,
     annee         : String,
     modifier      : Modifier = Modifier
@@ -99,7 +98,7 @@ fun MatieresScreen(
                 modifier = Modifier
                     .clip(RoundedCornerShape(16.dp))
                     .clickable {
-                        navController.navigate("${Screens.CoursesScreen().root}/$phase/$annee/${it.name}")
+                        viewModel.screenRepo.navigate_to_screen(screen = Screens.CoursesScreen().root , phase , annee , it.name)
                     }
             )
         }
@@ -163,19 +162,20 @@ fun MatieresScreenItem(
 fun MatieresScreen_preview() {
 
     val context = LocalContext.current
+    val navHostController = rememberNavController()
+
 
     MatieresScreen(
         viewModel = viewModel(
             factory = object : ViewModelProvider.Factory{
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     if(modelClass.isAssignableFrom(DaracademyViewModel::class.java))
-                        return DaracademyViewModel(context ) as T
+                        return DaracademyViewModel(context , navHostController) as T
                     else
                         throw IllegalArgumentException("can't create daracademyViewModel (MatiereScreen)")
                 }
             }
         ),
-        navController = rememberNavController(),
         phase = "",
         annee = ""
     )
@@ -185,6 +185,8 @@ fun MatieresScreen_preview() {
 @Preview
 @Composable
 fun MatieresScreenItem_preview() {
+
+
     MatieresScreenItem(
         matieres_primaire_premiere_annee[0]
     )

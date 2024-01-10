@@ -8,6 +8,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import com.example.daracademy.model.dataClasses.ChatInfo
 import com.example.daracademy.model.dataClasses.Course
 import com.example.daracademy.model.dataClasses.Formation
@@ -19,6 +20,7 @@ import com.example.daracademy.model.dataClasses.Teacher
 import com.example.daracademy.model.sealedClasses.Errors.Errors
 import com.example.daracademy.model.sealedClasses.screens.Screens
 import com.example.daracademy.repo.DaracademyRepo
+import com.example.daracademy.repo.ScreenRepo
 import com.example.daracademyadmin.repo.dataStore.DataStoreRepo
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -50,6 +52,7 @@ class DaracademyViewModel : ViewModel {
 
 
     val repo : DaracademyRepo = DaracademyRepo()
+    val screenRepo : ScreenRepo
 
 
     var matiere : List<Matiere> by mutableStateOf(emptyList())
@@ -67,8 +70,9 @@ class DaracademyViewModel : ViewModel {
         refresh_silent()
     }
 
-    constructor(context : Context ){
+    constructor(context : Context , navHostController: NavHostController){
         this.dataStoreRepo = DataStoreRepo(context = context )
+        this.screenRepo    = ScreenRepo   (navHostController )
     }
 
 

@@ -25,11 +25,14 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.bigsam.model.data.`object`.NormalTextStyles
 import com.example.daracademy.R
 import com.example.daracademy.model.variables.les_annees_d_etude.annees_de_primaire
@@ -49,9 +52,9 @@ import com.example.daracademyadmin.model.sealedClasses.phaseDesEtudes.PhaseDesEt
 
 @Composable
 fun AnneesDesEtudesScreen(
-    navController: NavController,
+    viewModel  : DaracademyViewModel,
     modifier   : Modifier = Modifier,
-    phase : String,
+    phase      : String,
 ) {
 
 
@@ -109,7 +112,7 @@ fun AnneesDesEtudesScreen(
                         .clip(RoundedCornerShape(16.dp))
                         .background(color = color)
                         .clickable {
-                            navController.navigate("${Screens.MateriauxScreen().root}/${phase}/${annee.id}")
+                            viewModel.screenRepo.navigate_to_screen(Screens.MateriauxScreen().root , params = arrayOf(phase , annee.id))
                         }
                         .padding(top = 4.dp, bottom = 4.dp, start = 10.dp, end = 10.dp)
                 ) {
@@ -132,7 +135,7 @@ fun AnneesDesEtudesScreen(
                         .clip(RoundedCornerShape(16.dp))
                         .background(color = color)
                         .clickable {
-                            navController.navigate("${Screens.MateriauxScreen().root}/${phase}/${annee.id}")
+                            viewModel.screenRepo.navigate_to_screen(Screens.MateriauxScreen().root , params = arrayOf(phase , annee.id))
                         }
                         .padding(top = 4.dp, bottom = 4.dp, start = 10.dp, end = 10.dp)
                 ) {
@@ -184,8 +187,22 @@ fun AnneesDesEtudesScreen(
 @Preview
 @Composable
 fun AnneesDesEtudesScreen_preview() {
+
+    val context = LocalContext.current
+    val navHostController = rememberNavController()
+
     AnneesDesEtudesScreen(
-        navController = rememberNavController(),
+        viewModel = viewModel(
+            factory = object : ViewModelProvider.Factory{
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    if(modelClass.isAssignableFrom(DaracademyViewModel::class.java))
+                        return DaracademyViewModel(context , navHostController) as T
+                    else
+                        throw IllegalArgumentException("can't create daracademyViewModel (home screen)")
+                }
+            }
+        ),
+
         phase = ""
     )
 }

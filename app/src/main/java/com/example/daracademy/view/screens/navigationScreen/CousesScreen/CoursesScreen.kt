@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.bigsam.model.data.`object`.NormalTextStyles
 import com.example.daracademy.R
@@ -304,13 +305,14 @@ fun LessonCard(
 fun CoursesScreen_preview() {
 
     val context = LocalContext.current
+    val navHostController = rememberNavController()
 
     CoursesScreen(
         viewModel = viewModel(
             factory = object : ViewModelProvider.Factory{
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     if(modelClass.isAssignableFrom(DaracademyViewModel::class.java))
-                        return DaracademyViewModel(context ) as T
+                        return DaracademyViewModel(context , navHostController) as T
                     else
                         throw IllegalArgumentException("can't create daracademyViewModel (coursesScreen)")
                 }

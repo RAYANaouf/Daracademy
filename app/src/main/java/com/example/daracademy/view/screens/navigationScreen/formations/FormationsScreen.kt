@@ -76,7 +76,6 @@ import com.example.daracademy.viewModel.DaracademyViewModel
 @Composable
 fun FormationsScreen(
     viewModel     : DaracademyViewModel,
-    navController : NavController = rememberNavController(),
     modifier      : Modifier = Modifier
 ) {
 
@@ -317,13 +316,16 @@ fun Item_preview() {
 @Preview
 @Composable
 fun FormationsScreen_preview() {
+
     val context = LocalContext.current
+    val navHostController = rememberNavController()
+
     FormationsScreen(
         viewModel = viewModel(
             factory = object : ViewModelProvider.Factory{
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     if (modelClass.isAssignableFrom(DaracademyViewModel::class.java)){
-                        return DaracademyViewModel(context) as T
+                        return DaracademyViewModel(context , navHostController) as T
                     }
                     else
                         throw IllegalArgumentException("creation if daracademyViewModel (formations screen)")

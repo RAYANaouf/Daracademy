@@ -64,7 +64,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen(
     viewModel     : DaracademyViewModel ,
-    navController : NavController,
     onChat        : (String)->Unit = {},
     modifier      : Modifier = Modifier
 ) {
@@ -113,11 +112,7 @@ fun HomeScreen(
 
                 show_dialog = false
 
-                navController.navigate("${Screens.Chat_Screen().root}/${id}/${postId}/${name}"){
-                    popUpTo(Screens.HomeScreen().root){
-                        inclusive = true
-                    }
-                }
+                viewModel.screenRepo.navigate_to_screen(screen = Screens.Chat_Screen().root , params = arrayOf(id,postId,name))
 
                 result      = false
             }
@@ -158,7 +153,8 @@ fun HomeScreen(
                 HeaderSection(
                     viewModel = viewModel,
                     onNavigate = { screen , phase->
-                             navController.navigate("${Screens.AnneesScreen().root}/${phase}")
+                        viewModel.screenRepo.navigate_to_screen(screen = Screens.AnneesScreen().root , params = arrayOf(phase))
+
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -172,7 +168,8 @@ fun HomeScreen(
                 AcademyStage(
                     onClick = {
                         viewModel.formation = it
-                        navController.navigate(Screens.FormationScreen().root)
+                        viewModel.screenRepo.navigate_to_screen(screen = Screens.FormationScreen().root)
+
                     },
                     formations = viewModel.formations,
                     modifier = Modifier
@@ -219,7 +216,8 @@ fun HomeScreen(
 
 
                             if (existence && anonymInfo != null){
-                                navController.navigate("${Screens.Chat_Screen().root}/${anonymInfo?.id}/${postId}/${anonymInfo?.name}")
+                                viewModel.screenRepo.navigate_to_screen(screen = Screens.Chat_Screen().root , anonymInfo?.id ?: "" , postId , anonymInfo?.name ?: "" )
+
                             }
 
                         }
@@ -267,6 +265,7 @@ fun HomeScreen(
 fun HomeScreen_preview() {
 
     val context = LocalContext.current
+    val navHostController = rememberNavController()
 
     Surface(
         color = customWhite2
@@ -276,13 +275,12 @@ fun HomeScreen_preview() {
                 factory = object : ViewModelProvider.Factory{
                     override fun <T : ViewModel> create(modelClass: Class<T>): T {
                         if(modelClass.isAssignableFrom(DaracademyViewModel::class.java))
-                            return DaracademyViewModel(context ) as T
+                            return DaracademyViewModel(context , navHostController ) as T
                         else
                             throw IllegalArgumentException("can't create daracademyViewModel (home screen)")
                     }
                 }
             ),
-            navController = rememberNavController()
         )
     }
 }

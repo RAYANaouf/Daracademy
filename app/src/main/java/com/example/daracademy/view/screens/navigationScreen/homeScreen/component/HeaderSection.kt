@@ -38,6 +38,7 @@ import com.example.daracademy.ui.theme.customBlack7
 import com.example.daracademy.ui.theme.customWhite0
 import com.example.daracademy.ui.theme.customWhite2
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import com.example.daracademy.model.sealedClasses.screens.Screens
 import com.example.daracademyadmin.model.sealedClasses.phaseDesEtudes.PhaseDesEtudes
 
@@ -228,6 +229,7 @@ fun HeaderSection(
 fun HeaderSection_preview() {
 
     val context = LocalContext.current
+    val navHostController = rememberNavController()
 
     Surface(
         color = customWhite2
@@ -237,7 +239,7 @@ fun HeaderSection_preview() {
                 factory = object : ViewModelProvider.Factory{
                     override fun <T : ViewModel> create(modelClass: Class<T>): T {
                         if(modelClass.isAssignableFrom(DaracademyViewModel::class.java))
-                            return DaracademyViewModel(context ) as T
+                            return DaracademyViewModel(context , navHostController) as T
                         else
                             throw IllegalArgumentException("can't create daracademyViewModel (headerSection)")
                     }

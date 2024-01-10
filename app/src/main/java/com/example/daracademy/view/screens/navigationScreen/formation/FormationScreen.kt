@@ -83,7 +83,6 @@ import com.example.daracademy.viewModel.DaracademyViewModel
 @Composable
 fun FormationScreen(
     formation     : Formation,
-    navController : NavController,
     viewModel     : DaracademyViewModel,
     modifier      : Modifier = Modifier
 ) {
@@ -119,11 +118,7 @@ fun FormationScreen(
             HeaderItem(
                 images        = formation.imgs ,
                 onNavBack     = {
-                    navController.navigate(Screens.HomeScreen().root){
-                        popUpTo(Screens.HomeScreen().root){
-                            inclusive = true
-                        }
-                    }
+                    viewModel.screenRepo.navigate_to_screen(screen = Screens.HomeScreen().root )
                 },
                 formationName = formation.name,
                 modifier      = Modifier
@@ -272,14 +267,15 @@ fun FormationScreen(
 fun FormationScreen_preview() {
 
     val context = LocalContext.current
+    val navHostController = rememberNavController()
+
 
     FormationScreen(
-        navController = rememberNavController(),
         viewModel     = viewModel(
             factory   = object : ViewModelProvider.Factory{
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     if (modelClass.isAssignableFrom(DaracademyViewModel::class.java)){
-                        return DaracademyViewModel(context ) as T
+                        return DaracademyViewModel(context , navHostController) as T
                     }
                     else{
                         throw IllegalArgumentException("can tcreate daracademy viewmodel (formationScreen)")

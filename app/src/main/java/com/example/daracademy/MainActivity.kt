@@ -72,6 +72,7 @@ import com.example.daracademy.model.sealedClasses.userType.UserType
 import com.example.daracademy.viewModel.DaracademyViewModel
 import com.example.daracademy.ui.theme.DaracademyTheme
 import com.example.daracademy.ui.theme.customWhite7
+import com.example.daracademy.view.components.navigationDrawer.AlphaNavigationDrawer
 import com.example.daracademy.view.screens.fullScreen.signIn.SignInScreen
 import com.example.daracademy.view.screens.navigationScreen.CousesScreen.CoursesScreen
 import com.example.daracademy.view.screens.navigationScreen.chat.ChatScreen
@@ -100,6 +101,7 @@ class MainActivity : ComponentActivity() {
             DaracademyTheme {
 
                 val context = LocalContext.current
+                val navHostController = rememberNavController()
 
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -111,7 +113,7 @@ class MainActivity : ComponentActivity() {
                         factory = object : ViewModelProvider.Factory{
                             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                                 if (modelClass.isAssignableFrom(DaracademyViewModel::class.java))
-                                    return DaracademyViewModel(context ) as T
+                                    return DaracademyViewModel(context , navHostController) as T
                                 else
                                     throw IllegalArgumentException("cant create daracademyViewModel")
                             }
@@ -147,344 +149,29 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(viewModel : DaracademyViewModel) {
 
 
-    val navController = rememberNavController()
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-
 
     var chatId : String by rememberSaveable {
         mutableStateOf("")
     }
 
-
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val coroutineScope = rememberCoroutineScope()
+
+
     val context        = LocalContext.current
 
 
     ModalNavigationDrawer(
         drawerContent = {
-            ModalDrawerSheet(
-                drawerContainerColor = Color.White,
-                modifier = Modifier
-                    .widthIn(max = 450.dp)
-                    .fillMaxWidth(0.75f)
-            ) {
-
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .weight(2f)
-                        .fillMaxWidth()
-                        .drawBehind {
-                            drawLine(
-                                color = customWhite7,
-                                strokeWidth = 1f,
-                                start = Offset(0f, size.height),
-                                end = Offset(size.width, size.height)
-                            )
-                        }
-                        .clickable {
-                            coroutineScope.launch {
-                                drawerState.apply {
-                                    close()
-                                }
-                            }
-                        }
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.daracademy),
-                        contentDescription = null,
-                        contentScale = ContentScale.Inside,
-                        modifier = Modifier
-                            .width(85.dp)
-                            .height(110.dp)
-                    )
-                }
-
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .weight(8f)
-                        .fillMaxWidth()
-                        .verticalScroll(rememberScrollState())
-                ) {
-
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxWidth(0.8f)
-                            .padding(top = 16.dp)
-                            .background(customWhite7)
-                    )
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .height(65.dp)
-                            .padding(start = 16.dp, end = 16.dp)
-                            .clickable {
-                                coroutineScope.launch {
-                                    drawerState.apply {
-                                        close()
-                                    }
-                                }
-
-                                if (appUserType is UserType.AnonymousUser || appUserType == null )
-                                navController.navigate("${Screens.SignInScreen().root}")
-
-                            }
-                            .padding(top = 6.dp, bottom = 6.dp)
-                            .fillMaxWidth()
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.user_account),
-                            contentDescription = null,
-                            contentScale = ContentScale.Inside,
-                            modifier = Modifier
-                                .size(26.dp)
-                        )
-
-                        Spacer(modifier = Modifier.width(16.dp))
-
-                        Text(
-                            text = "Account",
-                            style = NormalTextStyles.TextStyleSZ7
-                        )
-                    }
-
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxWidth(0.8f)
-                            .padding(top = 16.dp, bottom = 16.dp)
-                            .height(1.dp)
-                            .background(customWhite7)
-                    )
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .height(65.dp)
-                            .padding(start = 16.dp, end = 16.dp)
-                            .clickable {
-                                coroutineScope.launch {
-                                    drawerState.apply {
-                                        close()
-                                    }
-                                }
-                            }
-                            .padding(top = 6.dp, bottom = 6.dp)
-                            .fillMaxWidth()
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.support),
-                            contentDescription = null,
-                            contentScale = ContentScale.Inside,
-                            modifier = Modifier
-                                .size(26.dp)
-                        )
-
-                        Spacer(modifier = Modifier.width(16.dp))
-
-                        Text(
-                            text = "Support",
-                            style = NormalTextStyles.TextStyleSZ7
-                        )
-                    }
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .height(65.dp)
-                            .padding(start = 16.dp, end = 16.dp)
-                            .clickable {
-
-                                navController.navigate(Screens.FormationsScreen().root){
-                                    popUpTo(Screens.HomeScreen().root){
-//                                        inclusive = true
-                                    }
-                                }
-
-                                coroutineScope.launch {
-                                    drawerState.apply {
-                                        close()
-                                    }
-                                }
-                            }
-                            .padding(top = 6.dp, bottom = 6.dp)
-                            .fillMaxWidth()
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.formation),
-                            contentDescription = null,
-                            contentScale = ContentScale.Inside,
-                            modifier = Modifier
-                                .size(26.dp)
-                        )
-
-                        Spacer(modifier = Modifier.width(16.dp))
-
-                        Text(
-                            text = "Formations",
-                            style = NormalTextStyles.TextStyleSZ7
-                        )
-                    }
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .height(65.dp)
-                            .padding(start = 16.dp, end = 16.dp)
-                            .clickable {
-                                coroutineScope.launch {
-                                    drawerState.apply {
-                                        close()
-                                    }
-                                }
-                            }
-                            .padding(top = 6.dp, bottom = 6.dp)
-                            .fillMaxWidth()
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.post),
-                            contentDescription = null,
-                            contentScale = ContentScale.Inside,
-                            modifier = Modifier
-                                .size(26.dp)
-                        )
-
-                        Spacer(modifier = Modifier.width(16.dp))
-
-                        Text(
-                            text = "Posts",
-                            style = NormalTextStyles.TextStyleSZ7
-                        )
-                    }
-
-
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxWidth(0.8f)
-                            .padding(top = 16.dp, bottom = 16.dp)
-                            .height(1.dp)
-                            .background(customWhite7)
-                    )
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .height(65.dp)
-                            .padding(start = 16.dp, end = 16.dp)
-                            .clickable {
-                                coroutineScope.launch {
-
-                                    navController.navigate("${Screens.ChatBoxsScreen().root}")
-
-                                    drawerState.apply {
-                                        close()
-                                    }
-
-                                }
-                            }
-                            .padding(top = 6.dp, bottom = 6.dp)
-                            .fillMaxWidth()
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.live_chat),
-                            contentDescription = null,
-                            contentScale = ContentScale.Inside,
-                            modifier = Modifier
-                                .size(26.dp)
-                        )
-
-                        Spacer(modifier = Modifier.width(16.dp))
-
-                        Text(
-                            text = "Chats",
-                            style = NormalTextStyles.TextStyleSZ7
-                        )
-                    }
-
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxWidth(0.8f)
-                            .padding(top = 16.dp, bottom = 16.dp)
-                            .height(1.dp)
-                            .background(customWhite7)
-                    )
-
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .height(65.dp)
-                            .padding(start = 16.dp, end = 16.dp)
-                            .clickable {
-                                coroutineScope.launch {
-                                    drawerState.apply {
-                                        close()
-                                    }
-                                }
-                            }
-                            .padding(top = 6.dp, bottom = 6.dp)
-                            .fillMaxWidth()
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.about_us),
-                            contentDescription = null,
-                            contentScale = ContentScale.Inside,
-                            modifier = Modifier
-                                .size(26.dp)
-                        )
-
-                        Spacer(modifier = Modifier.width(16.dp))
-
-                        Text(
-                            text = "About us",
-                            style = NormalTextStyles.TextStyleSZ7
-                        )
-                    }
-
-
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .height(65.dp)
-                            .padding(start = 16.dp, end = 16.dp)
-                            .clickable {
-                                coroutineScope.launch {
-                                    drawerState.apply {
-                                        close()
-                                    }
-                                }
-                            }
-                            .padding(top = 6.dp, bottom = 6.dp)
-                            .fillMaxWidth()
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.development),
-                            contentDescription = null,
-                            contentScale = ContentScale.Inside,
-                            modifier = Modifier
-                                .size(26.dp)
-                        )
-
-                        Spacer(modifier = Modifier.width(16.dp))
-
-                        Text(
-                            text = "developpeur",
-                            style = NormalTextStyles.TextStyleSZ7
-                        )
-                    }
-
-                }
-
-            }
+            AlphaNavigationDrawer(
+                viewModel     = viewModel,
+                drawerState   = drawerState
+            )
         },
         drawerState = drawerState
     ) {
         Scaffold(
             topBar = {
-                if (navBackStackEntry?.destination?.route != Screens.FormationScreen().root){
+                if (viewModel.screenRepo.app_screen != Screens.FormationScreen().root){
                     AlphaTopBar2(
                         img = painterResource(id = R.drawable.daracademy),
                         txt = "Daracademy" ,
@@ -497,7 +184,7 @@ fun MainScreen(viewModel : DaracademyViewModel) {
         ) {paddingValues ->
 
             NavHost(
-                navController = navController ,
+                navController = viewModel.screenRepo.navController ,
                 startDestination = Screens.HomeScreen().root,
                 modifier = Modifier
                     .windowInsetsPadding(WindowInsets.ime)
@@ -506,7 +193,6 @@ fun MainScreen(viewModel : DaracademyViewModel) {
 
                 composable(route = Screens.HomeScreen().root){
                     HomeScreen(
-                        navController = navController,
                         viewModel = viewModel,
                         onChat = {
                             chatId = it
@@ -528,7 +214,7 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                     ),
                 ){navBackStackEntry->
                     AnneesDesEtudesScreen(
-                        navController = navController,
+                        viewModel = viewModel,
                         phase     = navBackStackEntry.arguments?.getString("phase") ?: "",
                         modifier  = Modifier
                             .padding(top = paddingValues.calculateTopPadding())
@@ -550,7 +236,6 @@ fun MainScreen(viewModel : DaracademyViewModel) {
 
                     MatieresScreen(
                         viewModel     = viewModel,
-                        navController = navController,
                         phase         = navBackStackEntry.arguments?.getString("phase") ?: "",
                         annee         = navBackStackEntry.arguments?.getString("annee") ?: "",
                         modifier      = Modifier
@@ -596,9 +281,7 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                     ChatBoxsScreen(
                         viewModel  = viewModel,
                         onNavigate = {screen , messageBox ->
-                            Toast.makeText(context , "${messageBox.userId}_${messageBox.productId}" , Toast.LENGTH_LONG).show()
-                            navController.navigate("${screen.root}/${messageBox.userId}/${messageBox.productId}/${messageBox.name}")
-                            viewModel.setAppScreen(screen)
+                            viewModel.screenRepo.navigate_to_screen(screen = Screens.Chat_Screen().root , params =  arrayOf(messageBox.userId  , messageBox.productId , messageBox.name) )
 
                         },
                         modifier = Modifier
@@ -641,7 +324,6 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                 ){navBackStackEntry->
                     FormationScreen(
                         viewModel = viewModel,
-                        navController = navController,
                         formation = viewModel.formation!!,
                         modifier = Modifier
                             .background(Color(parseColor("#f9f9f9")))
@@ -653,7 +335,6 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                 ){navBackStackEntry->
                     FormationsScreen(
                         viewModel = viewModel,
-                        navController = navController,
                         modifier = Modifier
                             .background(Color(parseColor("#f9f9f9")))
                             .padding(top = paddingValues.calculateTopPadding())
