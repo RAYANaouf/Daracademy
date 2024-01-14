@@ -109,7 +109,6 @@ fun FormationScreen(
 
 
         Surface(
-            shape = RoundedCornerShape(bottomStart = 40.dp, bottomEnd = 40.dp) ,
             shadowElevation = 4.dp,
             modifier = Modifier
                 .fillMaxWidth()
@@ -135,7 +134,7 @@ fun FormationScreen(
 
             Text(
                 text     = formation.name,
-                style    = NormalTextStyles.TextStyleSZ4.copy(color = customBlack3 , fontFamily = firaSansFamily),
+                style    = NormalTextStyles.TextStyleSZ5.copy(color = customBlack3 , fontFamily = josefinSansFamily),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
@@ -164,7 +163,7 @@ fun FormationScreen(
                 .padding(start = 20.dp , end = 16.dp)
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(26.dp))
 
 
         DescriptionItem(
