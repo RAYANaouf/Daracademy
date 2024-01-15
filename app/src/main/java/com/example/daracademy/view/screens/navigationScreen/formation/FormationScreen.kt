@@ -134,29 +134,16 @@ fun FormationScreen(
 
             Text(
                 text     = formation.name,
-                style    = NormalTextStyles.TextStyleSZ5.copy(color = customBlack3 , fontFamily = josefinSansFamily),
+                style    = NormalTextStyles.TextStyleSZ7.copy(color = customBlack3 , fontFamily = josefinSansFamily),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
-                    .weight(3f)
+                    .weight(1f)
             )
 
-            Box(
-                contentAlignment = Alignment.CenterEnd,
-                modifier = Modifier
-                    .weight(1f)
-            ) {
-                Text(
-                    text     = "${formation.prix} DA",
-                    style    = NormalTextStyles.TextStyleSZ8.copy(color = color2 , fontFamily = firaSansFamily),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier
-                )
-            }
-
-
         }
+
+        Spacer(modifier = Modifier.height(26.dp))
 
         InfoSection(
             modifier = Modifier
