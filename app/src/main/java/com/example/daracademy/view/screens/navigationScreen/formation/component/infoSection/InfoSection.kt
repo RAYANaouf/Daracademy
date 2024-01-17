@@ -60,21 +60,6 @@ fun InfoSection(
         }
 
 
-        Spacer(modifier = Modifier.height(26.dp))
-
-        Box(
-            contentAlignment = Alignment.CenterEnd,
-            modifier = Modifier
-        ) {
-            Text(
-                text     = "${formation.prix} DA",
-                style    = NormalTextStyles.TextStyleSZ8.copy(color = color2 , fontFamily = firaSansFamily),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-        }
     }
 
 }

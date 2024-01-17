@@ -53,6 +53,9 @@ fun SchedulerCards(
         modifier = modifier
     ) {
 
+        Spacer(modifier = Modifier.height(12.dp))
+
+
         Text(
             text = "Scheduler",
             style = NormalTextStyles.TextStyleSZ5.copy(fontFamily = josefinSansFamily , color = customBlack5),

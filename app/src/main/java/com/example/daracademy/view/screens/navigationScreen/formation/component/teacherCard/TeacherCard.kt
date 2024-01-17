@@ -47,16 +47,14 @@ import com.example.daracademy.ui.theme.customWhite7
 @Composable
 fun TeacherCard(
     teacher      : Teacher?,
-    shape        : Shape        = RoundedCornerShape(16.dp),
-    elevation    : Dp           = 3.dp,
-    borderStroke : BorderStroke = BorderStroke(width = 2.dp , color = customWhite4),
-    color        : Color        = Color.White,
     modifier     : Modifier     = Modifier
 ) {
 
     Column(
         modifier = modifier
     ) {
+        
+        Spacer(modifier = Modifier.height(12.dp))
 
         Text(
             text  = "Teacher ",
@@ -74,7 +72,7 @@ fun TeacherCard(
                 contentScale       = ContentScale.Crop,
                 modifier           = Modifier
                     .clip(CircleShape)
-                    .size(35.dp)
+                    .size(55.dp)
             )
 
             Spacer(modifier = Modifier.width(12.dp))

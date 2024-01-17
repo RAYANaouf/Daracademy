@@ -75,7 +75,7 @@ fun DescriptionItem(
 
             Text(
                 text  = "See All",
-                style = NormalTextStyles.TextStyleSZ9.copy(fontFamily = josefinSansFamily , color = color2),
+                style = NormalTextStyles.TextStyleSZ9.copy(fontFamily = josefinSansFamily , color = customBlack5),
                 modifier = Modifier
                     .clickable {
                         show = !show
@@ -83,7 +83,7 @@ fun DescriptionItem(
             )
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
 
         Box(
