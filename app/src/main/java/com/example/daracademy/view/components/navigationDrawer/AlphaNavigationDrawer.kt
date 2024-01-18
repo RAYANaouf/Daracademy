@@ -39,7 +39,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.bigsam.model.data.`object`.NormalTextStyles
 import com.example.daracademy.R
-import com.example.daracademy.appUserType
 import com.example.daracademy.model.sealedClasses.screens.Screens
 import com.example.daracademy.model.sealedClasses.userType.UserType
 import com.example.daracademy.ui.theme.customWhite7
@@ -120,7 +119,7 @@ fun AlphaNavigationDrawer(
                             }
                         }
 
-                        if (appUserType is UserType.AnonymousUser || appUserType == null)
+                        if (viewModel.dataStoreRepo.appUserType is UserType.AnonymousUser || viewModel.dataStoreRepo.appUserType == null)
                             viewModel.screenRepo.navigate_to_screen(Screens.SignInScreen().root)
 
                     }

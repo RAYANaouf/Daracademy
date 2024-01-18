@@ -16,6 +16,7 @@ import com.example.daracademy.model.dataClasses.Matiere
 import com.example.daracademy.model.dataClasses.Message
 import com.example.daracademy.model.dataClasses.MessageBox
 import com.example.daracademy.model.dataClasses.Post
+import com.example.daracademy.model.dataClasses.Student
 import com.example.daracademy.model.dataClasses.Teacher
 import com.example.daracademy.model.sealedClasses.Errors.Errors
 import com.example.daracademy.model.sealedClasses.screens.Screens
@@ -52,6 +53,7 @@ class DaracademyViewModel : ViewModel {
 
 
     val repo : DaracademyRepo = DaracademyRepo()
+    val dataStoreRepo : DataStoreRepo
     val screenRepo : ScreenRepo
 
 
@@ -59,10 +61,8 @@ class DaracademyViewModel : ViewModel {
 
     var courses : List<Course> by mutableStateOf(emptyList())
 
+
     var formation : Formation? by mutableStateOf(null)
-
-
-    val dataStoreRepo : DataStoreRepo
 
 
 
@@ -239,6 +239,14 @@ class DaracademyViewModel : ViewModel {
 
     fun isTeacherExist(teacherId : String): Teacher?{
         return  repo.isTeacherExist(teacherId)
+    }
+
+    fun teacherSignIn(email : String, password : String, onSuccessCallBack: ( Teacher ) -> Unit = {}, onFailureCallBack: (exp: Exception) -> Unit = {}){
+        repo.teacherSignIn(email , password , onSuccessCallBack , onFailureCallBack)
+    }
+
+    fun studentSignIn(email : String, password : String, onSuccessCallBack: ( Student ) -> Unit = {}, onFailureCallBack: (exp: Exception) -> Unit = {}){
+        repo.studentSignIn(email , password , onSuccessCallBack , onFailureCallBack)
     }
 
 

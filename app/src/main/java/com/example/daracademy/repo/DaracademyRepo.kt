@@ -11,8 +11,10 @@ import com.example.daracademy.model.dataClasses.MatiereWithCourses
 import com.example.daracademy.model.dataClasses.Message
 import com.example.daracademy.model.dataClasses.MessageBox
 import com.example.daracademy.model.dataClasses.Post
+import com.example.daracademy.model.dataClasses.Student
 import com.example.daracademy.model.dataClasses.Teacher
 import com.example.daracademy.model.sealedClasses.Errors.Errors
+import com.example.daracademy.model.sealedClasses.userType.UserType
 import com.example.daracademy.model.variables.les_annees_d_etude.annees_de_C_E_M
 import com.example.daracademy.model.variables.les_annees_d_etude.annees_de_lycee
 import com.example.daracademy.model.variables.les_annees_d_etude.annees_de_primaire
@@ -36,6 +38,7 @@ class DaracademyRepo {
     private val firebaseFirestore     = Firebase.firestore
     private val firebaseStorageRef    = Firebase.storage.reference
     private val analytics             =  Firebase.analytics
+
 
 
     private var chatListener          : ListenerRegistration? = null
@@ -455,6 +458,54 @@ class DaracademyRepo {
         }
 
         return null
+    }
+
+    fun teacherSignIn(email : String , password : String , onSuccessCallBack: ( Teacher ) -> Unit = {} , onFailureCallBack: (exp: Exception) -> Unit = {}){
+
+        firebaseFirestore.collection("teachers")
+            .whereEqualTo("email"    , email)
+            .whereEqualTo("password" , password)
+            .get()
+            .addOnSuccessListener {accounts->
+
+                if (accounts.isEmpty){
+                    onFailureCallBack(Errors.userOrPasswordIncorrect())
+                    return@addOnSuccessListener
+                }
+
+                var users = ArrayList<Teacher>()
+
+                users.addAll(accounts.toObjects(Teacher::class.java))
+                onSuccessCallBack(users[0])
+
+
+            }
+            .addOnFailureListener(onFailureCallBack)
+
+    }
+
+    fun studentSignIn(email : String , password : String , onSuccessCallBack: ( Student ) -> Unit = {} , onFailureCallBack: (exp: Exception) -> Unit = {}){
+
+        firebaseFirestore.collection("students")
+            .whereEqualTo("email"    , email)
+            .whereEqualTo("password" , password)
+            .get()
+            .addOnSuccessListener {accounts->
+
+                if (accounts.isEmpty){
+                    onFailureCallBack(Errors.userOrPasswordIncorrect())
+                    return@addOnSuccessListener
+                }
+
+                var users = ArrayList<Student>()
+
+                users.addAll(accounts.toObjects(Student::class.java))
+                onSuccessCallBack(users[0])
+
+
+            }
+            .addOnFailureListener(onFailureCallBack)
+
     }
 
 }

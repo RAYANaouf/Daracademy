@@ -1,6 +1,9 @@
 package com.example.daracademyadmin.repo.dataStore
 
 import android.content.Context
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
 import androidx.datastore.preferences.core.Preferences
@@ -9,9 +12,14 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.daracademy.model.dataClasses.ChatInfo
+import com.example.daracademy.model.dataClasses.Student
+import com.example.daracademy.model.dataClasses.Teacher
 import com.example.daracademy.model.objects.userType.user_type
 import com.example.daracademy.model.sealedClasses.userType.UserType
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class DataStoreRepo {
 
@@ -21,6 +29,10 @@ class DataStoreRepo {
     private val dataStoreInstance  : DataStore<Preferences>
 
 
+    //data
+    var  appUserType : UserType? by mutableStateOf(null)
+
+
 
     constructor(context: Context ){
         this.dataStoreInstance = com.example.daracademy.model.dataStore.dataStore.getInstance(context)
@@ -28,16 +40,68 @@ class DataStoreRepo {
     }
 
 
-    suspend fun getUserType() : UserType{
-        val type   = dataStoreInstance.data.first()[dataStoreKeys.Key_anonymeId]
+    fun getUserType() : UserType?{
 
-        val app_user_type = when(type){
-            user_type.teacher_user -> UserType.TeacherUser()
-            user_type.student_user -> UserType.StudentUser()
-            else -> UserType.AnonymousUser()
+        if (appUserType == null){
+            MainScope().launch {
+                val type   = dataStoreInstance.data.first()[dataStoreKeys.Key_accountType]
+
+                when(type){
+                    user_type.teacher_user ->{
+                        appUserType = UserType.TeacherUser()
+                    }
+                    user_type.student_user ->{
+                        appUserType = UserType.StudentUser()
+                    }
+                    else -> {
+                        appUserType = UserType.AnonymousUser()
+                    }
+                }
+            }
         }
 
-        return app_user_type
+        return appUserType
+    }
+
+
+    suspend fun getUserInfo() : Any{
+
+        var id    = dataStoreInstance.data.first()[dataStoreKeys.Key_anonymeId]
+        var name  = dataStoreInstance.data.first()[dataStoreKeys.Key_userName]
+        var email = dataStoreInstance.data.first()[dataStoreKeys.Key_userEmail]
+        var image = dataStoreInstance.data.first()[dataStoreKeys.Key_userImage]
+
+
+        if (appUserType is UserType.TeacherUser){
+            return Teacher(id = id?: "" ,name = name?: "" , email = email?: "" , photo = image?: "")
+        }
+        else{
+            return Student(id = id?: "" , name = name?: "" , email = email?: "" , photo = image?: "")
+        }
+
+    }
+
+
+    suspend fun saveSignIn(teacher : Teacher){
+        dataStoreInstance.edit {
+            it[dataStoreKeys.Key_accountType] = user_type.teacher_user
+            it[dataStoreKeys.Key_anonymeId]   = teacher.id
+            it[dataStoreKeys.Key_userName]    = teacher.name
+            it[dataStoreKeys.Key_userEmail]   = teacher.email
+            it[dataStoreKeys.Key_userImage]   = teacher.photo
+
+        }
+        appUserType = UserType.TeacherUser()
+    }
+    suspend fun saveSignIn(student: Student){
+        dataStoreInstance.edit {
+            it[dataStoreKeys.Key_accountType] = user_type.student_user
+            it[dataStoreKeys.Key_anonymeId]   = student.id
+            it[dataStoreKeys.Key_userName]    = student.name
+            it[dataStoreKeys.Key_userEmail]   = student.email
+            it[dataStoreKeys.Key_userImage]   = student.photo
+        }
+        appUserType = UserType.StudentUser()
     }
 
 

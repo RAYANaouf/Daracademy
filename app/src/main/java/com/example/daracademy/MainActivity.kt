@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -54,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -61,8 +63,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import coil.compose.rememberAsyncImagePainter
+import com.example.bigsam.grafic.material.loadingEffect.LottieAnimation_loading_1
 import com.example.bigsam.grafic.material.topBar.AlphaTopBar2
 import com.example.bigsam.model.data.`object`.NormalTextStyles
+import com.example.daracademy.model.dataClasses.Teacher
 import com.example.daracademy.model.objects.userType.user_type
 import com.example.daracademy.view.screens.navigationScreen.annees_de_etude_Screen.AnneesDesEtudesScreen
 import com.example.daracademy.view.screens.navigationScreen.homeScreen.HomeScreen
@@ -79,11 +84,11 @@ import com.example.daracademy.view.screens.navigationScreen.chat.ChatScreen
 import com.example.daracademy.view.screens.navigationScreen.chatBoxs.ChatBoxsScreen
 import com.example.daracademy.view.screens.navigationScreen.formation.FormationScreen
 import com.example.daracademy.view.screens.navigationScreen.formations.FormationsScreen
+import com.example.daracademy.view.screens.navigationScreen.teacherHome.TeacherHome
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
 
-var appUserType : UserType? = null
 
 
 class MainActivity : ComponentActivity() {
@@ -121,6 +126,7 @@ class MainActivity : ComponentActivity() {
                     )
 
 
+
                     LaunchedEffect(key1 = true ){
 
                         val anonymInfo = viewModel.dataStoreRepo.getAnonymInfo()
@@ -131,13 +137,24 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        appUserType = viewModel.dataStoreRepo.getUserType()
-
-
                     }
 
+                    if (viewModel.dataStoreRepo.getUserType() == null){
+                        LottieAnimation_loading_1(
+                            modifier = Modifier
+                                .fillMaxWidth(0.8f)
+                        )
+                    }
+                    else if(viewModel.dataStoreRepo.getUserType() is UserType.AnonymousUser){
+                        MainScreen(viewModel =  viewModel)
+                    }
+                    else if(viewModel.dataStoreRepo.getUserType() is UserType.TeacherUser){
+                        MainScreen(viewModel =  viewModel)
+                    }
+                    else if (viewModel.dataStoreRepo.getUserType() is UserType.StudentUser){
+                        MainScreen(viewModel =  viewModel)
+                    }
 
-                    MainScreen(viewModel =  viewModel)
                 }
             }
         }
@@ -171,13 +188,34 @@ fun MainScreen(viewModel : DaracademyViewModel) {
     ) {
         Scaffold(
             topBar = {
-                if (viewModel.screenRepo.app_screen != Screens.FormationScreen().root){
-                    AlphaTopBar2(
-                        img = painterResource(id = R.drawable.daracademy),
-                        txt = "Daracademy" ,
-                        modifier = Modifier
-                            .windowInsetsPadding(WindowInsets.statusBars)
-                    )
+                if (viewModel.screenRepo.app_screen != Screens.FormationScreen().root && viewModel.screenRepo.app_screen != Screens.SignInScreen().root ){
+                    if (viewModel.dataStoreRepo.appUserType is UserType.TeacherUser){
+
+                        var teacher : Teacher? by rememberSaveable{
+                            mutableStateOf(null)
+                        }
+
+                        LaunchedEffect(key1 = true ){
+                            teacher = viewModel.dataStoreRepo.getUserInfo() as Teacher
+                        }
+
+
+                        AlphaTopBar2(
+                            img = rememberAsyncImagePainter(model = teacher , placeholder = painterResource(id = R.drawable.teacher) , fallback = painterResource(id = R.drawable.teacher) , error = painterResource(id = R.drawable.teacher)),
+                            txt = teacher?.name ?: "teacher name" ,
+                            modifier = Modifier
+                                .windowInsetsPadding(WindowInsets.statusBars)
+                        )
+                    }
+                    else{
+
+                        AlphaTopBar2(
+                            img = painterResource(id = R.drawable.daracademy),
+                            txt = "Daracademy" ,
+                            modifier = Modifier
+                                .windowInsetsPadding(WindowInsets.statusBars)
+                        )
+                    }
                 }
             },
             modifier = Modifier
@@ -192,17 +230,31 @@ fun MainScreen(viewModel : DaracademyViewModel) {
 
 
                 composable(route = Screens.HomeScreen().root){
-                    HomeScreen(
-                        viewModel = viewModel,
-                        onChat = {
-                            chatId = it
-                        },
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color.White)
-                            .padding(top = paddingValues.calculateTopPadding())
-                            .windowInsetsPadding(WindowInsets.navigationBars)
-                    )
+
+
+                    if (viewModel.dataStoreRepo.getUserType() is UserType.AnonymousUser){
+                        HomeScreen(
+                            viewModel = viewModel,
+                            onChat = {
+                                chatId = it
+                            },
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(Color.White)
+                                .padding(top = paddingValues.calculateTopPadding())
+                                .windowInsetsPadding(WindowInsets.navigationBars)
+                        )
+                    }
+                    else if(viewModel.dataStoreRepo.getUserType() is UserType.TeacherUser){
+                        TeacherHome(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(Color.White)
+                                .padding(top = paddingValues.calculateTopPadding())
+                                .windowInsetsPadding(WindowInsets.navigationBars)
+                        )
+                    }
+
                 }
 
                 composable(
@@ -346,8 +398,10 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                     route = "${Screens.SignInScreen().root}"
                 ){navBackStackEntry->
                     SignInScreen(
+                        viewModel = viewModel,
                         modifier = Modifier
                             .background(Color(parseColor("#f9f9f9")))
+                            .fillMaxHeight()
                             .padding(top = paddingValues.calculateTopPadding())
                             .windowInsetsPadding(WindowInsets.navigationBars)
                     )

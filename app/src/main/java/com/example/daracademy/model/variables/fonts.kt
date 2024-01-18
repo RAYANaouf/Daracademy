@@ -36,3 +36,23 @@ val josefinSansFamily = FontFamily(
     Font(R.font.josefin_sans_medium_italic      , FontWeight.Medium     , FontStyle.Italic),
     Font(R.font.josefin_sans_thin_italic        , FontWeight.Thin       , FontStyle.Italic)
 )
+
+val nunitoFamily = FontFamily(
+    Font(R.font.nunito_bold                      , FontWeight.Bold                         ),
+    Font(R.font.nunito_extra_bold                , FontWeight.ExtraBold                    ),
+    Font(R.font.nunito_semi_bold                 , FontWeight.SemiBold                     ),
+    Font(R.font.nunito_extra_light               , FontWeight.ExtraLight                   ),
+    Font(R.font.nunito_light                     , FontWeight.Light                        ),
+    Font(R.font.nunito_medium                    , FontWeight.Medium                       ),
+    Font(R.font.nunito_regular                   , FontWeight.Normal                       ),
+
+
+    //italic ones
+    Font(R.font.nunito_italic                    , FontWeight.Bold       , FontStyle.Italic),
+    Font(R.font.nunito_extra_bold_italic         , FontWeight.ExtraBold  , FontStyle.Italic),
+    Font(R.font.nunito_semi_bold_italic          , FontWeight.SemiBold   , FontStyle.Italic),
+    Font(R.font.nunito_extra_light_italic        , FontWeight.ExtraLight , FontStyle.Italic),
+    Font(R.font.nunito_light                     , FontWeight.Light      , FontStyle.Italic),
+    Font(R.font.nunito_medium                    , FontWeight.Medium     , FontStyle.Italic),
+    Font(R.font.nunito_regular                   , FontWeight.Normal     , FontStyle.Italic),
+)
