@@ -2,73 +2,48 @@ package com.example.daracademy
 
 import android.graphics.Color.parseColor
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import coil.compose.rememberAsyncImagePainter
 import com.example.bigsam.grafic.material.loadingEffect.LottieAnimation_loading_1
 import com.example.bigsam.grafic.material.topBar.AlphaTopBar2
-import com.example.bigsam.model.data.`object`.NormalTextStyles
 import com.example.daracademy.model.dataClasses.Teacher
-import com.example.daracademy.model.objects.userType.user_type
 import com.example.daracademy.view.screens.navigationScreen.annees_de_etude_Screen.AnneesDesEtudesScreen
 import com.example.daracademy.view.screens.navigationScreen.homeScreen.HomeScreen
 import com.example.daracademy.view.screens.navigationScreen.materiauxScreen.MatieresScreen
@@ -76,8 +51,8 @@ import com.example.daracademy.model.sealedClasses.screens.Screens
 import com.example.daracademy.model.sealedClasses.userType.UserType
 import com.example.daracademy.viewModel.DaracademyViewModel
 import com.example.daracademy.ui.theme.DaracademyTheme
-import com.example.daracademy.ui.theme.customWhite7
-import com.example.daracademy.view.components.navigationDrawer.AlphaNavigationDrawer
+import com.example.daracademy.ui.theme.backgroundLight
+import com.example.daracademy.view.components.navigationDrawer.anonimNavigationDrawer.AlphaNavigationDrawer
 import com.example.daracademy.view.screens.fullScreen.signIn.SignInScreen
 import com.example.daracademy.view.screens.navigationScreen.CousesScreen.CoursesScreen
 import com.example.daracademy.view.screens.navigationScreen.chat.ChatScreen
@@ -85,7 +60,6 @@ import com.example.daracademy.view.screens.navigationScreen.chatBoxs.ChatBoxsScr
 import com.example.daracademy.view.screens.navigationScreen.formation.FormationScreen
 import com.example.daracademy.view.screens.navigationScreen.formations.FormationsScreen
 import com.example.daracademy.view.screens.navigationScreen.teacherHome.TeacherHome
-import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
 
@@ -240,7 +214,7 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                             },
                             modifier = Modifier
                                 .fillMaxSize()
-                                .background(Color.White)
+                                .background(backgroundLight)
                                 .padding(top = paddingValues.calculateTopPadding())
                                 .windowInsetsPadding(WindowInsets.navigationBars)
                         )
@@ -249,7 +223,7 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                         TeacherHome(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .background(Color.White)
+                                .background(backgroundLight)
                                 .padding(top = paddingValues.calculateTopPadding())
                                 .windowInsetsPadding(WindowInsets.navigationBars)
                         )

@@ -33,6 +33,14 @@ val customBlack4 = Color(0xFF404040)
 val customBlack5 = Color(0xFF505050)
 val customBlack6 = Color(0xFF606060)
 val customBlack7 = Color(0xFF707070)
+val customBlack8 = Color(0xFF8A8A8A)
+
+/**************************************************/
+
+
+/***************  backgrounds    ******************/
+
+val backgroundLight = Color(0xFFF9F9F9)
 
 /**************************************************/
 
