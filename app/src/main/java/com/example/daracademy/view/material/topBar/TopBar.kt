@@ -40,6 +40,7 @@ fun AlphaTopBar2(
     modifier       : Modifier = Modifier,
     img            : Painter  ,
     onImgClick     : ()->Unit = {},
+    onMenuClick    : ()->Unit = {},
     txt            : String   ,
     containerColor : Color = Color.White  ,
     elevation      : Dp = 8.dp,
@@ -89,6 +90,9 @@ fun AlphaTopBar2(
                 tint = customWhite5,
                 modifier = Modifier
                     .size(25.dp)
+                    .clickable {
+                        onMenuClick()
+                    }
             )
                 
         }

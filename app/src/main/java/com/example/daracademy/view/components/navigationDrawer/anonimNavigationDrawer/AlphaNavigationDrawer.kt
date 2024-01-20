@@ -118,7 +118,7 @@ fun AlphaNavigationDrawer(
                             }
                         }
 
-                        if (viewModel.dataStoreRepo.appUserType is UserType.AnonymousUser || viewModel.dataStoreRepo.appUserType == null)
+                        if (viewModel.dataStoreRepo.userInfo.userType is UserType.AnonymousUser || viewModel.dataStoreRepo.userInfo.userType == null)
                             viewModel.screenRepo.navigate_to_screen(Screens.SignInScreen().root)
 
                     }

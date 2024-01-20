@@ -33,16 +33,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import com.example.bigsam.model.data.`object`.NormalTextStyles
 import com.example.daracademy.R
 import com.example.daracademy.model.variables.firaSansFamily
 import com.example.daracademy.ui.theme.color1
 import com.example.daracademy.ui.theme.color2
 import com.example.daracademy.ui.theme.color3
+import com.example.daracademy.ui.theme.customBlack3
 import com.example.daracademy.ui.theme.customWhite0
+import com.example.daracademy.ui.theme.customWhite1
+import com.example.daracademy.ui.theme.customWhite2
 
 @Composable
 fun HeaderSection(
+    onNavigate : (Index : Int)->Unit ={},
     modifier: Modifier = Modifier
 ) {
 
@@ -66,15 +71,20 @@ fun HeaderSection(
                 .padding(start = 36.dp, end = 36.dp)
         ) {
 
-            Spacer(modifier = Modifier.height(45.dp))
+            Spacer(modifier = Modifier.height(35.dp))
 
             MonyIndicator()
 
-            Spacer(modifier = Modifier.height(36.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
-            actionRow(modifier = Modifier.fillMaxWidth())
+            actionRow(
+                onClick = {index->
+                    onNavigate(index)
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
 
-            Spacer(modifier = Modifier.height(36.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
             Spacer(
                 modifier = Modifier
@@ -129,35 +139,54 @@ fun MonyIndicator(
                 modifier           = Modifier
             )
         }
-        Row(
-            verticalAlignment = Alignment.CenterVertically
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(0.75f)
         ) {
             Box(
                 modifier = Modifier
-                    .height(10.dp)
+                    .height(12.dp)
                     .clip(CircleShape)
-                    .background(Color(parseColor("#0B357D")))
+                    .background(customWhite2)
+                    .fillMaxWidth()
+                    .border(
+                        width = 1.5.dp,
+                        color = Color(parseColor("#0B357D")),
+                        shape = CircleShape
+                    )
             ) {
                 Box(
                     modifier = Modifier
-                        .height(10.dp)
+                        .height(12.dp)
                         .clip(CircleShape)
                         .background(color1)
                         .fillMaxWidth(0.73f)
                 )
             }
-            Text(
-                text = "22/30",
-                modifier
-            )
+            Box(
+                contentAlignment = Alignment.CenterEnd,
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+            ) {
+                Text(
+                    text = "22/30",
+                    style = NormalTextStyles.TextStyleSZ9.copy(color = customBlack3),
+                    modifier = Modifier
+                        .offset(x = 16.dp, y = 0.dp)
+                        .zIndex(5f)
+                )
+            }
         }
-        Spacer(modifier = Modifier.height(40.dp))
+
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
 @Composable
 fun actionRow(
-    modifier: Modifier = Modifier
+    onClick  : (Int)->Unit = {},
+    modifier : Modifier = Modifier
 ) {
 
     Row(
@@ -177,7 +206,9 @@ fun actionRow(
                 )
                 .clip(RoundedCornerShape(12.dp))
                 .background(customWhite0)
-                .clickable { }
+                .clickable {
+                    onClick(1)
+                }
         ) {
             Image(
                 painter = painterResource(id = R.drawable.student_icon),
@@ -199,7 +230,9 @@ fun actionRow(
                 )
                 .clip(RoundedCornerShape(12.dp))
                 .background(customWhite0)
-                .clickable { }
+                .clickable {
+                    onClick(2)
+                }
         ) {
             Image(
                 painter = painterResource(id = R.drawable.support),
@@ -221,10 +254,12 @@ fun actionRow(
                 )
                 .clip(RoundedCornerShape(12.dp))
                 .background(customWhite0)
-                .clickable { }
+                .clickable {
+                    onClick(3)
+                }
         ) {
             Image(
-                painter = painterResource(id = R.drawable.profits),
+                painter = painterResource(id = R.drawable.formation),
                 contentDescription = null,
                 contentScale = ContentScale.Inside,
                 modifier = Modifier

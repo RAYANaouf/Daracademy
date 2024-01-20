@@ -18,13 +18,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
+import com.example.daracademy.model.sealedClasses.screens.Screens
 import com.example.daracademy.ui.theme.backgroundLight
 import com.example.daracademy.view.screens.navigationScreen.teacherHome.components.coursesCard.CoursesCard
 import com.example.daracademy.view.screens.navigationScreen.teacherHome.components.formationsCard.FormationsCard
 import com.example.daracademy.view.screens.navigationScreen.teacherHome.components.headerSection.HeaderSection
+import com.example.daracademy.viewModel.DaracademyViewModel
 
 @Composable
 fun TeacherHome(
+    viewModel: DaracademyViewModel,
     modifier: Modifier = Modifier
 ) {
 
@@ -45,7 +52,21 @@ fun TeacherHome(
             .verticalScroll(rememberScrollState())
     ) {
 
-        HeaderSection()
+        HeaderSection(
+            onNavigate = { index ->
+                when(index){
+                    1->{
+                        viewModel.screenRepo.navigate_to_screen(Screens.HomeScreen().root)
+                    }
+                    2->{
+                        viewModel.screenRepo.navigate_to_screen(Screens.FormationsScreen().root)
+                    }
+                    3->{
+                        viewModel.screenRepo.navigate_to_screen(Screens.FormationsScreen().root)
+                    }
+                }
+            }
+        )
 
         Spacer(modifier = Modifier.height(45.dp))
 
@@ -80,5 +101,18 @@ fun TeacherHome(
 @Preview
 @Composable
 fun TeacherHome_preview() {
-    TeacherHome()
+    val context = LocalContext.current
+    val navHostController = rememberNavController()
+    TeacherHome(
+        viewModel = viewModel(
+            factory = object : ViewModelProvider.Factory{
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    if (modelClass.isAssignableFrom(DaracademyViewModel::class.java))
+                        return DaracademyViewModel(context , navHostController) as T
+                    else
+                        throw IllegalArgumentException("cant create viewModel (teacher home)")
+                }
+            }
+        )
+    )
 }

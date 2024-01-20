@@ -14,6 +14,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.example.daracademy.model.dataClasses.ChatInfo
 import com.example.daracademy.model.dataClasses.Student
 import com.example.daracademy.model.dataClasses.Teacher
+import com.example.daracademy.model.dataClasses.UserInfo
 import com.example.daracademy.model.objects.userType.user_type
 import com.example.daracademy.model.sealedClasses.userType.UserType
 import kotlinx.coroutines.GlobalScope
@@ -28,10 +29,8 @@ class DataStoreRepo {
     // At the top level of your kotlin file:
     private val dataStoreInstance  : DataStore<Preferences>
 
-
-    //data
-    var  appUserType : UserType? by mutableStateOf(null)
-
+    var userInfo  by mutableStateOf(UserInfo())
+        private set
 
 
     constructor(context: Context ){
@@ -40,44 +39,33 @@ class DataStoreRepo {
     }
 
 
-    fun getUserType() : UserType?{
+    suspend fun getUserInfo() : UserInfo {
 
-        if (appUserType == null){
-            MainScope().launch {
-                val type   = dataStoreInstance.data.first()[dataStoreKeys.Key_accountType]
+        if(userInfo.id == ""){
+            val type     = dataStoreInstance.data.first()[dataStoreKeys.Key_accountType]
+            val id       = dataStoreInstance.data.first()[dataStoreKeys.Key_userId]
+            val name     = dataStoreInstance.data.first()[dataStoreKeys.Key_userName]
+            val email    = dataStoreInstance.data.first()[dataStoreKeys.Key_userEmail]
+            val image    = dataStoreInstance.data.first()[dataStoreKeys.Key_userImage]
 
-                when(type){
-                    user_type.teacher_user ->{
-                        appUserType = UserType.TeacherUser()
-                    }
-                    user_type.student_user ->{
-                        appUserType = UserType.StudentUser()
-                    }
-                    else -> {
-                        appUserType = UserType.AnonymousUser()
-                    }
+            var userType : UserType
+            when(type){
+                user_type.teacher_user ->{
+                    userType = UserType.TeacherUser()
+                }
+                user_type.student_user ->{
+                    userType = UserType.StudentUser()
+                }
+                else -> {
+                    userType = UserType.AnonymousUser()
                 }
             }
+
+            this.userInfo = UserInfo(userType = userType, id = id ?: "" , name = name ?: "" , email = email ?: "" , image = image ?: "")
         }
 
-        return appUserType
-    }
 
-
-    suspend fun getUserInfo() : Any{
-
-        var id    = dataStoreInstance.data.first()[dataStoreKeys.Key_anonymeId]
-        var name  = dataStoreInstance.data.first()[dataStoreKeys.Key_userName]
-        var email = dataStoreInstance.data.first()[dataStoreKeys.Key_userEmail]
-        var image = dataStoreInstance.data.first()[dataStoreKeys.Key_userImage]
-
-
-        if (appUserType is UserType.TeacherUser){
-            return Teacher(id = id?: "" ,name = name?: "" , email = email?: "" , photo = image?: "")
-        }
-        else{
-            return Student(id = id?: "" , name = name?: "" , email = email?: "" , photo = image?: "")
-        }
+        return userInfo
 
     }
 
@@ -85,23 +73,35 @@ class DataStoreRepo {
     suspend fun saveSignIn(teacher : Teacher){
         dataStoreInstance.edit {
             it[dataStoreKeys.Key_accountType] = user_type.teacher_user
-            it[dataStoreKeys.Key_anonymeId]   = teacher.id
+            it[dataStoreKeys.Key_userId]      = teacher.id
             it[dataStoreKeys.Key_userName]    = teacher.name
             it[dataStoreKeys.Key_userEmail]   = teacher.email
             it[dataStoreKeys.Key_userImage]   = teacher.photo
 
         }
-        appUserType = UserType.TeacherUser()
+
+        this.userInfo = UserInfo(userType = UserType.TeacherUser() , id = teacher.id ?: "" , name = teacher.name ?: "" , email = teacher.email ?: "" , image = teacher.photo ?: "")
     }
     suspend fun saveSignIn(student: Student){
         dataStoreInstance.edit {
             it[dataStoreKeys.Key_accountType] = user_type.student_user
-            it[dataStoreKeys.Key_anonymeId]   = student.id
+            it[dataStoreKeys.Key_userId]      = student.id
             it[dataStoreKeys.Key_userName]    = student.name
             it[dataStoreKeys.Key_userEmail]   = student.email
             it[dataStoreKeys.Key_userImage]   = student.photo
         }
-        appUserType = UserType.StudentUser()
+        this.userInfo = UserInfo(userType = UserType.StudentUser() , id = student.id ?: "" , name = student.name ?: "" , email = student.email ?: "" , image = student.photo ?: "")
+    }
+
+    suspend fun deconnect(){
+        dataStoreInstance.edit {
+            it[dataStoreKeys.Key_accountType] = user_type.anonymous_user
+            it[dataStoreKeys.Key_userId]      = ""
+            it[dataStoreKeys.Key_userName]    = ""
+            it[dataStoreKeys.Key_userEmail]   = ""
+            it[dataStoreKeys.Key_userImage]   = ""
+        }
+        this.userInfo = UserInfo(userType = UserType.AnonymousUser())
     }
 
 

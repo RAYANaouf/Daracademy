@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -44,6 +45,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.bigsam.grafic.material.loadingEffect.LottieAnimation_loading_1
 import com.example.bigsam.grafic.material.topBar.AlphaTopBar2
 import com.example.daracademy.model.dataClasses.Teacher
+import com.example.daracademy.model.dataClasses.UserInfo
 import com.example.daracademy.view.screens.navigationScreen.annees_de_etude_Screen.AnneesDesEtudesScreen
 import com.example.daracademy.view.screens.navigationScreen.homeScreen.HomeScreen
 import com.example.daracademy.view.screens.navigationScreen.materiauxScreen.MatieresScreen
@@ -53,6 +55,8 @@ import com.example.daracademy.viewModel.DaracademyViewModel
 import com.example.daracademy.ui.theme.DaracademyTheme
 import com.example.daracademy.ui.theme.backgroundLight
 import com.example.daracademy.view.components.navigationDrawer.anonimNavigationDrawer.AlphaNavigationDrawer
+import com.example.daracademy.view.components.navigationDrawer.studentNavigationDrawer.Student_AlphaNavigationDrawer
+import com.example.daracademy.view.components.navigationDrawer.teacherNavigationDrawer.Teacher_AlphaNavigationDrawer
 import com.example.daracademy.view.screens.fullScreen.signIn.SignInScreen
 import com.example.daracademy.view.screens.navigationScreen.CousesScreen.CoursesScreen
 import com.example.daracademy.view.screens.navigationScreen.chat.ChatScreen
@@ -60,6 +64,7 @@ import com.example.daracademy.view.screens.navigationScreen.chatBoxs.ChatBoxsScr
 import com.example.daracademy.view.screens.navigationScreen.formation.FormationScreen
 import com.example.daracademy.view.screens.navigationScreen.formations.FormationsScreen
 import com.example.daracademy.view.screens.navigationScreen.teacherHome.TeacherHome
+import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
 
@@ -103,31 +108,19 @@ class MainActivity : ComponentActivity() {
 
                     LaunchedEffect(key1 = true ){
 
-                        val anonymInfo = viewModel.dataStoreRepo.getAnonymInfo()
-
-                        if (anonymInfo != null){
-                            viewModel.setChatBoxsListener(
-                                userId = anonymInfo.id
-                            )
-                        }
+                        viewModel.dataStoreRepo.getUserInfo()
 
                     }
 
-                    if (viewModel.dataStoreRepo.getUserType() == null){
-                        LottieAnimation_loading_1(
-                            modifier = Modifier
-                                .fillMaxWidth(0.8f)
-                        )
-                    }
-                    else if(viewModel.dataStoreRepo.getUserType() is UserType.AnonymousUser){
+//                    if (viewModel.dataStoreRepo.userInfo == null){
+//                        LottieAnimation_loading_1(
+//                            modifier = Modifier
+//                                .fillMaxWidth(0.8f)
+//                        )
+//                    }
+//                    else{
                         MainScreen(viewModel =  viewModel)
-                    }
-                    else if(viewModel.dataStoreRepo.getUserType() is UserType.TeacherUser){
-                        MainScreen(viewModel =  viewModel)
-                    }
-                    else if (viewModel.dataStoreRepo.getUserType() is UserType.StudentUser){
-                        MainScreen(viewModel =  viewModel)
-                    }
+//                    }
 
                 }
             }
@@ -153,30 +146,49 @@ fun MainScreen(viewModel : DaracademyViewModel) {
 
     ModalNavigationDrawer(
         drawerContent = {
-            AlphaNavigationDrawer(
-                viewModel     = viewModel,
-                drawerState   = drawerState
-            )
+            if (viewModel.dataStoreRepo.userInfo.userType is UserType.AnonymousUser){
+                AlphaNavigationDrawer(
+                    viewModel     = viewModel,
+                    drawerState   = drawerState
+                )
+            }
+            else if (viewModel.dataStoreRepo.userInfo.userType is UserType.AnonymousUser){
+                Student_AlphaNavigationDrawer(
+                    viewModel     = viewModel,
+                    drawerState   = drawerState
+                )
+            }
+            else{
+                Teacher_AlphaNavigationDrawer(
+                    viewModel     = viewModel,
+                    drawerState   = drawerState
+                )
+            }
         },
         drawerState = drawerState
     ) {
         Scaffold(
             topBar = {
                 if (viewModel.screenRepo.app_screen != Screens.FormationScreen().root && viewModel.screenRepo.app_screen != Screens.SignInScreen().root ){
-                    if (viewModel.dataStoreRepo.appUserType is UserType.TeacherUser){
+                    if (viewModel.dataStoreRepo.userInfo.userType is UserType.TeacherUser){
 
-                        var teacher : Teacher? by rememberSaveable{
+                        var user : UserInfo? by rememberSaveable{
                             mutableStateOf(null)
                         }
 
                         LaunchedEffect(key1 = true ){
-                            teacher = viewModel.dataStoreRepo.getUserInfo() as Teacher
+                            user = viewModel.dataStoreRepo.getUserInfo()
                         }
 
 
                         AlphaTopBar2(
-                            img = rememberAsyncImagePainter(model = teacher , placeholder = painterResource(id = R.drawable.teacher) , fallback = painterResource(id = R.drawable.teacher) , error = painterResource(id = R.drawable.teacher)),
-                            txt = teacher?.name ?: "teacher name" ,
+                            img = rememberAsyncImagePainter(model = user , placeholder = painterResource(id = R.drawable.teacher) , fallback = painterResource(id = R.drawable.teacher) , error = painterResource(id = R.drawable.teacher)),
+                            txt = user?.name ?: "teacher name" ,
+                            onMenuClick = {
+                                viewModel.viewModelScope.launch {
+                                    viewModel.dataStoreRepo.deconnect()
+                                }
+                            },
                             modifier = Modifier
                                 .windowInsetsPadding(WindowInsets.statusBars)
                         )
@@ -206,7 +218,7 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                 composable(route = Screens.HomeScreen().root){
 
 
-                    if (viewModel.dataStoreRepo.getUserType() is UserType.AnonymousUser){
+                    if (viewModel.dataStoreRepo.userInfo.userType is UserType.AnonymousUser){
                         HomeScreen(
                             viewModel = viewModel,
                             onChat = {
@@ -219,8 +231,9 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                                 .windowInsetsPadding(WindowInsets.navigationBars)
                         )
                     }
-                    else if(viewModel.dataStoreRepo.getUserType() is UserType.TeacherUser){
+                    else if(viewModel.dataStoreRepo.userInfo.userType is UserType.TeacherUser){
                         TeacherHome(
+                            viewModel = viewModel,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .background(backgroundLight)
@@ -344,17 +357,6 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                     )
                 }
 
-
-                composable(
-                    route = "${Screens.FormationScreen().root}"
-                ){navBackStackEntry->
-                    FormationScreen(
-                        viewModel = viewModel,
-                        formation = viewModel.formation!!,
-                        modifier = Modifier
-                            .background(Color(parseColor("#f9f9f9")))
-                    )
-                }
 
                 composable(
                     route = "${Screens.FormationsScreen().root}"
