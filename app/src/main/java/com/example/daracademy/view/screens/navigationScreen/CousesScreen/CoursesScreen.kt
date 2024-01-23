@@ -71,9 +71,7 @@ import com.example.daracademy.viewModel.DaracademyViewModel
 @Composable
 fun CoursesScreen(
     viewModel  : DaracademyViewModel,
-    phase      : String,
-    annee      : String,
-    matiere    : String,
+    matiereId  : String,
     modifier   : Modifier = Modifier
 ) {
 
@@ -84,10 +82,12 @@ fun CoursesScreen(
         window.window.apply {
             statusBarColor = Color.White.toArgb()
         }
+
+        viewModel.courses = emptyList()
+        viewModel.getCourses( matiereId = matiereId   , onSuccessCallBack = {} , onFailureCallBack = {})
     }
 
-    viewModel.courses = emptyList()
-    viewModel.getCourses(phase , annee , matiere , onSuccessCallBack = {} , onFailureCallBack = {})
+
 
 
 
@@ -318,8 +318,6 @@ fun CoursesScreen_preview() {
                 }
             }
         ),
-        phase      ="",
-        annee      ="",
-        matiere    ="",
+        matiereId    ="",
     )
 }

@@ -103,7 +103,7 @@ dependencies {
 
     // https://mvnrepository.com/artifact/me.saket.swipe/swipe
     implementation("me.saket.swipe:swipe:1.2.0")
-
+    //shared element transaction
 
 
     /****************************  firebase   ****************************/

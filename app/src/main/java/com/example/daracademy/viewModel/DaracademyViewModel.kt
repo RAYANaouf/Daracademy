@@ -13,6 +13,7 @@ import com.example.daracademy.model.dataClasses.ChatInfo
 import com.example.daracademy.model.dataClasses.Course
 import com.example.daracademy.model.dataClasses.Formation
 import com.example.daracademy.model.dataClasses.Matiere
+import com.example.daracademy.model.dataClasses.MatiereWithCourses
 import com.example.daracademy.model.dataClasses.Message
 import com.example.daracademy.model.dataClasses.MessageBox
 import com.example.daracademy.model.dataClasses.Post
@@ -198,7 +199,7 @@ class DaracademyViewModel : ViewModel {
 
 
 
-        fun getAllMatieres(phase : String, annee : String, onSuccessCallBack: (List<Matiere>) -> Unit, onFailureCallBack: (ex: Exception) -> Unit) {
+    fun getAllMatieres(phase : String, annee : String, onSuccessCallBack: (List<Matiere>) -> Unit, onFailureCallBack: (ex: Exception) -> Unit) {
 
         matiere = emptyList()
 
@@ -214,14 +215,12 @@ class DaracademyViewModel : ViewModel {
 
     }
 
-    fun getCourses(phase : String, annee : String, matiere : String, onSuccessCallBack: (List<Course>) -> Unit, onFailureCallBack: (ex: Exception) -> Unit) {
+    fun getCourses( matiereId : String, onSuccessCallBack: (List<Course>) -> Unit, onFailureCallBack: (ex: Exception) -> Unit) {
 
         courses = emptyList()
 
         this.repo.getCourses(
-            phase,
-            annee,
-            matiere,
+            matiereId = matiereId,
             onSuccessCallBack = {
                 courses = it
                 onSuccessCallBack(it)
@@ -231,7 +230,25 @@ class DaracademyViewModel : ViewModel {
 
     }
 
-    fun getTeacherById(teacherId : String, onSuccessCallBack: (Teacher?) -> Unit, onFailureCallBack: (ex: Exception) -> Unit){
+    fun getCourses(  onSuccessCallBack: (List<Course>) -> Unit, onFailureCallBack: (ex: Exception) -> Unit) {
+
+        courses = emptyList()
+
+        this.repo.getCourses(
+            onSuccessCallBack = {
+                courses = it
+                onSuccessCallBack(it)
+            },
+            onFailureCallBack
+        )
+
+    }
+
+    fun getCourses_Matieres(onSuccessCallBack: (List<MatiereWithCourses>) -> Unit, onFailureCallBack: (ex: Exception) -> Unit){
+        repo.getCourses_Matieres(onSuccessCallBack, onFailureCallBack)
+    }
+
+        fun getTeacherById(teacherId : String, onSuccessCallBack: (Teacher?) -> Unit, onFailureCallBack: (ex: Exception) -> Unit){
 
         this.repo.getTeacherById(teacherId , onSuccessCallBack , onFailureCallBack)
 

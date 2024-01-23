@@ -4,6 +4,7 @@ import android.graphics.Color.parseColor
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -63,8 +64,10 @@ import com.example.daracademy.view.screens.navigationScreen.chat.ChatScreen
 import com.example.daracademy.view.screens.navigationScreen.chatBoxs.ChatBoxsScreen
 import com.example.daracademy.view.screens.navigationScreen.formation.FormationScreen
 import com.example.daracademy.view.screens.navigationScreen.formations.FormationsScreen
+import com.example.daracademy.view.screens.navigationScreen.teacherCourses.TeacherCourses
 import com.example.daracademy.view.screens.navigationScreen.teacherHome.TeacherHome
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.time.delay
 import java.lang.IllegalArgumentException
 
 
@@ -112,15 +115,7 @@ class MainActivity : ComponentActivity() {
 
                     }
 
-//                    if (viewModel.dataStoreRepo.userInfo == null){
-//                        LottieAnimation_loading_1(
-//                            modifier = Modifier
-//                                .fillMaxWidth(0.8f)
-//                        )
-//                    }
-//                    else{
-                        MainScreen(viewModel =  viewModel)
-//                    }
+                    MainScreen(viewModel =  viewModel)
 
                 }
             }
@@ -286,24 +281,34 @@ fun MainScreen(viewModel : DaracademyViewModel) {
 
 
                 composable(
-                    route = "${Screens.CoursesScreen().root}/{phase}/{annee}/{matiere}",
+                    route = "${Screens.TeacherCoursesScreen().root}",
+//                    arguments = listOf(
+//                        navArgument("teacherId"){
+//                            type = NavType.StringType
+//                        }
+//                    )
+                ){navBackStackEntry->
+                    TeacherCourses(
+                        viewModel = viewModel,
+//                        teacherId = navBackStackEntry.arguments?.getString("matiereId") ?: "",
+                        modifier  = Modifier
+                            .background(Color(parseColor("#f9f9f9")))
+                            .padding(top = paddingValues.calculateTopPadding())
+                            .windowInsetsPadding(WindowInsets.navigationBars)
+                    )
+                }
+
+                composable(
+                    route = "${Screens.CoursesScreen().root}/{matiereId}",
                     arguments = listOf(
-                        navArgument("phase"){
-                            type = NavType.StringType
-                        },
-                        navArgument("annee"){
-                            type = NavType.StringType
-                        },
-                        navArgument("matiere"){
+                        navArgument("matiereId"){
                             type = NavType.StringType
                         }
                     )
                 ){navBackStackEntry->
                     CoursesScreen(
                         viewModel = viewModel,
-                        phase = navBackStackEntry.arguments?.getString("phase") ?: "",
-                        annee = navBackStackEntry.arguments?.getString("annee") ?: "",
-                        matiere = navBackStackEntry.arguments?.getString("matiere") ?: "",
+                        matiereId = navBackStackEntry.arguments?.getString("matiereId") ?: "",
                         modifier = Modifier
                             .background(Color(parseColor("#f9f9f9")))
                             .padding(top = paddingValues.calculateTopPadding())
@@ -357,6 +362,17 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                     )
                 }
 
+
+                composable(
+                    route = "${Screens.FormationScreen().root}"
+                ){navBackStackEntry->
+                    FormationScreen(
+                        viewModel = viewModel,
+                        formation = viewModel.formation!!,
+                        modifier = Modifier
+                            .background(Color(parseColor("#f9f9f9")))
+                    )
+                }
 
                 composable(
                     route = "${Screens.FormationsScreen().root}"

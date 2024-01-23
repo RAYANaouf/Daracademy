@@ -59,7 +59,7 @@ fun TeacherHome(
                         viewModel.screenRepo.navigate_to_screen(Screens.HomeScreen().root)
                     }
                     2->{
-                        viewModel.screenRepo.navigate_to_screen(Screens.FormationsScreen().root)
+                        viewModel.screenRepo.navigate_to_screen(Screens.TeacherCoursesScreen().root)
                     }
                     3->{
                         viewModel.screenRepo.navigate_to_screen(Screens.FormationsScreen().root)

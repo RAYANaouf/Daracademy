@@ -28,6 +28,7 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 
@@ -49,32 +50,24 @@ class DaracademyRepo {
 
 
 
-    //matiere && its courses
-    var matieres : HashMap<String , HashMap< String , List<MatiereWithCourses>? > > =
+    var matieres : HashMap<String , List<Matiere>? > =
         hashMapOf(
-            PhaseDesEtudes.Primaire().phase to hashMapOf(
-                annees_de_primaire[0].id     to null,
-                annees_de_primaire[1].id     to null,
-                annees_de_primaire[2].id     to null,
-                annees_de_primaire[3].id     to null,
-                annees_de_primaire[4].id     to null,
-                annees_de_primaire[5].id     to null,
-                annees_de_primaire[6].id     to null,
-            ),
-            PhaseDesEtudes.CEM().phase      to hashMapOf(
-                annees_de_C_E_M[0].id        to null,
-                annees_de_C_E_M[1].id        to null,
-                annees_de_C_E_M[2].id        to null,
-                annees_de_C_E_M[3].id        to null,
-                annees_de_C_E_M[4].id        to null,
-            ),
-            PhaseDesEtudes.Lycee().phase    to hashMapOf(
-                annees_de_lycee[0].id        to null,
-                annees_de_lycee[1].id        to null,
-                annees_de_lycee[2].id        to null,
-                annees_de_lycee[3].id        to null,
-            )
+            PhaseDesEtudes.Primaire().phase+"_"+annees_de_primaire[0].id to null,
+            PhaseDesEtudes.Primaire().phase+"_"+annees_de_primaire[1].id to null,
+            PhaseDesEtudes.Primaire().phase+"_"+annees_de_primaire[2].id to null,
+            PhaseDesEtudes.Primaire().phase+"_"+annees_de_primaire[3].id to null,
+            PhaseDesEtudes.Primaire().phase+"_"+annees_de_primaire[4].id to null,
 
+            PhaseDesEtudes.CEM().phase+"_"+annees_de_C_E_M[0].id to null,
+            PhaseDesEtudes.CEM().phase+"_"+annees_de_C_E_M[1].id to null,
+            PhaseDesEtudes.CEM().phase+"_"+annees_de_C_E_M[2].id to null,
+            PhaseDesEtudes.CEM().phase+"_"+annees_de_C_E_M[3].id to null,
+            PhaseDesEtudes.CEM().phase+"_"+annees_de_C_E_M[4].id to null,
+
+            PhaseDesEtudes.Lycee().phase+"_"+annees_de_lycee[0].id to null,
+            PhaseDesEtudes.Lycee().phase+"_"+annees_de_lycee[1].id to null,
+            PhaseDesEtudes.Lycee().phase+"_"+annees_de_lycee[2].id to null,
+            PhaseDesEtudes.Lycee().phase+"_"+annees_de_lycee[3].id to null,
         )
 
     //teachers
@@ -310,95 +303,116 @@ class DaracademyRepo {
     fun getAllMatieres(phase : String , annee : String , onSuccessCallBack: (List<Matiere>) -> Unit , onFailureCallBack: (ex: Exception) -> Unit) {
 
 
-        if (matieres.get(phase)?.get(annee) != null){
-            onSuccessCallBack(matieres.get(phase)?.get(annee)!!.map{it.matiere ?: Matiere()} )
+        matieres[phase+"_"+annee]?.let {
+            onSuccessCallBack(it)
+            return@getAllMatieres
         }
 
-        else{
-            firebaseFirestore.collection("phases")
-                .document(phase)
-                .collection("annees")
-                .document(annee)
-                .collection("matieres")
-                .get()
-                .addOnSuccessListener { docs->
-                    var new_matieres = ArrayList<Matiere>()
-                    var new_matiereswithCourses = ArrayList<MatiereWithCourses>()
-                    for (doc in docs){
-                        val matiere = doc.toObject(Matiere::class.java)
-                        new_matieres.add(matiere)
-                        new_matiereswithCourses.add(MatiereWithCourses(matiere = matiere))
-                    }
-
-                    matieres.get(phase)?.set(annee , new_matiereswithCourses)
-
-                    onSuccessCallBack(new_matieres)
+        firebaseFirestore
+            .collection("matieres")
+            .whereEqualTo("phase" , phase)
+            .whereEqualTo("annee" , annee)
+            .get()
+            .addOnSuccessListener { docs->
+                var new_matieres = ArrayList<Matiere>()
+                for (doc in docs){
+                    val matiere = doc.toObject(Matiere::class.java)
+                    new_matieres.add(matiere)
                 }
-                .addOnFailureListener {
-                    onFailureCallBack(it)
-                }
-        }
+
+                matieres[phase+"_"+annee] =  new_matieres.toList()
+
+                onSuccessCallBack(new_matieres)
+            }
+            .addOnFailureListener {
+                onFailureCallBack(it)
+            }
 
 
     }
 
+    fun getMatieresById( matiereId: String , onSuccessCallBack: (Matiere) -> Unit , onFailureCallBack: (ex: Exception) -> Unit) {
 
-    fun getCourses(phase : String , annee : String , matiere_name : String ,  onSuccessCallBack: (List<Course>) -> Unit , onFailureCallBack: (ex: Exception) -> Unit){
 
-
-        var coursesList : List<Course>? = null
-        var matiereIdex  = 0
-
-        matieres[phase]?.get(annee)?.forEachIndexed {index , item ->
-
-            if (item.matiere?.name == matiere_name){
-                matiereIdex = index
-                coursesList = item.courses
-            }
-
-        }
-
-        if (coursesList != null){
-
-            onSuccessCallBack(coursesList!!)
-
-            return@getCourses
-        }
-
-        firebaseFirestore.collection("phases")
-            .document(phase)
-            .collection("annees")
-            .document(annee)
+        firebaseFirestore
             .collection("matieres")
-            .document(matiere_name)
-            .collection("courses")
+            .whereEqualTo("id" , matiereId)
             .get()
             .addOnSuccessListener { docs->
-
-                var courses = ArrayList<Course>()
-
                 for (doc in docs){
-                    courses.add(doc.toObject(Course::class.java))
+                    onSuccessCallBack(doc.toObject())
                 }
-
-                //now we get the courses
-                //change the courses value in the hashmap
-                if (courses.isEmpty()){
-
-                    matieres.get(phase)?.get(annee)?.get(matiereIdex)?.courses = null
-                    onSuccessCallBack(courses)
-                }
-                else {
-                    matieres.get(phase)?.get(annee)?.get(matiereIdex)?.courses = courses
-                    onSuccessCallBack(courses)
-                }
-
-
 
             }
             .addOnFailureListener {
                 onFailureCallBack(it)
             }
+
+
+    }
+
+
+    fun getCourses( matiereId : String ,  onSuccessCallBack: (List<Course>) -> Unit , onFailureCallBack: (ex: Exception) -> Unit){
+
+
+        firebaseFirestore.collection("courses")
+            .whereEqualTo("matiereId" , matiereId)
+            .get()
+            .addOnSuccessListener {
+                onSuccessCallBack(it.toObjects(Course::class.java))
+            }
+            .addOnFailureListener(onFailureCallBack)
+
+
+    }
+
+    fun getCourses(   onSuccessCallBack: (List<Course>) -> Unit , onFailureCallBack: (ex: Exception) -> Unit){
+
+
+        firebaseFirestore.collection("courses")
+            .get()
+            .addOnSuccessListener {
+                onSuccessCallBack(it.toObjects(Course::class.java))
+            }
+            .addOnFailureListener(onFailureCallBack)
+
+
+    }
+
+    fun getCourses_Matieres(   onSuccessCallBack: (List<MatiereWithCourses>) -> Unit , onFailureCallBack: (ex: Exception) -> Unit){
+
+        var courses = ArrayList<Course>()
+        var courses_matieres = ArrayList<MatiereWithCourses>()
+        var counter = 0
+
+        firebaseFirestore.collection("courses")
+            .get()
+            .addOnSuccessListener {
+                courses.addAll(it.toObjects(Course::class.java))
+
+                courses.forEachIndexed { index, course ->
+                    this.getMatieresById(
+                        course.matiereId,
+                        onSuccessCallBack = {matiere->
+
+                            counter++
+
+                            courses_matieres.add(MatiereWithCourses(courses = courses[index] , matiere = matiere))
+
+                            if (counter == courses.size){
+                                onSuccessCallBack(courses_matieres)
+                            }
+
+                        },
+                        onFailureCallBack = onFailureCallBack
+                    )
+                }
+
+
+            }
+            .addOnFailureListener(onFailureCallBack)
+
+
     }
 
 

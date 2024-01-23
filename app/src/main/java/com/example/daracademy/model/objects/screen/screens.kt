@@ -14,5 +14,6 @@ object screens {
     val chat_Screen              = "Chat"
     val chatBoxs_Screen          = "Chat boxs"
     val coursesScreen            = "Courses"
+    val teacherCoursesScreen     = "My Courses"
 
 }

@@ -6,21 +6,22 @@ sealed class Screens(val root : String){
 
 
 
-    class SignInScreen       : Screens(root = screens.signInScreen)
-    class HomeScreen         : Screens(root = screens.homeScreen)
+    class SignInScreen         : Screens(root = screens.signInScreen)
+    class HomeScreen           : Screens(root = screens.homeScreen)
 
-    class FormationScreen    : Screens(root = screens.formationScreen)
-    class FormationsScreen   : Screens(root = screens.formationsScreen)
-
-
-    class AnneesScreen       : Screens(root = screens.anneesScreen)
-
-    class MateriauxScreen    : Screens(root = screens.materiaux_Screen)
-
-    class ChatBoxsScreen     : Screens(root = screens.chatBoxs_Screen)
-    class Chat_Screen        : Screens(root = screens.chat_Screen)
+    class FormationScreen      : Screens(root = screens.formationScreen)
+    class FormationsScreen     : Screens(root = screens.formationsScreen)
 
 
-    class CoursesScreen      : Screens(root = screens.coursesScreen)
+    class AnneesScreen         : Screens(root = screens.anneesScreen)
+
+    class MateriauxScreen      : Screens(root = screens.materiaux_Screen)
+
+    class ChatBoxsScreen       : Screens(root = screens.chatBoxs_Screen)
+    class Chat_Screen          : Screens(root = screens.chat_Screen)
+
+
+    class CoursesScreen        : Screens(root = screens.coursesScreen)
+    class TeacherCoursesScreen : Screens(root = screens.teacherCoursesScreen)
 
 }

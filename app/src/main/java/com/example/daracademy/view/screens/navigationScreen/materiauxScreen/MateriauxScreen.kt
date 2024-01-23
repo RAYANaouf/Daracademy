@@ -98,7 +98,7 @@ fun MatieresScreen(
                 modifier = Modifier
                     .clip(RoundedCornerShape(16.dp))
                     .clickable {
-                        viewModel.screenRepo.navigate_to_screen(screen = Screens.CoursesScreen().root , phase , annee , it.name)
+                        viewModel.screenRepo.navigate_to_screen(screen = Screens.CoursesScreen().root , it.id)
                     }
             )
         }
