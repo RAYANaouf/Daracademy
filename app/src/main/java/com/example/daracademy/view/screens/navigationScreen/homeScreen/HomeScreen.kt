@@ -91,6 +91,8 @@ fun HomeScreen(
     var postId      by remember {
         mutableStateOf("")
     }
+
+
     AddChatFeatureDialog(
         show        = show_dialog,
         onDismiss   = {
@@ -197,9 +199,8 @@ fun HomeScreen(
 
 
                             /******/
-
-
                             /******/
+
 //                            existence = viewModel.dataStoreRepo.isProductSaved(_postId)
                             viewModel.getAllMessageBoxs().forEach {
                                 if (it.productId == _postId)
@@ -210,6 +211,7 @@ fun HomeScreen(
                                 viewModel.dataStoreRepo.saveProduct(_postId)
                                 existence = true
                             }
+
                             /*****/
                             /*****/
 

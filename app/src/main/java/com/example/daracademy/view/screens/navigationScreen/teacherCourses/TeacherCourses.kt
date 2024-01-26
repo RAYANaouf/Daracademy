@@ -61,8 +61,8 @@ import com.example.daracademy.viewModel.DaracademyViewModel
 
 @Composable
 fun TeacherCourses(
-    viewModel: DaracademyViewModel ,
-    modifier : Modifier = Modifier
+    viewModel  : DaracademyViewModel ,
+    modifier   : Modifier = Modifier
 ) {
 
     val course_matiere = remember {
@@ -72,9 +72,9 @@ fun TeacherCourses(
     val context = LocalContext.current
 
     LaunchedEffect(key1 = true ){
-        viewModel.getCourses_Matieres(
+        viewModel.getUser_Courses_Matieres(
+            viewModel.dataStoreRepo.userInfo.id,
             onSuccessCallBack = {
-//                Toast.makeText(context , "$it" , Toast.LENGTH_LONG).show()
                 course_matiere.addAll(it)
             },
             onFailureCallBack = {

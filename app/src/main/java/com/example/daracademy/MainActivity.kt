@@ -290,7 +290,7 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                 ){navBackStackEntry->
                     TeacherCourses(
                         viewModel = viewModel,
-//                        teacherId = navBackStackEntry.arguments?.getString("matiereId") ?: "",
+//                        teacherId = navBackStackEntry.arguments?.getString("teacherId") ?: "",
                         modifier  = Modifier
                             .background(Color(parseColor("#f9f9f9")))
                             .padding(top = paddingValues.calculateTopPadding())

@@ -248,7 +248,11 @@ class DaracademyViewModel : ViewModel {
         repo.getCourses_Matieres(onSuccessCallBack, onFailureCallBack)
     }
 
-        fun getTeacherById(teacherId : String, onSuccessCallBack: (Teacher?) -> Unit, onFailureCallBack: (ex: Exception) -> Unit){
+    fun getUser_Courses_Matieres( userId: String , onSuccessCallBack: (List<MatiereWithCourses>) -> Unit, onFailureCallBack: (ex: Exception) -> Unit){
+        repo.getUser_Courses_Matieres( userId , onSuccessCallBack, onFailureCallBack)
+    }
+
+    fun getTeacherById(teacherId : String, onSuccessCallBack: (Teacher?) -> Unit, onFailureCallBack: (ex: Exception) -> Unit){
 
         this.repo.getTeacherById(teacherId , onSuccessCallBack , onFailureCallBack)
 

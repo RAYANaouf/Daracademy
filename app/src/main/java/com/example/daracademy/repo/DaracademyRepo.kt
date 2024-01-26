@@ -415,6 +415,43 @@ class DaracademyRepo {
 
     }
 
+    fun getUser_Courses_Matieres(  userId : String ,  onSuccessCallBack: (List<MatiereWithCourses>) -> Unit , onFailureCallBack: (ex: Exception) -> Unit){
+
+        var courses = ArrayList<Course>()
+        var courses_matieres = ArrayList<MatiereWithCourses>()
+        var counter = 0
+
+        firebaseFirestore.collection("courses")
+            .whereEqualTo("teacherId" , userId)
+            .get()
+            .addOnSuccessListener {
+                courses.addAll(it.toObjects(Course::class.java))
+
+                courses.forEachIndexed { index, course ->
+                    this.getMatieresById(
+                        course.matiereId,
+                        onSuccessCallBack = {matiere->
+
+                            counter++
+
+                            courses_matieres.add(MatiereWithCourses(courses = courses[index] , matiere = matiere))
+
+                            if (counter == courses.size){
+                                onSuccessCallBack(courses_matieres)
+                            }
+
+                        },
+                        onFailureCallBack = onFailureCallBack
+                    )
+                }
+
+
+            }
+            .addOnFailureListener(onFailureCallBack)
+
+
+    }
+
 
     fun getTeacherById(teacherId : String , onSuccessCallBack: (Teacher?) -> Unit , onFailureCallBack: (ex: Exception) -> Unit){
 
