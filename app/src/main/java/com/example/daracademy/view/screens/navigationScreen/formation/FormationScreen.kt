@@ -66,6 +66,7 @@ import com.example.daracademy.view.screens.navigationScreen.formation.component.
 import com.example.daracademy.view.screens.navigationScreen.formation.component.schedulerCards.SchedulerCards
 import com.example.daracademy.view.screens.navigationScreen.formation.component.teacherCard.TeacherCard
 import com.example.daracademy.viewModel.DaracademyViewModel
+import com.mxalbert.sharedelements.SharedElement
 
 @Composable
 fun FormationScreen(
@@ -95,16 +96,18 @@ fun FormationScreen(
     ) {
 
 
-        HeaderItem(
-            images        = formation.imgs ,
-            onNavBack     = {
-                viewModel.screenRepo.navigate_to_screen(screen = Screens.HomeScreen().root )
-            },
-            formationName = formation.name,
-            modifier      = Modifier
-                .fillMaxWidth()
-                .aspectRatio(0.8f, true)
-        )
+        SharedElement(key = "name ${formation.name}" , screenKey = "formation screen") {
+            HeaderItem(
+                images        = formation.imgs ,
+                onNavBack     = {
+                    viewModel.screenRepo.navigate_to_screen(screen = Screens.HomeScreen().root )
+                },
+                formationName = formation.name,
+                modifier      = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(0.8f, true)
+            )
+        }
 
 
         Row(

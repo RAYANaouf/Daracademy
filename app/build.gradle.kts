@@ -51,6 +51,8 @@ android {
     }
 }
 
+
+
 dependencies {
 
     implementation("androidx.core:core-ktx:1.9.0")
@@ -103,7 +105,10 @@ dependencies {
 
     // https://mvnrepository.com/artifact/me.saket.swipe/swipe
     implementation("me.saket.swipe:swipe:1.2.0")
+
     //shared element transaction
+    implementation("com.mxalbert.sharedelements:shared-elements:0.1.0-SNAPSHOT")
+
 
 
     /****************************  firebase   ****************************/

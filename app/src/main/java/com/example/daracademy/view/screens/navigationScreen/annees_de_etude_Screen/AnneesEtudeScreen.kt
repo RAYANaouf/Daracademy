@@ -49,6 +49,7 @@ import com.example.daracademy.viewModel.DaracademyViewModel
 import com.example.daracademy.ui.theme.color2
 import com.example.daracademy.ui.theme.color3
 import com.example.daracademyadmin.model.sealedClasses.phaseDesEtudes.PhaseDesEtudes
+import com.mxalbert.sharedelements.SharedElement
 
 @Composable
 fun AnneesDesEtudesScreen(
@@ -95,92 +96,95 @@ fun AnneesDesEtudesScreen(
     }
 
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.fillMaxWidth()
-    )
-    {
+    SharedElement(key = phase , screenKey = "annee screen" ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier.fillMaxWidth()
+        )
+        {
 
-        annees.forEachIndexed { index, annee ->
+            annees.forEachIndexed { index, annee ->
+                Spacer(modifier = Modifier.height(26.dp))
+
+                if (index != annees.lastIndex){
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .fillMaxWidth(0.8f)
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(color = color)
+                            .clickable {
+                                viewModel.screenRepo.navigate_to_screen(Screens.MateriauxScreen().root , params = arrayOf(phase , annee.id))
+                            }
+                            .padding(top = 4.dp, bottom = 4.dp, start = 10.dp, end = 10.dp)
+                    ) {
+                        Text(
+                            text = annee.name,
+                            style = NormalTextStyles.TextStyleSZ5.copy(color = customWhite0),
+                            fontFamily = firaSansFamily,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+
+                }
+                else
+                {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .fillMaxWidth(0.8f)
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(color = color)
+                            .clickable {
+                                viewModel.screenRepo.navigate_to_screen(Screens.MateriauxScreen().root , params = arrayOf(phase , annee.id))
+                            }
+                            .padding(top = 4.dp, bottom = 4.dp, start = 10.dp, end = 10.dp)
+                    ) {
+
+                        Image(
+                            painter = painterResource(id = R.drawable.mortarboard),
+                            contentDescription = null,
+                            contentScale = ContentScale.Inside,
+                            modifier = Modifier
+                                .size(40.dp)
+                                .align(Alignment.CenterStart)
+                                .rotate(-90f)
+                        )
+
+                        Text(
+                            text = annee.name,
+                            style = NormalTextStyles.TextStyleSZ5.copy(color = customWhite0),
+                            fontFamily = firaSansFamily,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+
+                        Image(
+                            painter = painterResource(id = R.drawable.mortarboard),
+                            contentDescription = null,
+                            contentScale = ContentScale.Inside,
+                            modifier = Modifier
+                                .size(40.dp)
+                                .align(Alignment.CenterEnd)
+                                .rotate(90f)
+                        )
+                    }
+                }
+
+
+
+            }
+
+
+
+
             Spacer(modifier = Modifier.height(26.dp))
-
-            if (index != annees.lastIndex){
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .fillMaxWidth(0.8f)
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(color = color)
-                        .clickable {
-                            viewModel.screenRepo.navigate_to_screen(Screens.MateriauxScreen().root , params = arrayOf(phase , annee.id))
-                        }
-                        .padding(top = 4.dp, bottom = 4.dp, start = 10.dp, end = 10.dp)
-                ) {
-                    Text(
-                        text = annee.name,
-                        style = NormalTextStyles.TextStyleSZ5.copy(color = customWhite0),
-                        fontFamily = firaSansFamily,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-
-            }
-            else
-            {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .fillMaxWidth(0.8f)
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(color = color)
-                        .clickable {
-                            viewModel.screenRepo.navigate_to_screen(Screens.MateriauxScreen().root , params = arrayOf(phase , annee.id))
-                        }
-                        .padding(top = 4.dp, bottom = 4.dp, start = 10.dp, end = 10.dp)
-                ) {
-
-                    Image(
-                        painter = painterResource(id = R.drawable.mortarboard),
-                        contentDescription = null,
-                        contentScale = ContentScale.Inside,
-                        modifier = Modifier
-                            .size(40.dp)
-                            .align(Alignment.CenterStart)
-                            .rotate(-90f)
-                    )
-
-                    Text(
-                        text = annee.name,
-                        style = NormalTextStyles.TextStyleSZ5.copy(color = customWhite0),
-                        fontFamily = firaSansFamily,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-
-                    Image(
-                        painter = painterResource(id = R.drawable.mortarboard),
-                        contentDescription = null,
-                        contentScale = ContentScale.Inside,
-                        modifier = Modifier
-                            .size(40.dp)
-                            .align(Alignment.CenterEnd)
-                            .rotate(90f)
-                    )
-                }
-            }
-
 
 
         }
-        
-
-
-
-        Spacer(modifier = Modifier.height(26.dp))
-
-
     }
+
 }
 
 

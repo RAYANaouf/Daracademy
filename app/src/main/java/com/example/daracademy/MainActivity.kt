@@ -4,15 +4,22 @@ import android.graphics.Color.parseColor
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.SpringSpec
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.DrawerValue
@@ -32,6 +39,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -66,8 +74,8 @@ import com.example.daracademy.view.screens.navigationScreen.formation.FormationS
 import com.example.daracademy.view.screens.navigationScreen.formations.FormationsScreen
 import com.example.daracademy.view.screens.navigationScreen.teacherCourses.TeacherCourses
 import com.example.daracademy.view.screens.navigationScreen.teacherHome.TeacherHome
+import com.mxalbert.sharedelements.SharedElementsRoot
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.time.delay
 import java.lang.IllegalArgumentException
 
 
@@ -164,245 +172,260 @@ fun MainScreen(viewModel : DaracademyViewModel) {
     ) {
         Scaffold(
             topBar = {
-                if (viewModel.screenRepo.app_screen != Screens.FormationScreen().root && viewModel.screenRepo.app_screen != Screens.SignInScreen().root ){
-                    if (viewModel.dataStoreRepo.userInfo.userType is UserType.TeacherUser){
+//                if (viewModel.screenRepo.app_screen != Screens.FormationScreen().root && viewModel.screenRepo.app_screen != Screens.SignInScreen().root ){
+//
+//                }
 
-                        var user : UserInfo? by rememberSaveable{
-                            mutableStateOf(null)
+                Box(
+                    modifier = Modifier
+                        .windowInsetsPadding(WindowInsets.statusBars)
+                        .height(55.dp)
+                        .fillMaxWidth()
+                ) {
+                    AnimatedVisibility(visible = viewModel.screenRepo.app_screen != Screens.FormationScreen().root && viewModel.screenRepo.app_screen != Screens.SignInScreen().root) {
+                        if (viewModel.dataStoreRepo.userInfo.userType is UserType.TeacherUser){
+
+                            var user : UserInfo? by rememberSaveable{
+                                mutableStateOf(null)
+                            }
+
+                            LaunchedEffect(key1 = true ){
+                                user = viewModel.dataStoreRepo.getUserInfo()
+                            }
+
+
+                            AlphaTopBar2(
+                                img = rememberAsyncImagePainter(model = user , placeholder = painterResource(id = R.drawable.teacher) , fallback = painterResource(id = R.drawable.teacher) , error = painterResource(id = R.drawable.teacher)),
+                                txt = user?.name ?: "teacher name" ,
+                                onMenuClick = {
+                                    viewModel.viewModelScope.launch {
+                                        viewModel.dataStoreRepo.deconnect()
+                                    }
+                                },
+                                modifier = Modifier
+                                    .windowInsetsPadding(WindowInsets.statusBars)
+                            )
                         }
+                        else{
 
-                        LaunchedEffect(key1 = true ){
-                            user = viewModel.dataStoreRepo.getUserInfo()
+                            AlphaTopBar2(
+                                img = painterResource(id = R.drawable.daracademy),
+                                txt = "Daracademy" ,
+                                modifier = Modifier
+                                    .windowInsetsPadding(WindowInsets.statusBars)
+                            )
                         }
-
-
-                        AlphaTopBar2(
-                            img = rememberAsyncImagePainter(model = user , placeholder = painterResource(id = R.drawable.teacher) , fallback = painterResource(id = R.drawable.teacher) , error = painterResource(id = R.drawable.teacher)),
-                            txt = user?.name ?: "teacher name" ,
-                            onMenuClick = {
-                                viewModel.viewModelScope.launch {
-                                    viewModel.dataStoreRepo.deconnect()
-                                }
-                            },
-                            modifier = Modifier
-                                .windowInsetsPadding(WindowInsets.statusBars)
-                        )
-                    }
-                    else{
-
-                        AlphaTopBar2(
-                            img = painterResource(id = R.drawable.daracademy),
-                            txt = "Daracademy" ,
-                            modifier = Modifier
-                                .windowInsetsPadding(WindowInsets.statusBars)
-                        )
                     }
                 }
+
             },
             modifier = Modifier
         ) {paddingValues ->
 
-            NavHost(
-                navController = viewModel.screenRepo.navController ,
-                startDestination = Screens.HomeScreen().root,
-                modifier = Modifier
-                    .windowInsetsPadding(WindowInsets.ime)
-            ){
 
 
-                composable(route = Screens.HomeScreen().root){
+
+            SharedElementsRoot {
+                NavHost(
+                    navController = viewModel.screenRepo.navController ,
+                    startDestination = Screens.HomeScreen().root,
+                    modifier = Modifier
+                        .windowInsetsPadding(WindowInsets.ime)
+                ){
 
 
-                    if (viewModel.dataStoreRepo.userInfo.userType is UserType.AnonymousUser){
-                        HomeScreen(
+                    composable(route = Screens.HomeScreen().root){
+
+                        if (viewModel.dataStoreRepo.userInfo.userType is UserType.AnonymousUser){
+
+                            HomeScreen(
+                                viewModel = viewModel,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(backgroundLight)
+                                    .padding(top = paddingValues.calculateTopPadding())
+                                    .windowInsetsPadding(WindowInsets.navigationBars)
+                            )
+
+                        }
+                        else if(viewModel.dataStoreRepo.userInfo.userType is UserType.TeacherUser){
+                            TeacherHome(
+                                viewModel = viewModel,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(backgroundLight)
+                                    .padding(top = paddingValues.calculateTopPadding())
+                                    .windowInsetsPadding(WindowInsets.navigationBars)
+                            )
+                        }
+
+                    }
+
+                    composable(
+                        route = "${Screens.AnneesScreen().root}/{phase}",
+                        arguments = listOf(
+                            navArgument(name = "phase"){
+                                type = NavType.StringType
+                            }
+                        ),
+                    ){navBackStackEntry->
+                        AnneesDesEtudesScreen(
                             viewModel = viewModel,
-                            onChat = {
-                                chatId = it
+                            phase     = navBackStackEntry.arguments?.getString("phase") ?: "",
+                            modifier  = Modifier
+                                .padding(top = paddingValues.calculateTopPadding())
+                                .windowInsetsPadding(WindowInsets.navigationBars)
+                        )
+                    }
+
+                    composable(
+                        route = "${Screens.MateriauxScreen().root}/{phase}/{annee}",
+                        arguments = listOf(
+                            navArgument("phase"){
+                                type = NavType.StringType
                             },
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(backgroundLight)
+                            navArgument("annee"){
+                                type = NavType.StringType
+                            }
+                        )
+                    ){navBackStackEntry->
+
+                        MatieresScreen(
+                            viewModel     = viewModel,
+                            phase         = navBackStackEntry.arguments?.getString("phase") ?: "",
+                            annee         = navBackStackEntry.arguments?.getString("annee") ?: "",
+                            modifier      = Modifier
                                 .padding(top = paddingValues.calculateTopPadding())
                                 .windowInsetsPadding(WindowInsets.navigationBars)
                         )
-                    }
-                    else if(viewModel.dataStoreRepo.userInfo.userType is UserType.TeacherUser){
-                        TeacherHome(
-                            viewModel = viewModel,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(backgroundLight)
-                                .padding(top = paddingValues.calculateTopPadding())
-                                .windowInsetsPadding(WindowInsets.navigationBars)
-                        )
+
                     }
 
-                }
 
-                composable(
-                    route = "${Screens.AnneesScreen().root}/{phase}",
-                    arguments = listOf(
-                        navArgument(name = "phase"){
-                            type = NavType.StringType
-                        }
-                    ),
-                ){navBackStackEntry->
-                    AnneesDesEtudesScreen(
-                        viewModel = viewModel,
-                        phase     = navBackStackEntry.arguments?.getString("phase") ?: "",
-                        modifier  = Modifier
-                            .padding(top = paddingValues.calculateTopPadding())
-                            .windowInsetsPadding(WindowInsets.navigationBars)
-                    )
-                }
-
-                composable(
-                    route = "${Screens.MateriauxScreen().root}/{phase}/{annee}",
-                    arguments = listOf(
-                        navArgument("phase"){
-                            type = NavType.StringType
-                        },
-                        navArgument("annee"){
-                            type = NavType.StringType
-                        }
-                    )
-                ){navBackStackEntry->
-
-                    MatieresScreen(
-                        viewModel     = viewModel,
-                        phase         = navBackStackEntry.arguments?.getString("phase") ?: "",
-                        annee         = navBackStackEntry.arguments?.getString("annee") ?: "",
-                        modifier      = Modifier
-                            .padding(top = paddingValues.calculateTopPadding())
-                            .windowInsetsPadding(WindowInsets.navigationBars)
-                    )
-
-                }
-
-
-                composable(
-                    route = "${Screens.TeacherCoursesScreen().root}",
+                    composable(
+                        route = "${Screens.TeacherCoursesScreen().root}",
 //                    arguments = listOf(
 //                        navArgument("teacherId"){
 //                            type = NavType.StringType
 //                        }
 //                    )
-                ){navBackStackEntry->
-                    TeacherCourses(
-                        viewModel = viewModel,
+                    ){navBackStackEntry->
+                        TeacherCourses(
+                            viewModel = viewModel,
 //                        teacherId = navBackStackEntry.arguments?.getString("teacherId") ?: "",
-                        modifier  = Modifier
-                            .background(Color(parseColor("#f9f9f9")))
-                            .padding(top = paddingValues.calculateTopPadding())
-                            .windowInsetsPadding(WindowInsets.navigationBars)
-                    )
+                            modifier  = Modifier
+                                .background(Color(parseColor("#f9f9f9")))
+                                .padding(top = paddingValues.calculateTopPadding())
+                                .windowInsetsPadding(WindowInsets.navigationBars)
+                        )
+                    }
+
+                    composable(
+                        route = "${Screens.CoursesScreen().root}/{matiereId}",
+                        arguments = listOf(
+                            navArgument("matiereId"){
+                                type = NavType.StringType
+                            }
+                        )
+                    ){navBackStackEntry->
+                        CoursesScreen(
+                            viewModel = viewModel,
+                            matiereId = navBackStackEntry.arguments?.getString("matiereId") ?: "",
+                            modifier = Modifier
+                                .background(Color(parseColor("#f9f9f9")))
+                                .padding(top = paddingValues.calculateTopPadding())
+                                .windowInsetsPadding(WindowInsets.navigationBars)
+                        )
+                    }
+
+
+
+
+                    composable(
+                        route = "${Screens.ChatBoxsScreen().root}"
+                    ){
+                        ChatBoxsScreen(
+                            viewModel  = viewModel,
+                            onNavigate = {screen , messageBox ->
+                                viewModel.screenRepo.navigate_to_screen(screen = Screens.Chat_Screen().root , params =  arrayOf(messageBox.userId  , messageBox.productId , messageBox.name) )
+
+                            },
+                            modifier = Modifier
+                                .background(Color(parseColor("#f9f9f9")))
+                                .padding(top = paddingValues.calculateTopPadding())
+                                .windowInsetsPadding(WindowInsets.navigationBars)
+                        )
+                    }
+
+
+                    composable(
+                        route = "${Screens.Chat_Screen().root}/{userId}/{productId}/{name}",
+                        arguments = listOf(
+                            navArgument(name = "userId"){
+                                type = NavType.StringType
+                            },
+                            navArgument(name = "productId"){
+                                type = NavType.StringType
+                            },
+                            navArgument(name = "name"){
+                                type = NavType.StringType
+                            }
+                        )
+                    ){navBackStackEntry->
+                        ChatScreen(
+                            viewModel = viewModel,
+                            userId    = navBackStackEntry.arguments?.getString("userId") ?: "",
+                            productId = navBackStackEntry.arguments?.getString("productId") ?: "",
+                            name      = navBackStackEntry.arguments?.getString("name")   ?: "",
+                            modifier = Modifier
+                                .background(Color(parseColor("#f9f9f9")))
+                                .padding(top = paddingValues.calculateTopPadding())
+                                .windowInsetsPadding(WindowInsets.navigationBars)
+                        )
+                    }
+
+
+                    composable(
+                        route = "${Screens.FormationScreen().root}"
+                    ){navBackStackEntry->
+                        FormationScreen(
+                            viewModel = viewModel,
+                            formation = viewModel.formation!!,
+                            modifier = Modifier
+                                .background(Color(parseColor("#f9f9f9")))
+                        )
+                    }
+
+                    composable(
+                        route = "${Screens.FormationsScreen().root}"
+                    ){navBackStackEntry->
+                        FormationsScreen(
+                            viewModel = viewModel,
+                            modifier = Modifier
+                                .background(Color(parseColor("#f9f9f9")))
+                                .padding(top = paddingValues.calculateTopPadding())
+                                .windowInsetsPadding(WindowInsets.navigationBars)
+                        )
+                    }
+
+                    composable(
+                        route = "${Screens.SignInScreen().root}"
+                    ){navBackStackEntry->
+                        SignInScreen(
+                            viewModel = viewModel,
+                            modifier = Modifier
+                                .background(Color(parseColor("#f9f9f9")))
+                                .fillMaxHeight()
+                                .padding(top = paddingValues.calculateTopPadding())
+                                .windowInsetsPadding(WindowInsets.navigationBars)
+                        )
+                    }
+
+
+
+
+
                 }
-
-                composable(
-                    route = "${Screens.CoursesScreen().root}/{matiereId}",
-                    arguments = listOf(
-                        navArgument("matiereId"){
-                            type = NavType.StringType
-                        }
-                    )
-                ){navBackStackEntry->
-                    CoursesScreen(
-                        viewModel = viewModel,
-                        matiereId = navBackStackEntry.arguments?.getString("matiereId") ?: "",
-                        modifier = Modifier
-                            .background(Color(parseColor("#f9f9f9")))
-                            .padding(top = paddingValues.calculateTopPadding())
-                            .windowInsetsPadding(WindowInsets.navigationBars)
-                    )
-                }
-
-
-
-
-                composable(
-                    route = "${Screens.ChatBoxsScreen().root}"
-                ){
-                    ChatBoxsScreen(
-                        viewModel  = viewModel,
-                        onNavigate = {screen , messageBox ->
-                            viewModel.screenRepo.navigate_to_screen(screen = Screens.Chat_Screen().root , params =  arrayOf(messageBox.userId  , messageBox.productId , messageBox.name) )
-
-                        },
-                        modifier = Modifier
-                            .background(Color(parseColor("#f9f9f9")))
-                            .padding(top = paddingValues.calculateTopPadding())
-                            .windowInsetsPadding(WindowInsets.navigationBars)
-                    )
-                }
-
-
-                composable(
-                    route = "${Screens.Chat_Screen().root}/{userId}/{productId}/{name}",
-                    arguments = listOf(
-                        navArgument(name = "userId"){
-                            type = NavType.StringType
-                        },
-                        navArgument(name = "productId"){
-                            type = NavType.StringType
-                        },
-                        navArgument(name = "name"){
-                            type = NavType.StringType
-                        }
-                    )
-                ){navBackStackEntry->
-                    ChatScreen(
-                        viewModel = viewModel,
-                        userId    = navBackStackEntry.arguments?.getString("userId") ?: "",
-                        productId = navBackStackEntry.arguments?.getString("productId") ?: "",
-                        name      = navBackStackEntry.arguments?.getString("name")   ?: "",
-                        modifier = Modifier
-                            .background(Color(parseColor("#f9f9f9")))
-                            .padding(top = paddingValues.calculateTopPadding())
-                            .windowInsetsPadding(WindowInsets.navigationBars)
-                    )
-                }
-
-
-                composable(
-                    route = "${Screens.FormationScreen().root}"
-                ){navBackStackEntry->
-                    FormationScreen(
-                        viewModel = viewModel,
-                        formation = viewModel.formation!!,
-                        modifier = Modifier
-                            .background(Color(parseColor("#f9f9f9")))
-                    )
-                }
-
-                composable(
-                    route = "${Screens.FormationsScreen().root}"
-                ){navBackStackEntry->
-                    FormationsScreen(
-                        viewModel = viewModel,
-                        modifier = Modifier
-                            .background(Color(parseColor("#f9f9f9")))
-                            .padding(top = paddingValues.calculateTopPadding())
-                            .windowInsetsPadding(WindowInsets.navigationBars)
-                    )
-                }
-
-                composable(
-                    route = "${Screens.SignInScreen().root}"
-                ){navBackStackEntry->
-                    SignInScreen(
-                        viewModel = viewModel,
-                        modifier = Modifier
-                            .background(Color(parseColor("#f9f9f9")))
-                            .fillMaxHeight()
-                            .padding(top = paddingValues.calculateTopPadding())
-                            .windowInsetsPadding(WindowInsets.navigationBars)
-                    )
-                }
-
-
-
-
-
             }
 
 

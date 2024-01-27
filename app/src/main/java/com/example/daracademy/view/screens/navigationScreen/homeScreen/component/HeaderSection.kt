@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -41,6 +42,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.daracademy.model.sealedClasses.screens.Screens
 import com.example.daracademyadmin.model.sealedClasses.phaseDesEtudes.PhaseDesEtudes
+import com.mxalbert.sharedelements.SharedElement
 
 @Composable
 fun HeaderSection(
@@ -147,73 +149,99 @@ fun HeaderSection(
             Spacer(modifier = Modifier.width(20.dp))
 
             Box(
-                contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .weight(1f)
-                    .height(80.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(color1)
-                    .padding(4.dp)
-                    .clickable {
-                        onNavigate(Screens.AnneesScreen(), PhaseDesEtudes.Primaire().phase)
-                    }
             ) {
-                Text(
-                    text = "Primaire",
-                    style = NormalTextStyles.TextStyleSZ7.copy(color = customWhite0),
-                    fontFamily = firaSansFamily,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                SharedElement(key = PhaseDesEtudes.Primaire().phase, screenKey = "home screen" ) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(80.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(color1)
+                            .padding(4.dp)
+                            .clickable {
+                                onNavigate(Screens.AnneesScreen(), PhaseDesEtudes.Primaire().phase)
+                            }
+                    ) {
+                        Text(
+                            text = "Primaire",
+                            style = NormalTextStyles.TextStyleSZ7.copy(color = customWhite0),
+                            fontFamily = firaSansFamily,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.width(16.dp))
 
 
             Box(
-                contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .weight(1f)
-                    .height(80.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(color2)
-                    .padding(4.dp)
-                    .clickable {
-                        onNavigate(Screens.AnneesScreen(), PhaseDesEtudes.CEM().phase)
-                    }
             ) {
-                Text(
-                    text = "C.E.M",
-                    style = NormalTextStyles.TextStyleSZ7.copy(color = customWhite0),
-                    fontFamily = firaSansFamily,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                SharedElement(key = PhaseDesEtudes.CEM().phase, screenKey = "home screen" ) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(80.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(color2)
+                            .padding(4.dp)
+                            .clickable {
+                                onNavigate(Screens.AnneesScreen(), PhaseDesEtudes.CEM().phase)
+                            }
+                    ) {
+                        Text(
+                            text = "C.E.M",
+                            style = NormalTextStyles.TextStyleSZ7.copy(color = customWhite0),
+                            fontFamily = firaSansFamily,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
+
             }
+
+
 
             Spacer(modifier = Modifier.width(16.dp))
 
-
             Box(
-                contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .weight(1f)
-                    .height(80.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(color3)
-                    .clickable {
-                        onNavigate(Screens.AnneesScreen(), PhaseDesEtudes.Lycee().phase)
-                    }
-                    .padding(4.dp)
-
             ) {
-                Text(
-                    text = "Lycée",
-                    style = NormalTextStyles.TextStyleSZ7.copy(color = customWhite0),
-                    fontFamily = firaSansFamily,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+
+                SharedElement(key = PhaseDesEtudes.Lycee().phase, screenKey = "home screen" ) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(80.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(color3)
+                            .clickable {
+                                onNavigate(Screens.AnneesScreen(), PhaseDesEtudes.Lycee().phase)
+                            }
+                            .padding(4.dp)
+
+                    ) {
+                        Text(
+                            text = "Lycée",
+                            style = NormalTextStyles.TextStyleSZ7.copy(color = customWhite0),
+                            fontFamily = firaSansFamily,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+
+                }
+
             }
 
             Spacer(modifier = Modifier.width(20 .dp))
