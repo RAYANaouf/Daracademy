@@ -2,6 +2,7 @@ package com.example.daracademy.view.screens.navigationScreen.teacherHome.compone
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -46,6 +47,9 @@ fun acts(
                     shape = RoundedCornerShape(12.dp)
                 )
                 .background(customWhite0)
+                .clickable {
+
+                }
         )
 
         Spacer(
@@ -67,6 +71,9 @@ fun acts(
                     shape = RoundedCornerShape(12.dp)
                 )
                 .background(customWhite0)
+                .clickable {
+
+                }
         )
     }
 
