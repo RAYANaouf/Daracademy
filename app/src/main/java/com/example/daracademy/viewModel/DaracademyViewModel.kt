@@ -133,16 +133,6 @@ class DaracademyViewModel : ViewModel {
 
 
 
-    /****************** screen *************************/
-
-    fun setAppScreen(newScreen : Screens){
-
-            this.appScreen = newScreen.root
-    }
-
-    /***************************************************/
-
-
     fun getAllFormation(onSuccessCallBack: (List<Formation>) -> Unit = {}, onFailureCallBack: (ex : Exception) -> Unit = {} ){
 
         this.repo.getAllFormation(
@@ -176,7 +166,12 @@ class DaracademyViewModel : ViewModel {
 
 
 
-    fun getAllMessageBoxs( ) : List<MessageBox>{
+    fun getAllMessageBoxs( userId: String = "" ) : List<MessageBox>{
+        if (repo.chatBoxs.isEmpty()){
+            setChatBoxsListener(
+                userId = userId
+            )
+        }
         return repo.chatBoxs
     }
 
@@ -185,7 +180,7 @@ class DaracademyViewModel : ViewModel {
     }
 
 
-        fun getBoxMessages(userId : String , productId : String , onSuccessCallBack: (List<Message>) -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
+    fun getBoxMessages(userId : String , productId : String , onSuccessCallBack: (List<Message>) -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}  ){
         repo.getBoxMessages(userId , productId , onSuccessCallBack, onFailureCallBack)
     }
 

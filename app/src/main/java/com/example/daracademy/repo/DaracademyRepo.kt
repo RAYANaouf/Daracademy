@@ -73,10 +73,6 @@ class DaracademyRepo {
     //teachers
     var teachers : List<Teacher> = emptyList()
 
-    constructor(){
-
-    }
-
 
     fun setChatBoxsListener(userId: String , onSuccessCallBack: (List<MessageBox>) -> Unit = {}, onFailureCallBack: (exp : Exception) -> Unit = {}){
 
@@ -154,6 +150,8 @@ class DaracademyRepo {
 
 
         val chatBoxDoc = firebaseFirestore.collection("chats").document("${userId}_${productId}")
+
+        chatMessages.clear()
 
         chatListener?.remove()
 

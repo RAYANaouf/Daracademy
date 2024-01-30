@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,6 +20,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -37,6 +40,8 @@ import androidx.compose.ui.zIndex
 import com.example.bigsam.model.data.`object`.NormalTextStyles
 import com.example.daracademy.R
 import com.example.daracademy.model.variables.firaSansFamily
+import com.example.daracademy.model.variables.nunitoFamily
+import com.example.daracademy.ui.theme.backgroundLight
 import com.example.daracademy.ui.theme.color1
 import com.example.daracademy.ui.theme.color2
 import com.example.daracademy.ui.theme.color3
@@ -73,11 +78,7 @@ fun HeaderSection(
 
             Spacer(modifier = Modifier.height(35.dp))
 
-            MonyIndicator()
-
-            Spacer(modifier = Modifier.height(30.dp))
-
-            actionRow(
+            action(
                 onClick = {index->
                     onNavigate(index)
                 },
@@ -103,102 +104,22 @@ fun HeaderSection(
 }
 
 @Composable
-fun MonyIndicator(
-    modifier: Modifier = Modifier
-) {
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-            .clip(RoundedCornerShape(12.dp))
-            .border(
-                width = 1.dp,
-                color = color1,
-                shape = RoundedCornerShape(12.dp)
-            )
-            .background(customWhite0)
-            .fillMaxWidth()
-            .clickable { }
-    ) {
-        Row(
-            verticalAlignment     = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            modifier              = Modifier
-                .fillMaxWidth()
-                .padding(12.dp)
-        ) {
-            Text(
-                text = "35000 DA",
-                style = NormalTextStyles.TextStyleSZ4.copy(color = color1 , fontFamily = firaSansFamily , fontWeight = FontWeight.SemiBold)
-            )
-
-            Icon(
-                painter            = painterResource(id = R.drawable.eye_icon) ,
-                contentDescription = null,
-                tint               = color3 ,
-                modifier           = Modifier
-            )
-        }
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(0.75f)
-        ) {
-            Box(
-                modifier = Modifier
-                    .height(12.dp)
-                    .clip(CircleShape)
-                    .background(customWhite2)
-                    .fillMaxWidth()
-                    .border(
-                        width = 1.5.dp,
-                        color = Color(parseColor("#0B357D")),
-                        shape = CircleShape
-                    )
-            ) {
-                Box(
-                    modifier = Modifier
-                        .height(12.dp)
-                        .clip(CircleShape)
-                        .background(color1)
-                        .fillMaxWidth(0.73f)
-                )
-            }
-            Box(
-                contentAlignment = Alignment.CenterEnd,
-                modifier = Modifier
-                    .fillMaxWidth(1f)
-            ) {
-                Text(
-                    text = "22/30",
-                    style = NormalTextStyles.TextStyleSZ9.copy(color = customBlack3),
-                    modifier = Modifier
-                        .offset(x = 16.dp, y = 0.dp)
-                        .zIndex(5f)
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-    }
-}
-
-@Composable
-fun actionRow(
+fun action(
     onClick  : (Int)->Unit = {},
     modifier : Modifier = Modifier
 ) {
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly,
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
         modifier = modifier
     ) {
 
-        Box(
-            contentAlignment = Alignment.Center,
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .size(55.dp)
+                .height(55.dp)
+                .fillMaxWidth(0.85f)
                 .border(
                     width = 1.dp,
                     color = color1,
@@ -209,6 +130,7 @@ fun actionRow(
                 .clickable {
                     onClick(1)
                 }
+                .padding(start = 16.dp, end = 16.dp)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.student_icon),
@@ -217,12 +139,22 @@ fun actionRow(
                 modifier = Modifier
                     .size(26.dp)
             )
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Text(
+                text  = "My Students",
+                style = NormalTextStyles.TextStyleSZ8.copy(fontFamily = nunitoFamily)
+            )
         }
 
-        Box(
-            contentAlignment = Alignment.Center,
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .size(55.dp)
+                .height(55.dp)
+                .fillMaxWidth(0.85f)
                 .border(
                     width = 1.dp,
                     color = color1,
@@ -233,6 +165,7 @@ fun actionRow(
                 .clickable {
                     onClick(2)
                 }
+                .padding(start = 16.dp, end = 16.dp)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.support),
@@ -241,12 +174,22 @@ fun actionRow(
                 modifier = Modifier
                     .size(26.dp)
             )
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Text(
+                text  = "My courses",
+                style = NormalTextStyles.TextStyleSZ8.copy(fontFamily = nunitoFamily)
+            )
         }
 
-        Box(
-            contentAlignment = Alignment.Center,
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .size(55.dp)
+                .height(55.dp)
+                .fillMaxWidth(0.85f)
                 .border(
                     width = 1.dp,
                     color = color1,
@@ -257,6 +200,7 @@ fun actionRow(
                 .clickable {
                     onClick(3)
                 }
+                .padding(start = 16.dp, end = 16.dp)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.formation),
@@ -265,10 +209,63 @@ fun actionRow(
                 modifier = Modifier
                     .size(26.dp)
             )
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Text(
+                text  = "My Formations",
+                style = NormalTextStyles.TextStyleSZ8.copy(fontFamily = nunitoFamily)
+            )
         }
 
     }
 
+}
+
+
+
+
+@Composable
+fun actItem(
+    img : Int ,
+    txt : String,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+    ) {
+
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .weight(4f)
+                .fillMaxWidth()
+        ){
+            Image(
+                painter = painterResource(id = img),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxHeight(0.8f)
+                    .aspectRatio(1f)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .weight(2f)
+                .fillMaxWidth()
+        ) {
+            Text(
+                text  = txt,
+                style = NormalTextStyles.TextStyleSZ8.copy(fontFamily = nunitoFamily)
+            )
+        }
+    }
 }
 
 @Preview

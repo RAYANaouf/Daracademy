@@ -55,12 +55,19 @@ fun ChatBoxsScreen(
 
 
 
-    val window = LocalView.current.context as Activity
+    val window  = LocalView.current.context as Activity
+    val context = LocalContext.current
 
     LaunchedEffect(key1 = window){
         window.window.apply {
             statusBarColor = Color.White.toArgb()
         }
+
+    }
+
+    LaunchedEffect(key1 = true ){
+
+        viewModel.getAllMessageBoxs(userId = viewModel.dataStoreRepo.getUserInfo().id)
 
     }
 
@@ -83,7 +90,7 @@ fun ChatBoxsScreen(
                     messageBox = it,
                     modifier = Modifier
                         .clickable {
-                            onNavigate(Screens.Chat_Screen() , it)
+                            onNavigate(Screens.Chat_Screen(), it)
                         }
                         .padding(top = 8.dp, bottom = 8.dp)
 
@@ -115,7 +122,6 @@ fun Item(
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
-//                .background(Color.Magenta)
                 .padding(top = 16.dp)
                 .size(45.dp)
                 .clip(CircleShape)

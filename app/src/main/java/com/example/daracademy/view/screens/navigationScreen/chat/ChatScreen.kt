@@ -154,7 +154,7 @@ fun ChatScreen(
                 .weight(1f)
         ) {
 
-            items(viewModel.repo.chatMessages){
+            items(messages){
                 messageItem(
                     message         = it,
                     rightColor      = color1,

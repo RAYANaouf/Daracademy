@@ -65,6 +65,7 @@ class DataStoreRepo {
         }
 
 
+
         return userInfo
 
     }
@@ -106,8 +107,8 @@ class DataStoreRepo {
 
 
     suspend fun getAnonymInfo() : ChatInfo?{
-        val id   = dataStoreInstance.data.first()[dataStoreKeys.Key_anonymeId]
-        val name = dataStoreInstance.data.first()[dataStoreKeys.Key_anonymeName]
+        val id   = dataStoreInstance.data.first()[dataStoreKeys.Key_userId]
+        val name = dataStoreInstance.data.first()[dataStoreKeys.Key_userName]
         if (id == null || name == null){
             return null
         }
@@ -118,8 +119,11 @@ class DataStoreRepo {
     suspend fun insertAnonymInfo(chatInfo : ChatInfo) {
 
         dataStoreInstance.edit {
-            it[dataStoreKeys.Key_anonymeId] = chatInfo.id
-            it[dataStoreKeys.Key_anonymeName]   = chatInfo.name
+
+            it[dataStoreKeys.Key_accountType] = user_type.anonymous_user
+            it[dataStoreKeys.Key_userId]      = chatInfo.id
+            it[dataStoreKeys.Key_userName]    = chatInfo.name
+
         }
     }
 

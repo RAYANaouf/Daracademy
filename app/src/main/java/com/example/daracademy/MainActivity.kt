@@ -90,7 +90,6 @@ class MainActivity : ComponentActivity() {
 
         // At the top level of your kotlin file:
 
-
         setContent {
 
             DaracademyTheme {
@@ -120,6 +119,7 @@ class MainActivity : ComponentActivity() {
                     LaunchedEffect(key1 = true ){
 
                         viewModel.dataStoreRepo.getUserInfo()
+
 
                     }
 
@@ -348,7 +348,6 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                             viewModel  = viewModel,
                             onNavigate = {screen , messageBox ->
                                 viewModel.screenRepo.navigate_to_screen(screen = Screens.Chat_Screen().root , params =  arrayOf(messageBox.userId  , messageBox.productId , messageBox.name) )
-
                             },
                             modifier = Modifier
                                 .background(Color(parseColor("#f9f9f9")))

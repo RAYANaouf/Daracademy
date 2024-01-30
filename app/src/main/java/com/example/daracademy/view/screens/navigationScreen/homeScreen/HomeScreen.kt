@@ -202,7 +202,6 @@ fun HomeScreen(
 
                         if (existence && anonymInfo != null){
                             viewModel.screenRepo.navigate_to_screen(screen = Screens.Chat_Screen().root , anonymInfo?.id ?: "" , postId , anonymInfo?.name ?: "" )
-
                         }
 
                     }
