@@ -127,119 +127,136 @@ fun HomeScreen(
     )
 
 
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
+    val swipeState = rememberSwipeRefreshState(isRefreshing = viewModel.isLoading.collectAsState().value)
+
+    SwipeRefresh(
+        state = swipeState ,
+        onRefresh = {
+            viewModel.refresh()
+        },
+        indicator = { state, refreshTrigger ->
+            SwipeRefreshIndicator(
+                state = state,
+                refreshTriggerDistance = refreshTrigger ,
+                backgroundColor = color1,
+                contentColor = color3
+            )
+        }
     ) {
+        LazyColumn(
+            modifier = modifier
+                .fillMaxSize()
+        ) {
 
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
 
-            HeaderSection(
-                viewModel = viewModel,
-                onNavigate = { screen , phase->
-                    viewModel.screenRepo.navigate_to_screen(screen = Screens.AnneesScreen().root , params = arrayOf(phase))
+                HeaderSection(
+                    viewModel = viewModel,
+                    onNavigate = { screen , phase->
+                        viewModel.screenRepo.navigate_to_screen(screen = Screens.AnneesScreen().root , params = arrayOf(phase))
 
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(min = 200.dp, max = 200.dp)
-            )
-        }
-
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
-
-            AcademyStage(
-                onClick = {
-                    viewModel.formation = it
-                    viewModel.screenRepo.navigate_to_screen(screen = Screens.FormationScreen().root)
-
-                },
-                formations = viewModel.formations,
-                modifier = Modifier
-            )
-
-        }
-
-
-        items(viewModel.posts){
-            Spacer(modifier = Modifier.height(16.dp))
-
-            PostItem(
-                post = it,
-                onChatClick = { _postId->
-                    postId = _postId
-                    coroutineScope.launch {
-                        var anonymInfo : ChatInfo? = null
-                        var existence   = false
-
-                        anonymInfo = viewModel.dataStoreRepo.getAnonymInfo()
-                        if (anonymInfo == null){
-                            show_dialog = true
-                            return@launch
-                        }
-
-
-                        /******/
-                        /******/
-
-//                            existence = viewModel.dataStoreRepo.isProductSaved(_postId)
-                        viewModel.getAllMessageBoxs().forEach {
-                            if (it.productId == _postId)
-                                existence = true
-                        }
-                        if (!existence){
-                            viewModel.createChatBox(anonymInfo  , _postId)
-                            viewModel.dataStoreRepo.saveProduct(_postId)
-                            existence = true
-                        }
-
-                        /*****/
-                        /*****/
-
-
-
-                        if (existence && anonymInfo != null){
-                            viewModel.screenRepo.navigate_to_screen(screen = Screens.Chat_Screen().root , anonymInfo?.id ?: "" , postId , anonymInfo?.name ?: "" )
-                        }
-
-                    }
-
-
-
-                },
-                modifier = Modifier
-                    .padding(start = 16.dp , end = 16.dp)
-            )
-        }
-
-
-
-
-        item {
-            Spacer(modifier = Modifier.height(40.dp))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                Box(modifier = Modifier
-                    .clip(CircleShape)
-                    .background(customWhite4)
-                    .size(16.dp))
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = 200.dp, max = 200.dp)
+                )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                AcademyStage(
+                    onClick = {
+                        viewModel.formation = it
+                        viewModel.screenRepo.navigate_to_screen(screen = Screens.FormationScreen().root)
+
+                    },
+                    formations = viewModel.formations,
+                    modifier = Modifier
+                )
+
+            }
+
+
+            items(viewModel.posts){
+                Spacer(modifier = Modifier.height(16.dp))
+
+                PostItem(
+                    post = it,
+                    onChatClick = { _postId->
+                        postId = _postId
+                        coroutineScope.launch {
+                            var anonymInfo : ChatInfo? = null
+                            var existence   = false
+
+                            anonymInfo = viewModel.dataStoreRepo.getAnonymInfo()
+                            if (anonymInfo == null){
+                                show_dialog = true
+                                return@launch
+                            }
+
+
+                            /******/
+                            /******/
+
+//                            existence = viewModel.dataStoreRepo.isProductSaved(_postId)
+                            viewModel.getAllMessageBoxs().forEach {
+                                if (it.productId == _postId)
+                                    existence = true
+                            }
+                            if (!existence){
+                                viewModel.createChatBox(anonymInfo  , _postId)
+                                viewModel.dataStoreRepo.saveProduct(_postId)
+                                existence = true
+                            }
+
+                            /*****/
+                            /*****/
+
+
+
+                            if (existence && anonymInfo != null){
+                                viewModel.screenRepo.navigate_to_screen(screen = Screens.Chat_Screen().root , anonymInfo?.id ?: "" , postId , anonymInfo?.name ?: "" )
+                            }
+
+                        }
+
+
+
+                    },
+                    modifier = Modifier
+                        .padding(start = 16.dp , end = 16.dp)
+                )
+            }
+
+
+
+
+            item {
+                Spacer(modifier = Modifier.height(40.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Box(modifier = Modifier
+                        .clip(CircleShape)
+                        .background(customWhite4)
+                        .size(16.dp))
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+
+
+
+
+
         }
-
-
-
-
-
-
     }
 }
 
