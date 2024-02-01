@@ -63,7 +63,9 @@ import com.example.daracademy.ui.theme.customWhite0
 import com.example.daracademy.view.screens.navigationScreen.formation.component.descriptionItem.DescriptionItem
 import com.example.daracademy.view.screens.navigationScreen.formation.component.header.HeaderItem
 import com.example.daracademy.view.screens.navigationScreen.formation.component.infoSection.InfoSection
+import com.example.daracademy.view.screens.navigationScreen.formation.component.prerequisiteSection.PrerequisiteSection
 import com.example.daracademy.view.screens.navigationScreen.formation.component.schedulerCards.SchedulerCards
+import com.example.daracademy.view.screens.navigationScreen.formation.component.targetedSection.TargetedSection
 import com.example.daracademy.view.screens.navigationScreen.formation.component.teacherCard.TeacherCard
 import com.example.daracademy.viewModel.DaracademyViewModel
 import com.mxalbert.sharedelements.SharedElement
@@ -102,7 +104,6 @@ fun FormationScreen(
                 onNavBack     = {
                     viewModel.screenRepo.navigate_to_screen(screen = Screens.HomeScreen().root )
                 },
-                formationName = formation.name,
                 modifier      = Modifier
                     .fillMaxWidth()
                     .aspectRatio(0.8f, true)
@@ -128,14 +129,14 @@ fun FormationScreen(
 
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(36.dp))
 
         InfoSection(
             modifier = Modifier
                 .padding(start = 20.dp , end = 16.dp)
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
 
         DescriptionItem(
@@ -144,7 +145,7 @@ fun FormationScreen(
                 .padding(start = 20.dp , end = 16.dp)
         )
 
-        Spacer(modifier = Modifier.height(26.dp))
+        Spacer(modifier = Modifier.height(36.dp))
 
         var teacher : Teacher? by remember{
             mutableStateOf(null)
@@ -178,7 +179,7 @@ fun FormationScreen(
                 .padding(start = 20.dp , end = 16.dp)
         )
 
-        Spacer(modifier = Modifier.height(26.dp))
+        Spacer(modifier = Modifier.height(36.dp))
 
         SchedulerCards(
             lessons = formation.lessons,
@@ -186,7 +187,22 @@ fun FormationScreen(
                 .padding(start = 20.dp , end = 16.dp)
         )
 
-        Spacer(modifier = Modifier.height(26.dp))
+        Spacer(modifier = Modifier.height(36.dp))
+
+        TargetedSection(
+            emptyList(),
+            modifier = Modifier
+                .padding(start = 20.dp , end = 16.dp)
+        )
+
+        Spacer(modifier = Modifier.height(36.dp))
+
+        PrerequisiteSection(
+            emptyList(),
+            modifier = Modifier
+                .padding(start = 20.dp , end = 16.dp)
+
+        )
 
 //            CompaniesStage(
 //                companies = listOf(

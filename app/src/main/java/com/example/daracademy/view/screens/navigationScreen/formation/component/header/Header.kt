@@ -38,7 +38,6 @@ import com.example.daracademy.ui.theme.customWhite0
 fun HeaderItem(
     images    : List<String>,
     onNavBack : ()->Unit = {},
-    formationName : String,
     modifier  : Modifier = Modifier
 ) {
 
@@ -123,7 +122,6 @@ fun HeaderItem_preview() {
             "https://firebasestorage.googleapis.com/v0/b/daracademyfireproject.appspot.com/o/formations%2Fformation%20on%20flutter%20_formation_1703081027452%2Fimg_0?alt=media&token=18c914bf-c734-41f4-8f16-65711570d229",
             "https://firebasestorage.googleapis.com/v0/b/daracademyfireproject.appspot.com/o/formations%2Fformation%20on%20flutter%20_formation_1703081027452%2Fimg_1?alt=media&token=72dd74ab-0dda-47af-9be9-24f9bdd7393e",
             "https://firebasestorage.googleapis.com/v0/b/daracademyfireproject.appspot.com/o/formations%2Fformation%20on%20flutter%20_formation_1703081027452%2Fimg_2?alt=media&token=12ee1584-8aa6-4e5d-9439-784149839003"
-        ),
-        formationName = "formation on flutter"
+        )
     )
 }

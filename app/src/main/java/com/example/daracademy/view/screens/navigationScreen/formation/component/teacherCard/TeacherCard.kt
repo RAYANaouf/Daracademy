@@ -53,8 +53,7 @@ fun TeacherCard(
     Column(
         modifier = modifier
     ) {
-        
-        Spacer(modifier = Modifier.height(12.dp))
+
 
         Text(
             text  = "Teacher ",
@@ -62,7 +61,7 @@ fun TeacherCard(
             modifier = Modifier
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
 
         Row {

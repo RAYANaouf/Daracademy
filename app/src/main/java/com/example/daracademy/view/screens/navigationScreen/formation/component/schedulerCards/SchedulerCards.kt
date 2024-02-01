@@ -53,15 +53,12 @@ fun SchedulerCards(
         modifier = modifier
     ) {
 
-        Spacer(modifier = Modifier.height(12.dp))
-
-
         Text(
             text = "Scheduler",
             style = NormalTextStyles.TextStyleSZ5.copy(fontFamily = josefinSansFamily , color = customBlack5),
         )
 
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         Box(
             modifier = Modifier
@@ -150,6 +147,6 @@ fun LessonCard(
 @Composable
 fun SchedulerCards_preview() {
     SchedulerCards(
-        emptyList()
+        arrayListOf(Lesson(),Lesson(),Lesson())
     )
 }
