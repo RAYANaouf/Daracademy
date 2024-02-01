@@ -67,6 +67,7 @@ import com.example.daracademy.view.screens.navigationScreen.formation.component.
 import com.example.daracademy.view.screens.navigationScreen.formation.component.schedulerCards.SchedulerCards
 import com.example.daracademy.view.screens.navigationScreen.formation.component.targetedSection.TargetedSection
 import com.example.daracademy.view.screens.navigationScreen.formation.component.teacherCard.TeacherCard
+import com.example.daracademy.view.screens.navigationScreen.formation.component.timeLine.TimeLine
 import com.example.daracademy.viewModel.DaracademyViewModel
 import com.mxalbert.sharedelements.SharedElement
 
@@ -183,6 +184,14 @@ fun FormationScreen(
 
         SchedulerCards(
             lessons = formation.lessons,
+            modifier = Modifier
+                .padding(start = 20.dp , end = 16.dp)
+        )
+
+        Spacer(modifier = Modifier.height(36.dp))
+
+        TimeLine(
+            com.example.daracademy.model.dataClasses.TimeLine(),
             modifier = Modifier
                 .padding(start = 20.dp , end = 16.dp)
         )
