@@ -12,7 +12,7 @@
 
 
 <h1 align="center">
-    3.FORMATIONS
+    3.POSTS
 </h1>
 
 ![Record_2024-02-03-22-28-34-ezgif com-optimize](https://github.com/RAYANaouf/Daracademy/assets/120733474/c85068fd-7a34-418f-b131-b02c10efaacc)
