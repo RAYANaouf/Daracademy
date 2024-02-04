@@ -97,19 +97,17 @@ fun FormationScreen(
             .fillMaxHeight()
     ) {
 
+        HeaderItem(
+            name          = formation.name ,
+            images        = formation.imgs ,
+            onNavBack     = {
+                viewModel.screenRepo.navigate_to_screen(screen = Screens.HomeScreen().root )
+            },
+            modifier      = Modifier
+                .fillMaxWidth()
+                .aspectRatio(0.8f, true)
 
-        SharedElement(key = "name ${formation.name}" , screenKey = "formation screen") {
-            HeaderItem(
-                images        = formation.imgs ,
-                onNavBack     = {
-                    viewModel.screenRepo.navigate_to_screen(screen = Screens.HomeScreen().root )
-                },
-                modifier      = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(0.8f, true)
-            )
-        }
-
+        )
 
         Row(
             verticalAlignment = Alignment.CenterVertically,

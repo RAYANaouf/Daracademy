@@ -3,6 +3,7 @@ package com.example.daracademy.view.screens.navigationScreen.formation.component
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -56,6 +57,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
+import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.zIndex
 import com.example.bigsam.model.data.`object`.NormalTextStyles
 import com.example.daracademy.R
@@ -69,12 +71,15 @@ import com.example.daracademy.ui.theme.color3
 import com.example.daracademy.ui.theme.customBlack4
 import com.example.daracademy.ui.theme.customBlack5
 import com.example.daracademy.view.screens.navigationScreen.formation.component.targetedSection.Item
+import com.example.daracademy.view.screens.navigationScreen.formation.component.timeLine.dialogs.point_dialog
+import com.mxalbert.sharedelements.SharedElement
 
 @Composable
 fun TimeLine(
     timeLine : TimeLine,
     modifier : Modifier = Modifier
 ) {
+
 
     Column(
         modifier = modifier
@@ -161,6 +166,18 @@ fun PointItem(
         mutableStateOf(Size.Zero)
     }
 
+    var show_point_dialog by remember {
+      mutableStateOf(false)
+    }
+
+    //dialogs
+    point_dialog(
+        show = show_point_dialog,
+        onDismiss = {
+            show_point_dialog = false
+        }
+    )
+
     Column(
         modifier = modifier
     ){
@@ -171,6 +188,10 @@ fun PointItem(
                 modifier = Modifier
                     .onGloballyPositioned {
                         descSize = it.size.toSize()
+                    }
+                    .clip(RoundedCornerShape(12.dp))
+                    .clickable {
+                        show_point_dialog = true
                     }
             )
 
@@ -273,6 +294,10 @@ fun PointItem(
                 modifier = Modifier
                     .onGloballyPositioned {
                         descSize = it.size.toSize()
+                    }
+                    .clip(RoundedCornerShape(12.dp))
+                    .clickable {
+                        show_point_dialog = true
                     }
             )
         }

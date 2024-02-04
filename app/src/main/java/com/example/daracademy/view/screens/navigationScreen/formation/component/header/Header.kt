@@ -8,8 +8,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -32,10 +35,12 @@ import com.example.bigsam.model.data.`object`.NormalTextStyles
 import com.example.daracademy.R
 import com.example.daracademy.model.variables.firaSansFamily
 import com.example.daracademy.ui.theme.customWhite0
+import com.mxalbert.sharedelements.SharedElement
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HeaderItem(
+    name      : String = "",
     images    : List<String>,
     onNavBack : ()->Unit = {},
     modifier  : Modifier = Modifier
@@ -55,7 +60,7 @@ fun HeaderItem(
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .padding(top = 30.dp , start = 16.dp)
+                .padding(top = 30.dp, start = 16.dp)
                 .clip(CircleShape)
                 .background(Color(parseColor("#33000000")))
                 .zIndex(10f)
@@ -66,7 +71,7 @@ fun HeaderItem(
                 painter = painterResource(id = R.drawable.right_arrow ),
                 contentDescription = null,
                 tint = Color.White ,
-                modifier =Modifier
+                modifier = Modifier
                     .size(20.dp)
                     .rotate(180f)
             )
@@ -76,7 +81,7 @@ fun HeaderItem(
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .padding(top = 30.dp , end = 16.dp)
+                .padding(top = 30.dp, end = 16.dp)
                 .clip(CircleShape)
                 .background(Color(parseColor("#33000000")))
                 .zIndex(10f)
@@ -87,7 +92,7 @@ fun HeaderItem(
                 painter = painterResource(id = R.drawable.fullscreen_icon),
                 contentDescription = null,
                 tint = Color.White ,
-                modifier =Modifier
+                modifier = Modifier
                     .size(20.dp)
                     .rotate(180f)
             )
@@ -99,15 +104,21 @@ fun HeaderItem(
             modifier = Modifier
                 .fillMaxSize()
         ) { index ->
-            Image(
-                painter            = rememberAsyncImagePainter(model = images[index]) ,
-                contentDescription = null ,
-                contentScale       = ContentScale.Crop ,
-                modifier = Modifier
-                    .fillMaxSize()
-            )
-        }
 
+            SharedElement(key = "name ${name}" , screenKey = "formation screen") {
+                Image(
+                    painter            = rememberAsyncImagePainter(
+                        model = images[index] ,
+                        placeholder = rememberAsyncImagePainter(model = R.raw.loading_animation)
+                    ) ,
+                    contentDescription = null ,
+                    contentScale       = ContentScale.Crop ,
+                    modifier = Modifier
+                        .fillMaxSize()
+                )
+            }
+
+        }
 
 
     }

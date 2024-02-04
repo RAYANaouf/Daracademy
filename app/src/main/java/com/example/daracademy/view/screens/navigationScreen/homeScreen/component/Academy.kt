@@ -57,12 +57,6 @@ fun AcademyStage(
     formations    : List<Formation>
 ) {
 
-
-
-    val context = LocalContext.current
-
-
-
     Column(
         modifier = modifier
     ) {
