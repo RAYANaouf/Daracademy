@@ -108,32 +108,37 @@ fun PostItem(
                     .padding(start = 4.dp , end = 4.dp)
             )
 
-            Text(
-                text = post.title ,
-                style = NormalTextStyles.TextStyleSZ8.copy(customBlack1),
-                fontFamily = josefinSansFamily,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                textAlign = if (post.ltr) TextAlign.Left else TextAlign.Right,
-                modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .padding(start = 4.dp, end = 8.dp, top = 0.dp, bottom = 4.dp)
-            )
+            if (post.title != ""){
+                Text(
+                    text = post.title ,
+                    style = NormalTextStyles.TextStyleSZ8.copy(customBlack1),
+                    fontFamily = josefinSansFamily,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = if (post.ltr) TextAlign.Left else TextAlign.Right,
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f)
+                        .padding(start = 4.dp, end = 8.dp, top = 0.dp, bottom = 4.dp)
+                )
+            }
 
-            Text(
-                text = post.desc,
-                style = NormalTextStyles.TextStyleSZ9.copy(customBlack4),
-                fontFamily = josefinSansFamily,
-                maxLines = if (show) Int.MAX_VALUE else 3,
-                overflow = TextOverflow.Ellipsis,
-                textAlign = if (post.ltr) TextAlign.Left else TextAlign.Right,
-                modifier = Modifier
-                    .padding(start = 4.dp, end = 8.dp, top = 4.dp, bottom = 10.dp)
-                    .fillMaxWidth()
-                    .clickable {
-                        show = !show
-                    }
-            )
+            if(post.desc != ""){
+                Text(
+                    text = post.desc,
+                    style = NormalTextStyles.TextStyleSZ9.copy(customBlack4),
+                    fontFamily = josefinSansFamily,
+                    maxLines = if (show) Int.MAX_VALUE else 3,
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = if (post.ltr) TextAlign.Left else TextAlign.Right,
+                    modifier = Modifier
+                        .padding(start = 4.dp, end = 8.dp, top = 4.dp, bottom = 10.dp)
+                        .fillMaxWidth()
+                        .clickable {
+                            show = !show
+                        }
+                )
+            }
+
 
             Spacer(modifier = Modifier
                 .fillMaxWidth()

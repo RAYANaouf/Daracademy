@@ -93,7 +93,6 @@ fun FormationScreen(
 
     Column(
         modifier = modifier
-            .background(customWhite0)
             .verticalScroll(rememberScrollState())
             .fillMaxHeight()
     ) {
@@ -193,7 +192,7 @@ fun FormationScreen(
         TimeLine(
             com.example.daracademy.model.dataClasses.TimeLine(),
             modifier = Modifier
-                .padding(start = 20.dp , end = 16.dp)
+//                .padding(start = 20.dp , end = 16.dp)
         )
 
         Spacer(modifier = Modifier.height(36.dp))

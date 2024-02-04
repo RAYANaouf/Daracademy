@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.example.bigsam.model.data.`object`.NormalTextStyles
 import com.example.daracademy.R
 import com.example.daracademy.model.variables.josefinSansFamily
+import com.example.daracademy.model.variables.nunitoFamily
 import com.example.daracademy.ui.theme.customBlack5
 
 @Composable
@@ -76,7 +77,7 @@ fun Item(
 
         Text(
             text = "$txt",
-            style = NormalTextStyles.TextStyleSZ8.copy(fontFamily = josefinSansFamily ),
+            style = NormalTextStyles.TextStyleSZ8.copy(fontFamily = nunitoFamily ),
         )
 
     }

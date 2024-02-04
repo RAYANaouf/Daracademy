@@ -1,5 +1,6 @@
 package com.example.daracademy.view.screens.navigationScreen.formation.component.descriptionItem
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -31,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bigsam.model.data.`object`.NormalTextStyles
 import com.example.daracademy.model.variables.josefinSansFamily
+import com.example.daracademy.ui.theme.backgroundLight
 import com.example.daracademy.ui.theme.color2
 import com.example.daracademy.ui.theme.customBlack5
 import com.example.daracademy.ui.theme.customBlack6
@@ -99,24 +101,28 @@ fun DescriptionItem(
             Text(
                 text = description,
                 style = NormalTextStyles.TextStyleSZ9.copy(fontFamily = josefinSansFamily , lineHeight = 18.sp),
-                overflow = TextOverflow.Ellipsis
             )
 
-            if (!show){
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(10.dp)
-                        .background(
-                            brush = Brush.verticalGradient(
-                                listOf(
-                                    Color.Transparent,
-                                    Color.White
+
+            Column(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+            ){
+                AnimatedVisibility(visible = !show ) {
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(10.dp)
+                            .background(
+                                brush = Brush.verticalGradient(
+                                    listOf(
+                                        Color.Transparent,
+                                        backgroundLight
+                                    )
                                 )
                             )
-                        )
-                        .align(Alignment.BottomCenter)
-                )
+                    )
+                }
             }
         }
     }

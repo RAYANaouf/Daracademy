@@ -391,7 +391,7 @@ fun MainScreen(viewModel : DaracademyViewModel) {
                             viewModel = viewModel,
                             formation = viewModel.formation!!,
                             modifier = Modifier
-                                .background(Color(parseColor("#f9f9f9")))
+                                .background(backgroundLight)
                         )
                     }
 

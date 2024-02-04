@@ -1,6 +1,7 @@
 package com.example.daracademy.view.screens.navigationScreen.formation.component.schedulerCards
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
@@ -74,7 +75,13 @@ fun SchedulerCards(
             ) {
 
                 lessons.forEachIndexed { index, lesson -> 
-                    LessonCard(lesson = lesson)
+
+                    LessonCard(
+                        lesson   = lesson,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(Color.White)
+                    )
                     
                     if (index < lessons.size-1 ){
                         Spacer(modifier = Modifier.width(18.dp))
