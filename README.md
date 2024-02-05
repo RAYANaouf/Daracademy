@@ -5,7 +5,6 @@
 
 <ul>
 <li>Homme</li>
-    ![Screenshot_2024-02-05-23-17-31-11](https://github.com/RAYANaouf/Daracademy/assets/120733474/d3a2c82c-883a-4885-b189-ff0c926b41f3)
     <img src="https://github.com/RAYANaouf/Daracademy/assets/120733474/d3a2c82c-883a-4885-b189-ff0c926b41f3">
 <li>Sign in</li>
 <li>formations</li>
