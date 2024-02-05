@@ -5,12 +5,12 @@
 
 <ul>
 <li>Homme</li>
+    ![Screenshot_2024-02-05-23-17-31-11](https://github.com/RAYANaouf/Daracademy/assets/120733474/d3a2c82c-883a-4885-b189-ff0c926b41f3)
 <li>Sign in</li>
 <li>formations</li>
 ....
 </ul>
 
-![Record_2024-02-03-22-09-51-ezgif com-video-to-gif-converter](https://github.com/RAYANaouf/Daracademy/assets/120733474/b4d2d184-bf75-4ccd-b9ca-346240b3d3f8)
 
 <h1 align="center" >
     Screen anatomy
