@@ -1,3 +1,17 @@
+
+<h1 >
+    application screens
+</h1>
+
+<ul>
+<li>Homme</li>
+<li>Sign in</li>
+<li>formations</li>
+....
+</ul>
+
+
+
 <h1 align="center">
     1.SUPORT CORSES
 </h1>
@@ -16,3 +30,12 @@
 </h1>
 
 ![Record_2024-02-03-22-28-34-ezgif com-optimize](https://github.com/RAYANaouf/Daracademy/assets/120733474/c85068fd-7a34-418f-b131-b02c10efaacc)
+
+
+
+<h1 align="center">
+    component
+</h1>
+
+
+![Screenshot_2024-02-05-22-04-46-25](https://github.com/RAYANaouf/Daracademy/assets/120733474/0f0ff7ad-f216-43c7-a7f2-3f3a6c86d48a)
