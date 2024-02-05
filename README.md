@@ -1,5 +1,5 @@
 
-<h1 >
+<h1 align="center" >
     application screens
 </h1>
 
@@ -11,8 +11,20 @@
 </ul>
 
 
+<h1 align="center" >
+    Screen anatomy
+</h1>
 
-<h1 align="center">
+
+<ol>
+<li>Homme</li>
+<li>Sign in</li>
+<li>formations</li>
+....
+</ol>
+
+
+<h1 >
     1.SUPORT CORSES
 </h1>
 
