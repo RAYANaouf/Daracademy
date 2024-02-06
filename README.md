@@ -1,31 +1,24 @@
 
 
-## Application Screens
-
-| Homme  |
-|-------|
-| ![Homme](https://github.com/RAYANaouf/Daracademy/assets/120733474/d3a2c82c-883a-4885-b189-ff0c926b41f3) |
-|scroll down|
-|![Homme](https://github.com/RAYANaouf/Daracademy/assets/120733474/ad7fb64e-6c23-463a-afe0-b7d181b51c3d) |
-
-
-
 <h1 align="center" >
     application screens
 </h1>
 
-<ul>
-<li  ><h3 >Homme</h3></li>
-    <div style="display: inline-block; >
-        <img src="https://github.com/RAYANaouf/Daracademy/assets/120733474/d3a2c82c-883a-4885-b189-ff0c926b41f3">
-    <hr><hr>
-    <img src="https://github.com/RAYANaouf/Daracademy/assets/120733474/ad7fb64e-6c23-463a-afe0-b7d181b51c3d">
-    </div>
-<li  ><h3 >Sign in</h3></li>
-    <img src="https://github.com/RAYANaouf/Daracademy/assets/120733474/748d2810-e1f9-4d49-941b-40741b87a931">
-    <img src="https://github.com/RAYANaouf/Daracademy/assets/120733474/807a225b-b89b-4a81-8a5b-f5650f19d5e4">
-<li  ><h3 >formations</h3></li>
-        <img src="https://github.com/RAYANaouf/Daracademy/assets/120733474/1627af33-1f9e-404c-85fe-fb76d9f45f4d">
+
+| a | b |
+|-------|-------|
+|![a](https://github.com/RAYANaouf/Daracademy/assets/120733474/d3a2c82c-883a-4885-b189-ff0c926b41f3) |![b](https://github.com/RAYANaouf/Daracademy/assets/120733474/ad7fb64e-6c23-463a-afe0-b7d181b51c3d) |
+
+| Sign in  |
+|-------|
+| ![Sign in](https://github.com/RAYANaouf/Daracademy/assets/120733474/748d2810-e1f9-4d49-941b-40741b87a931) |
+|scroll down|
+|![Sign in](https://github.com/RAYANaouf/Daracademy/assets/120733474/807a225b-b89b-4a81-8a5b-f5650f19d5e4) |
+
+
+| Sign in  |
+|-------|
+| ![Sign in](https://github.com/RAYANaouf/Daracademy/assets/120733474/1627af33-1f9e-404c-85fe-fb76d9f45f4d) |
 
 ....
 </ul>
