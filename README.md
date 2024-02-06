@@ -39,9 +39,6 @@
 | study stage | formations | Posts |
 |-------|-------|-------|
 | ![study stage](https://github.com/RAYANaouf/Daracademy/assets/120733474/5b89c441-3aca-46ac-8dc2-bb9f23aa9338) | ![formations](https://github.com/RAYANaouf/Daracademy/assets/120733474/5b94d85b-bc90-4023-a943-d8e959d11494) |![Posts](https://github.com/RAYANaouf/Daracademy/assets/120733474/803fb1c6-9a53-4a11-b1fb-9758c100901a) |
-    
-<li><h3>Sign in</h3></li>
-<li><h3>formations</h3></li>
 ....
 </ol>
 
