@@ -14,12 +14,11 @@
 <h3> Sign in screen </h3>
 
 
-| a |
-|-------|
-| ![Sign in](https://github.com/RAYANaouf/Daracademy/assets/120733474/748d2810-e1f9-4d49-941b-40741b87a931) |
-|scroll down|
-|![Sign in](https://github.com/RAYANaouf/Daracademy/assets/120733474/807a225b-b89b-4a81-8a5b-f5650f19d5e4) |
+| a | b |
+|-------|-------|
+| ![Sign in](https://github.com/RAYANaouf/Daracademy/assets/120733474/748d2810-e1f9-4d49-941b-40741b87a931) | ![Sign in](https://github.com/RAYANaouf/Daracademy/assets/120733474/807a225b-b89b-4a81-8a5b-f5650f19d5e4) |
 
+<h3> Formation screen </h3>
 
 | a |
 |-------|
